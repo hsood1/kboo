@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Good Morning, Kboo ☀️</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ── Sky background ── */
+    .sky {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, #87ceeb 0%, #b8e4f9 50%, #fde68a 100%);
+      animation: skyShift 12s ease-in-out infinite alternate;
+      z-index: 0;
+    }
+    @keyframes skyShift {
+      0%   { background: linear-gradient(180deg, #87ceeb 0%, #b8e4f9 55%, #fde68a 100%); }
+      50%  { background: linear-gradient(180deg, #56b4e9 0%, #9dd9f3 50%, #f9c74f 100%); }
+      100% { background: linear-gradient(180deg, #87ceeb 0%, #b8e4f9 55%, #ffe5a0 100%); }
+    }
+
+    /* ── Sun ── */
+    .sun {
+      position: fixed;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff7a1 30%, #f9c74f 70%, #f4a226 100%);
+      box-shadow: 0 0 60px 30px rgba(249,199,79,0.5), 0 0 120px 60px rgba(249,199,79,0.2);
+      animation: sunPulse 4s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes sunPulse {
+      0%, 100% { box-shadow: 0 0 60px 30px rgba(249,199,79,0.5), 0 0 120px 60px rgba(249,199,79,0.2); }
+      50%       { box-shadow: 0 0 80px 40px rgba(249,199,79,0.7), 0 0 160px 80px rgba(249,199,79,0.3); }
+    }
+
+    /* ── Sun rays ── */
+    .rays {
+      position: fixed;
+      top: calc(8% - 20px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 130px;
+      animation: spinRays 18s linear infinite;
+      z-index: 1;
+    }
+    .rays::before, .rays::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: repeating-conic-gradient(
+        rgba(255,230,100,0.45) 0deg 15deg,
+        transparent 15deg 30deg
+      );
+    }
+    .rays::after { transform: rotate(15deg); opacity: 0.6; }
+    @keyframes spinRays { to { transform: translateX(-50%) rotate(360deg); } }
+
+    /* ── Clouds ── */
+    .cloud {
+      position: fixed;
+      background: rgba(255,255,255,0.88);
+      border-radius: 50px;
+      z-index: 1;
+      filter: blur(2px);
+    }
+    .cloud::before, .cloud::after {
+      content: '';
+      position: absolute;
+      background: rgba(255,255,255,0.88);
+      border-radius: 50%;
+    }
+    .c1 { width:160px; height:45px; top:18%; left:-180px; animation: drift1 28s linear infinite; }
+    .c1::before { width:80px; height:70px; top:-35px; left:20px; }
+    .c1::after  { width:60px; height:55px; top:-28px; left:70px; }
+
+    .c2 { width:120px; height:35px; top:28%; left:-140px; animation: drift2 38s linear infinite 5s; }
+    .c2::before { width:60px; height:55px; top:-28px; left:15px; }
+    .c2::after  { width:50px; height:45px; top:-22px; left:55px; }
+
+    .c3 { width:200px; height:55px; top:14%; left:-220px; animation: drift1 50s linear infinite 12s; opacity:0.7; }
+    .c3::before { width:90px; height:80px; top:-42px; left:25px; }
+    .c3::after  { width:75px; height:65px; top:-34px; left:90px; }
+
+    @keyframes drift1 { to { left: 110vw; } }
+    @keyframes drift2 { to { left: 110vw; } }
+
+    /* ── Birds ── */
+    .birds {
+      position: fixed;
+      top: 22%;
+      left: -60px;
+      z-index: 2;
+      animation: birdFly 35s linear infinite 8s;
+    }
+    .bird {
+      width: 28px;
+      height: 8px;
+      border-top: 3px solid rgba(80,80,100,0.6);
+      border-radius: 50% 50% 0 0;
+      border-left: none;
+      border-right: none;
+      display: inline-block;
+      margin: 0 4px;
+      animation: flapWings 0.6s ease-in-out infinite alternate;
+    }
+    .bird:nth-child(2) { margin-top: 12px; animation-delay: 0.2s; }
+    .bird:nth-child(3) { margin-top: 6px;  animation-delay: 0.4s; }
+    @keyframes flapWings {
+      0%   { transform: scaleY(1); }
+      100% { transform: scaleY(-0.4); }
+    }
+    @keyframes birdFly { to { left: 110vw; } }
+
+    /* ── Grass strip ── */
+    .grass {
+      position: fixed;
+      bottom: 0;
+      left: 0; right: 0;
+      height: 90px;
+      background: linear-gradient(180deg, #6abf4b 0%, #4e9a32 100%);
+      border-radius: 60% 60% 0 0 / 30% 30% 0 0;
+      z-index: 1;
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative;
+      z-index: 10;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: 28px;
+      padding: 44px 52px;
+      max-width: 560px;
+      width: 92%;
+      text-align: center;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.12);
+    }
+
+    .greeting {
+      font-size: 2.4rem;
+      color: #2c3e50;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .sub-greeting {
+      font-size: 1.05rem;
+      color: #7f8c8d;
+      margin-bottom: 22px;
+    }
+
+    .date-pill {
+      display: inline-block;
+      background: rgba(249,199,79,0.35);
+      border: 1px solid rgba(249,199,79,0.7);
+      border-radius: 50px;
+      padding: 6px 20px;
+      font-size: 0.95rem;
+      color: #6d4c00;
+      font-weight: 600;
+      margin-bottom: 28px;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Forecast row (two cards side by side) ── */
+    .weather-loading {
+      font-size: 0.95rem;
+      color: #7f8c8d;
+      padding: 18px 0 24px;
+    }
+
+    .forecast-row {
+      display: none;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .forecast-row.loaded {
+      display: flex;
+    }
+
+    .forecast-card {
+      flex: 1;
+      background: rgba(135,206,235,0.22);
+      border: 1px solid rgba(135,206,235,0.5);
+      border-radius: 18px;
+      padding: 18px 10px 16px;
+      text-align: center;
+    }
+
+    .fc-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #2980b9;
+      margin-bottom: 8px;
+    }
+    .fc-icon  { font-size: 2.4rem; line-height: 1; margin-bottom: 6px; }
+    .fc-temp  {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a5276;
+      line-height: 1.1;
+    }
+    .fc-desc  {
+      font-size: 0.82rem;
+      color: #2980b9;
+      text-transform: capitalize;
+      margin: 4px 0 6px;
+      min-height: 1.1em;
+    }
+    .fc-feels {
+      font-size: 0.76rem;
+      color: #5d8aa8;
+    }
+
+    /* ── Walk / Rain banners ── */
+    .walk-banner {
+      display: none;
+      background: linear-gradient(135deg, #d4efdf, #a9dfbf);
+      border: 1px solid #7dcea0;
+      border-radius: 16px;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      color: #1e8449;
+      font-weight: 600;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+    .walk-banner.show { display: block; }
+    .walk-banner .walk-icon { font-size: 1.4rem; margin-right: 6px; vertical-align: middle; }
+
+    .rain-banner {
+      display: none;
+      background: linear-gradient(135deg, #d6eaf8, #aed6f1);
+      border: 1px solid #85c1e9;
+      border-radius: 16px;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      color: #1a5276;
+      font-weight: 600;
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+    .rain-banner.show { display: block; }
+
+    .footer-note {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 10px;
+    }
+    .heart { color: #e74c3c; }
+
+    /* ── Mobile tweaks ── */
+    @media (max-width: 420px) {
+      .card { padding: 32px 24px; }
+      .greeting { font-size: 1.9rem; }
+      .fc-temp { font-size: 1.65rem; }
+      .fc-icon { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sky & atmosphere -->
+  <div class="sky"></div>
+  <div class="rays"></div>
+  <div class="sun"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+  <div class="birds">
+    <div class="bird"></div>
+    <div class="bird"></div>
+    <div class="bird"></div>
+  </div>
+  <div class="grass"></div>
+
+  <!-- Main card -->
+  <div class="card">
+    <div class="greeting">Good morning, Kboo ☀️</div>
+    <div class="sub-greeting">Hope you slept well — it's a brand new day.</div>
+
+    <div class="date-pill" id="date-display">Loading date...</div>
+
+    <!-- Weather -->
+    <div class="weather-loading" id="weather-loading">Fetching your local weather...</div>
+
+    <div class="forecast-row" id="forecast-row">
+      <!-- This Morning -->
+      <div class="forecast-card">
+        <div class="fc-label">This Morning</div>
+        <div class="fc-icon"  id="morning-icon">🌤</div>
+        <div class="fc-temp"  id="morning-temp">--°F</div>
+        <div class="fc-desc"  id="morning-desc">--</div>
+        <div class="fc-feels" id="morning-feels">Feels like --°F</div>
+      </div>
+      <!-- This Afternoon -->
+      <div class="forecast-card">
+        <div class="fc-label">This Afternoon</div>
+        <div class="fc-icon"  id="afternoon-icon">🌤</div>
+        <div class="fc-temp"  id="afternoon-temp">--°F</div>
+        <div class="fc-desc"  id="afternoon-desc">--</div>
+        <div class="fc-feels" id="afternoon-feels">Feels like --°F</div>
+      </div>
+    </div>
+
+    <!-- Walk suggestion -->
+    <div class="walk-banner" id="walk-banner">
+      <span class="walk-icon">🚶‍♀️</span>
+      It looks lovely outside! Why not take a lunchtime walk today? A bit of fresh air and sunshine will do you the world of good. 🌿
+    </div>
+
+    <!-- Stay-in suggestion -->
+    <div class="rain-banner" id="rain-banner">
+      <span style="font-size:1.4rem;margin-right:6px;vertical-align:middle;">☔</span>
+      Not the best day for a walk — maybe enjoy a cosy lunch indoors today? 🍵
+    </div>
+
+    <div class="footer-note">Made with <span class="heart">♥</span> for Kboo · Weather via Open-Meteo</div>
+  </div>
+
+  <script>
+    // ── Date ──────────────────────────────────────────────────────────────────
+    (function () {
+      const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('date-display').textContent =
+        new Date().toLocaleDateString('en-GB', opts);
+    })();
+
+    // ── WMO weather code → label + emoji ──────────────────────────────────────
+    function decodeWMO(code) {
+      const map = {
+        0:  ['Clear sky',               '☀️'],
+        1:  ['Mainly clear',            '🌤'],
+        2:  ['Partly cloudy',           '⛅'],
+        3:  ['Overcast',                '☁️'],
+        45: ['Foggy',                   '🌫'],
+        48: ['Icy fog',                 '🌫'],
+        51: ['Light drizzle',           '🌦'],
+        53: ['Moderate drizzle',        '🌦'],
+        55: ['Dense drizzle',           '🌧'],
+        61: ['Slight rain',             '🌧'],
+        63: ['Moderate rain',           '🌧'],
+        65: ['Heavy rain',              '🌧'],
+        71: ['Slight snow',             '🌨'],
+        73: ['Moderate snow',           '🌨'],
+        75: ['Heavy snow',              '❄️'],
+        77: ['Snow grains',             '🌨'],
+        80: ['Light showers',           '🌦'],
+        81: ['Moderate showers',        '🌧'],
+        82: ['Violent showers',         '⛈'],
+        85: ['Snow showers',            '🌨'],
+        86: ['Heavy snow showers',      '❄️'],
+        95: ['Thunderstorm',            '⛈'],
+        96: ['Thunderstorm + hail',     '⛈'],
+        99: ['Thunderstorm + hail',     '⛈'],
+      };
+      return map[code] || ['Unknown', '🌡'];
+    }
+
+    // ── Walk-worthy? (Fahrenheit threshold: 46 °F ≈ 8 °C) ───────────────────
+    function isNiceForWalk(wmoCode, tempF) {
+      return [0, 1, 2, 3].includes(wmoCode) && tempF >= 46;
+    }
+
+    // ── Geolocation: GPS → IP fallback → London ───────────────────────────────
+    // Works on file://, mobile Safari, and Chrome without a secure origin prompt.
+    function getLocation() {
+      return new Promise((resolve) => {
+
+        // Helper: IP-based fallback using ipwho.is (CORS-enabled, no API key)
+        async function ipFallback() {
+          try {
+            const r = await fetch('https://ipwho.is/');
+            const d = await r.json();
+            if (d && d.latitude) {
+              resolve({ lat: d.latitude, lon: d.longitude, city: d.city || '' });
+              return;
+            }
+          } catch (_) {}
+          // Hard fallback: London
+          resolve({ lat: 51.5074, lon: -0.1278, city: 'London' });
+        }
+
+        if (!navigator.geolocation) {
+          // Geolocation API not available (e.g. file:// on some Android browsers)
+          ipFallback();
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+            city: ''
+          }),
+          () => ipFallback(),           // denied or timed out → IP fallback
+          { timeout: 6000, maximumAge: 300000 }
+        );
+      });
+    }
+
+    // ── Find the hourly index closest to a target hour ────────────────────────
+    // Open-Meteo returns times like "2025-03-30T09:00" — we match today's date.
+    function findHourIndex(times, targetHour) {
+      const todayPrefix = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+      const target = `${todayPrefix}T${String(targetHour).padStart(2,'0')}:00`;
+      const idx = times.indexOf(target);
+      // If exact match not found (e.g. timezone offset edge case), scan nearest
+      if (idx !== -1) return idx;
+      // Fallback: find any entry for today closest to targetHour
+      let best = -1, bestDiff = Infinity;
+      times.forEach((t, i) => {
+        if (!t.startsWith(todayPrefix)) return;
+        const h = parseInt(t.slice(11, 13), 10);
+        const diff = Math.abs(h - targetHour);
+        if (diff < bestDiff) { bestDiff = diff; best = i; }
+      });
+      return best;
+    }
+
+    // ── Main weather loader ────────────────────────────────────────────────────
+    async function loadWeather() {
+      try {
+        const { lat, lon } = await getLocation();
+
+        // Open-Meteo hourly forecast — temperature_unit=fahrenheit requested directly
+        const url = 'https://api.open-meteo.com/v1/forecast'
+          + `?latitude=${lat}&longitude=${lon}`
+          + '&hourly=temperature_2m,apparent_temperature,weather_code'
+          + '&temperature_unit=fahrenheit'
+          + '&wind_speed_unit=mph'
+          + '&timezone=auto'
+          + '&forecast_days=1';
+
+        const res  = await fetch(url);
+        const data = await res.json();
+        const { time, temperature_2m, apparent_temperature, weather_code } = data.hourly;
+
+        // Pick 9 am (morning) and 2 pm (afternoon) slots
+        const slots = [
+          { id: 'morning',   hour: 9,  label: 'This Morning'    },
+          { id: 'afternoon', hour: 14, label: 'This Afternoon'  },
+        ];
+
+        // Track afternoon data for walk suggestion
+        let afternoonCode = 99, afternoonTemp = 32;
+
+        slots.forEach(({ id, hour }) => {
+          const idx = findHourIndex(time, hour);
+          if (idx === -1) return;
+
+          const temp   = Math.round(temperature_2m[idx]);
+          const feels  = Math.round(apparent_temperature[idx]);
+          const code   = weather_code[idx];
+          const [desc, icon] = decodeWMO(code);
+
+          document.getElementById(`${id}-icon`).textContent  = icon;
+          document.getElementById(`${id}-temp`).textContent  = `${temp}°F`;
+          document.getElementById(`${id}-desc`).textContent  = desc;
+          document.getElementById(`${id}-feels`).textContent = `Feels like ${feels}°F`;
+
+          if (id === 'afternoon') { afternoonCode = code; afternoonTemp = temp; }
+        });
+
+        // Show forecast cards, hide spinner
+        document.getElementById('weather-loading').style.display = 'none';
+        document.getElementById('forecast-row').classList.add('loaded');
+
+        // Walk / rain suggestion based on afternoon forecast
+        if (isNiceForWalk(afternoonCode, afternoonTemp)) {
+          document.getElementById('walk-banner').classList.add('show');
+        } else {
+          document.getElementById('rain-banner').classList.add('show');
+        }
+
+        // Dim the sun on bad weather days
+        if (afternoonCode >= 51) {
+          document.querySelector('.sky').style.background =
+            'linear-gradient(180deg, #5d7a8a 0%, #8aaabb 50%, #b0bec5 100%)';
+          document.querySelector('.sun').style.opacity  = '0.2';
+          document.querySelector('.rays').style.opacity = '0.1';
+        }
+
+      } catch (err) {
+        document.getElementById('weather-loading').textContent =
+          'Weather unavailable — enjoy your day! ☀️';
+      }
+    }
+
+    loadWeather();
+  </script>
+</body>
+</html>
