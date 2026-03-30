@@ -643,6 +643,20 @@
       color: #ecf0f1;
     }
 
+    /* ── Location pill ── */
+    .location-display {
+      display: none;
+      font-size: 0.82rem;
+      color: #5a6a7a;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(100,140,180,0.25);
+      border-radius: 50px;
+      padding: 4px 14px;
+      margin: -10px auto 18px;
+      width: fit-content;
+      letter-spacing: 0.2px;
+    }
+
     .footer-note {
       font-size: 0.8rem;
       color: #aaa;
@@ -981,22 +995,23 @@
     <div class="sub-greeting">Hope you slept well — it's a brand new day.</div>
 
     <div class="date-pill" id="date-display">Loading date...</div>
+    <div class="location-display" id="location-display"></div>
 
     <div class="weather-loading" id="weather-loading">Fetching your local weather...</div>
 
     <div class="forecast-row" id="forecast-row">
       <div class="forecast-card">
+        <div class="fc-desc"  id="morning-desc">--</div>
         <div class="fc-label">This Morning</div>
         <div class="fc-icon"  id="morning-icon">🌤</div>
         <div class="fc-temp"  id="morning-temp">--°F</div>
-        <div class="fc-desc"  id="morning-desc">--</div>
         <div class="fc-feels" id="morning-feels">Feels like --°F</div>
       </div>
       <div class="forecast-card">
+        <div class="fc-desc"  id="afternoon-desc">--</div>
         <div class="fc-label">This Afternoon</div>
         <div class="fc-icon"  id="afternoon-icon">🌤</div>
         <div class="fc-temp"  id="afternoon-temp">--°F</div>
-        <div class="fc-desc"  id="afternoon-desc">--</div>
         <div class="fc-feels" id="afternoon-feels">Feels like --°F</div>
       </div>
     </div>
@@ -1038,9 +1053,13 @@
           51: ['Light drizzle',      '🌦'],
           53: ['Moderate drizzle',   '🌦'],
           55: ['Dense drizzle',      '🌧'],
+          56: ['Light freezing drizzle', '🌦'],
+          57: ['Heavy freezing drizzle', '🌧'],
           61: ['Slight rain',        '🌧'],
           63: ['Moderate rain',      '🌧'],
           65: ['Heavy rain',         '🌧'],
+          66: ['Light freezing rain','🌧'],
+          67: ['Heavy freezing rain','🌧'],
           71: ['Slight snow',        '🌨'],
           73: ['Moderate snow',      '🌨'],
           75: ['Heavy snow',         '❄️'],
@@ -1138,6 +1157,12 @@
       }
 
       // ── Scene name from WMO code + optional wind speed ───────────────────────
+      // Full WMO code coverage per Open-Meteo docs:
+      // 0=clear, 1=mainly clear, 2=partly cloudy, 3=overcast
+      // 45/48=fog, 51/53/55=drizzle, 56/57=freezing drizzle
+      // 61/63/65=rain, 66/67=freezing rain
+      // 71/73/75=snow, 77=snow grains, 80/81/82=showers
+      // 85/86=snow showers, 95/96/99=thunderstorm
       function getScene(wmoCode, windSpeedMph) {
         if (wmoCode === 0) return 'sunny';
         if (wmoCode === 1 || wmoCode === 2) {
@@ -1146,15 +1171,45 @@
         }
         if (wmoCode === 3) return 'overcast';
         if (wmoCode === 45 || wmoCode === 48) return 'fog';
-        if (wmoCode >= 51 && wmoCode <= 55) return 'light-rain';
+        // Drizzle (light & freezing)
+        if (wmoCode === 51 || wmoCode === 53 || wmoCode === 56) return 'light-rain';
+        if (wmoCode === 55 || wmoCode === 57) return 'light-rain';
+        // Rain
         if (wmoCode === 61) return 'light-rain';
-        if (wmoCode >= 62 && wmoCode <= 65) return 'heavy-rain';
+        if (wmoCode === 63 || wmoCode === 65) return 'heavy-rain';
+        // Freezing rain
+        if (wmoCode === 66) return 'light-rain';
+        if (wmoCode === 67) return 'heavy-rain';
+        // Snow
         if (wmoCode >= 71 && wmoCode <= 77) return 'snow';
+        // Rain showers
         if (wmoCode === 80) return 'light-rain';
-        if (wmoCode === 81 || wmoCode === 82) return 'heavy-rain';
+        if (wmoCode === 81) return 'heavy-rain';
+        if (wmoCode === 82) return 'storm';          // violent showers → storm scene
+        // Snow showers
         if (wmoCode === 85 || wmoCode === 86) return 'snow';
+        // Thunderstorm
         if (wmoCode >= 95) return 'storm';
         return 'sunny';
+      }
+
+      // ── Reverse-geocode lat/lon → city name (Nominatim) ─────────────────────
+      async function reverseGeocode(lat, lon) {
+        try {
+          const r = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`,
+            { headers: { 'Accept-Language': 'en' } }
+          );
+          const d = await r.json();
+          return (
+            d.address?.city      ||
+            d.address?.town      ||
+            d.address?.village   ||
+            d.address?.suburb    ||
+            d.address?.county    ||
+            ''
+          );
+        } catch (_) { return ''; }
       }
 
       // ── Geolocation: GPS → IP fallback → London ──────────────────────────────
@@ -1175,7 +1230,12 @@
           if (!navigator.geolocation) { ipFallback(); return; }
 
           navigator.geolocation.getCurrentPosition(
-            (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude, city: '' }),
+            async (pos) => {
+              const lat  = pos.coords.latitude;
+              const lon  = pos.coords.longitude;
+              const city = await reverseGeocode(lat, lon);
+              resolve({ lat, lon, city });
+            },
             () => ipFallback(),
             { timeout: 6000, maximumAge: 300000 }
           );
@@ -1201,7 +1261,16 @@
       // ── Main weather loader ───────────────────────────────────────────────────
       async function loadWeather() {
         try {
-          const { lat, lon } = await getLocation();
+          const { lat, lon, city } = await getLocation();
+
+          // Show detected location on the card
+          if (city) {
+            const locEl = document.getElementById('location-display');
+            if (locEl) {
+              locEl.textContent = `📍 ${city}`;
+              locEl.style.display = 'block';
+            }
+          }
 
           const url = 'https://api.open-meteo.com/v1/forecast'
             + `?latitude=${lat}&longitude=${lon}`
