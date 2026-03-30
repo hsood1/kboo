@@ -39,9 +39,14 @@
       transition: background 2s ease;
     }
 
+    /* ── data-sky: sky background (cloud cover / time of day / fog / wind)
+       ── data-precip: precipitation overlay (rain / snow / storm)
+       These are independent layers — both can be active simultaneously.
+    ═══════════════════════════════════════════════ */
+
     /* Default / sunny */
-    body[data-scene="sunny"] .sky,
-    body:not([data-scene]) .sky {
+    body[data-sky="sunny"] .sky,
+    body:not([data-sky]) .sky {
       background: linear-gradient(180deg, #1a90d9 0%, #87ceeb 45%, #b8e4f9 75%, #fde68a 100%);
       animation: skyShift 12s ease-in-out infinite alternate;
     }
@@ -52,27 +57,44 @@
     }
 
     /* Partly cloudy */
-    body[data-scene="partly-cloudy"] .sky {
+    body[data-sky="partly-cloudy"] .sky {
       background: linear-gradient(180deg, #4aa3d9 0%, #a4d4ed 50%, #d0eaf8 80%, #f0f4c3 100%);
     }
 
-    /* Overcast */
-    body[data-scene="overcast"] .sky {
+    /* Overcast (no precip) */
+    body[data-sky="overcast"] .sky {
       background: linear-gradient(180deg, #7a8a9a 0%, #b0bec5 60%, #cfd8dc 100%);
     }
 
+    /* Fog */
+    body[data-sky="fog"] .sky {
+      background: linear-gradient(180deg, #c8cdd2 0%, #d8dde2 50%, #e8eaec 100%);
+    }
+
+    /* Windy */
+    body[data-sky="windy"] .sky {
+      background: linear-gradient(180deg, #4a7a9a 0%, #7aaabf 50%, #a8c8d8 100%);
+    }
+
+    /* Night */
+    body[data-sky="night"] .sky {
+      background: linear-gradient(180deg, #0a0e27 0%, #1a1f4e 50%, #2a2060 100%);
+    }
+
+    /* ── Precipitation overrides sky background ── */
+
     /* Light rain */
-    body[data-scene="light-rain"] .sky {
+    body[data-precip="light-rain"] .sky {
       background: linear-gradient(180deg, #5a6a7a 0%, #8a9aaa 50%, #b0bec5 100%);
     }
 
     /* Heavy rain */
-    body[data-scene="heavy-rain"] .sky {
+    body[data-precip="heavy-rain"] .sky {
       background: linear-gradient(180deg, #3a4a55 0%, #5a6a75 50%, #7a8a95 100%);
     }
 
     /* Storm */
-    body[data-scene="storm"] .sky {
+    body[data-precip="storm"] .sky {
       background: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 40%, #3d3050 100%);
       animation: stormFlicker 8s ease-in-out infinite;
     }
@@ -83,25 +105,12 @@
       98%            { filter: brightness(1.5); }
     }
 
-    /* Snow */
-    body[data-scene="snow"] .sky {
+    /* Snow — cool pale sky */
+    body[data-precip="snow"] .sky {
       background: linear-gradient(180deg, #c8d8e8 0%, #dde8f2 50%, #e8eef4 100%);
     }
 
-    /* Fog */
-    body[data-scene="fog"] .sky {
-      background: linear-gradient(180deg, #c8cdd2 0%, #d8dde2 50%, #e8eaec 100%);
-    }
-
-    /* Windy */
-    body[data-scene="windy"] .sky {
-      background: linear-gradient(180deg, #4a7a9a 0%, #7aaabf 50%, #a8c8d8 100%);
-    }
-
-    /* Night */
-    body[data-scene="night"] .sky {
-      background: linear-gradient(180deg, #0a0e27 0%, #1a1f4e 50%, #2a2060 100%);
-    }
+    /* (Night sky now handled by data-sky="night" above) */
 
     /* ═══════════════════════════════════════════════
        SUN
@@ -149,30 +158,31 @@
     .rays::after { transform: rotate(15deg); opacity: 0.6; }
     @keyframes spinRays { to { transform: translateX(-50%) rotate(360deg); } }
 
-    /* Sun visibility per scene */
-    body[data-scene="sunny"] .sun,
-    body:not([data-scene]) .sun        { opacity: 1; }
-    body[data-scene="partly-cloudy"] .sun { opacity: 0.85; }
-    body[data-scene="overcast"] .sun   { opacity: 0; }
-    body[data-scene="light-rain"] .sun { opacity: 0; }
-    body[data-scene="heavy-rain"] .sun { opacity: 0; }
-    body[data-scene="storm"] .sun      { opacity: 0; }
-    body[data-scene="snow"] .sun       { opacity: 0.2; }
-    body[data-scene="fog"] .sun        { opacity: 0; }
-    body[data-scene="windy"] .sun      { opacity: 0.7; }
-    body[data-scene="night"] .sun      { opacity: 0; }
+    /* Sun visibility — driven by data-sky */
+    body[data-sky="sunny"] .sun,
+    body:not([data-sky]) .sun             { opacity: 1; }
+    body[data-sky="partly-cloudy"] .sun   { opacity: 0.85; }
+    body[data-sky="overcast"] .sun        { opacity: 0; }
+    body[data-sky="fog"] .sun             { opacity: 0; }
+    body[data-sky="windy"] .sun           { opacity: 0.7; }
+    body[data-sky="night"] .sun           { opacity: 0; }
+    /* Precipitation hides the sun */
+    body[data-precip="light-rain"] .sun   { opacity: 0; }
+    body[data-precip="heavy-rain"] .sun   { opacity: 0; }
+    body[data-precip="storm"] .sun        { opacity: 0; }
+    body[data-precip="snow"] .sun         { opacity: 0.2; }
 
-    body[data-scene="sunny"] .rays,
-    body:not([data-scene]) .rays        { opacity: 1; }
-    body[data-scene="partly-cloudy"] .rays { opacity: 0.6; }
-    body[data-scene="overcast"] .rays   { opacity: 0; }
-    body[data-scene="light-rain"] .rays { opacity: 0; }
-    body[data-scene="heavy-rain"] .rays { opacity: 0; }
-    body[data-scene="storm"] .rays      { opacity: 0; }
-    body[data-scene="snow"] .rays       { opacity: 0; }
-    body[data-scene="fog"] .rays        { opacity: 0; }
-    body[data-scene="windy"] .rays      { opacity: 0.5; }
-    body[data-scene="night"] .rays      { opacity: 0; }
+    body[data-sky="sunny"] .rays,
+    body:not([data-sky]) .rays             { opacity: 1; }
+    body[data-sky="partly-cloudy"] .rays   { opacity: 0.6; }
+    body[data-sky="overcast"] .rays        { opacity: 0; }
+    body[data-sky="fog"] .rays             { opacity: 0; }
+    body[data-sky="windy"] .rays           { opacity: 0.5; }
+    body[data-sky="night"] .rays           { opacity: 0; }
+    body[data-precip="light-rain"] .rays   { opacity: 0; }
+    body[data-precip="heavy-rain"] .rays   { opacity: 0; }
+    body[data-precip="storm"] .rays        { opacity: 0; }
+    body[data-precip="snow"] .rays         { opacity: 0; }
 
     /* ═══════════════════════════════════════════════
        MOON (night scene)
@@ -202,7 +212,7 @@
       border-radius: 50%;
       background: #1a1f4e;
     }
-    body[data-scene="night"] .moon { opacity: 1; }
+    body[data-sky="night"] .moon { opacity: 1; }
 
     /* ═══════════════════════════════════════════════
        STARS (night)
@@ -215,7 +225,7 @@
       opacity: 0;
       transition: opacity 1.5s ease;
     }
-    body[data-scene="night"] .stars { opacity: 1; }
+    body[data-sky="night"] .stars { opacity: 1; }
 
     .star {
       position: absolute;
@@ -248,13 +258,14 @@
       border-radius: 50%;
     }
 
-    /* Overcast / rain clouds become grey */
-    body[data-scene="overcast"] .cloud,
-    body[data-scene="light-rain"] .cloud { background: rgba(180,190,200,0.92); filter: blur(3px); }
-    body[data-scene="heavy-rain"] .cloud { background: rgba(120,130,140,0.95); filter: blur(4px); }
-    body[data-scene="storm"] .cloud      { background: rgba(60,55,75,0.97);    filter: blur(5px); }
-    body[data-scene="fog"] .cloud        { opacity: 0; }
-    body[data-scene="night"] .cloud      { opacity: 0.15; }
+    /* Overcast / rain clouds become grey — driven independently by data-sky and data-precip */
+    body[data-sky="overcast"] .cloud,
+    body[data-precip="light-rain"] .cloud,
+    body[data-precip="snow"] .cloud      { background: rgba(180,190,200,0.92); filter: blur(3px); }
+    body[data-precip="heavy-rain"] .cloud { background: rgba(120,130,140,0.95); filter: blur(4px); }
+    body[data-precip="storm"] .cloud      { background: rgba(60,55,75,0.97);    filter: blur(5px); }
+    body[data-sky="fog"] .cloud           { opacity: 0; }
+    body[data-sky="night"] .cloud         { opacity: 0.15; }
 
     /* Cloud 1 — sunny scene: 3 clouds; overcast/rain scenes use more */
     .c1 { width:160px; height:45px; top:18%; left:-180px; animation: drift1 28s linear infinite; }
@@ -282,26 +293,28 @@
     .c6::before { width:120px; height:100px; top:-55px; left:35px; }
     .c6::after  { width:95px;  height:82px;  top:-44px; left:130px; }
 
-    /* Show extra clouds on heavy scenes */
-    body[data-scene="overcast"] .c4,
-    body[data-scene="overcast"] .c5,
-    body[data-scene="overcast"] .c6    { opacity: 0.9; }
-    body[data-scene="light-rain"] .c4,
-    body[data-scene="light-rain"] .c5  { opacity: 0.9; }
-    body[data-scene="heavy-rain"] .c4,
-    body[data-scene="heavy-rain"] .c5,
-    body[data-scene="heavy-rain"] .c6  { opacity: 1; }
-    body[data-scene="storm"] .c4,
-    body[data-scene="storm"] .c5,
-    body[data-scene="storm"] .c6       { opacity: 1; }
+    /* Show extra clouds when overcast sky or precipitation present */
+    body[data-sky="overcast"] .c4,
+    body[data-sky="overcast"] .c5,
+    body[data-sky="overcast"] .c6       { opacity: 0.9; }
+    body[data-precip="light-rain"] .c4,
+    body[data-precip="light-rain"] .c5  { opacity: 0.9; }
+    body[data-precip="snow"] .c4,
+    body[data-precip="snow"] .c5        { opacity: 0.8; }
+    body[data-precip="heavy-rain"] .c4,
+    body[data-precip="heavy-rain"] .c5,
+    body[data-precip="heavy-rain"] .c6  { opacity: 1; }
+    body[data-precip="storm"] .c4,
+    body[data-precip="storm"] .c5,
+    body[data-precip="storm"] .c6       { opacity: 1; }
 
     @keyframes drift1 { from { left: -280px; } to { left: 110vw; } }
     @keyframes drift2 { from { left: -200px; } to { left: 110vw; } }
 
     /* Fast windy clouds */
-    body[data-scene="windy"] .c1 { animation: drift1 8s linear infinite; }
-    body[data-scene="windy"] .c2 { animation: drift2 10s linear infinite 1s; }
-    body[data-scene="windy"] .c3 { animation: drift1 12s linear infinite 3s; }
+    body[data-sky="windy"] .c1 { animation: drift1 8s linear infinite; }
+    body[data-sky="windy"] .c2 { animation: drift2 10s linear infinite 1s; }
+    body[data-sky="windy"] .c3 { animation: drift1 12s linear infinite 3s; }
 
     /* ═══════════════════════════════════════════════
        BIRDS
@@ -332,13 +345,13 @@
     @keyframes birdFly { to { left: 110vw; } }
 
     /* Faster birds in windy scene */
-    body[data-scene="windy"] .birds { animation: birdFly 10s linear infinite; }
+    body[data-sky="windy"] .birds { animation: birdFly 10s linear infinite; }
 
     /* Hide birds in bad weather */
-    body[data-scene="heavy-rain"] .birds,
-    body[data-scene="storm"] .birds,
-    body[data-scene="snow"] .birds,
-    body[data-scene="night"] .birds { opacity: 0; pointer-events: none; }
+    body[data-precip="heavy-rain"] .birds,
+    body[data-precip="storm"] .birds,
+    body[data-precip="snow"] .birds,
+    body[data-sky="night"] .birds { opacity: 0; pointer-events: none; }
 
     /* ═══════════════════════════════════════════════
        GRASS
@@ -353,12 +366,12 @@
       z-index: 1;
       transition: background 1.5s ease;
     }
-    body[data-scene="overcast"] .grass  { background: linear-gradient(180deg, #7a9a6a 0%, #5a7a4a 100%); }
-    body[data-scene="light-rain"] .grass { background: linear-gradient(180deg, #6a8a5a 0%, #4a6a3a 100%); }
-    body[data-scene="heavy-rain"] .grass { background: linear-gradient(180deg, #5a7a4a 0%, #3a5a2a 100%); }
-    body[data-scene="storm"] .grass     { background: linear-gradient(180deg, #4a5a3a 0%, #2a3a1a 100%); }
-    body[data-scene="fog"] .grass       { background: linear-gradient(180deg, #8a9a8a 0%, #6a7a6a 100%); opacity: 0.6; }
-    body[data-scene="windy"] .grass     { background: linear-gradient(180deg, #5abf3b 0%, #3a8a1a 100%); }
+    body[data-sky="overcast"] .grass    { background: linear-gradient(180deg, #7a9a6a 0%, #5a7a4a 100%); }
+    body[data-precip="light-rain"] .grass { background: linear-gradient(180deg, #6a8a5a 0%, #4a6a3a 100%); }
+    body[data-precip="heavy-rain"] .grass { background: linear-gradient(180deg, #5a7a4a 0%, #3a5a2a 100%); }
+    body[data-precip="storm"] .grass    { background: linear-gradient(180deg, #4a5a3a 0%, #2a3a1a 100%); }
+    body[data-sky="fog"] .grass         { background: linear-gradient(180deg, #8a9a8a 0%, #6a7a6a 100%); opacity: 0.6; }
+    body[data-sky="windy"] .grass       { background: linear-gradient(180deg, #5abf3b 0%, #3a8a1a 100%); }
 
     /* Snow — white ground */
     .snow-ground {
@@ -372,8 +385,8 @@
       opacity: 0;
       transition: opacity 1s ease;
     }
-    body[data-scene="snow"] .snow-ground { opacity: 1; }
-    body[data-scene="snow"] .grass       { opacity: 0; }
+    body[data-precip="snow"] .snow-ground { opacity: 1; }
+    body[data-precip="snow"] .grass       { opacity: 0; }
 
     /* ═══════════════════════════════════════════════
        RAIN
@@ -396,7 +409,7 @@
     }
 
     /* Light rain: thinner, slower, fewer visible */
-    body[data-scene="light-rain"] .raindrop {
+    body[data-precip="light-rain"] .raindrop {
       opacity: 1;
       background: linear-gradient(180deg, rgba(174,214,241,0) 0%, rgba(130,180,210,0.7) 100%);
       height: 18px;
@@ -404,7 +417,7 @@
     }
 
     /* Heavy rain: thicker, faster */
-    body[data-scene="heavy-rain"] .raindrop {
+    body[data-precip="heavy-rain"] .raindrop {
       opacity: 1;
       background: linear-gradient(180deg, rgba(100,130,160,0) 0%, rgba(80,110,140,0.85) 100%);
       height: 28px;
@@ -412,7 +425,7 @@
     }
 
     /* Storm: darkest, most dramatic */
-    body[data-scene="storm"] .raindrop {
+    body[data-precip="storm"] .raindrop {
       opacity: 1;
       background: linear-gradient(180deg, rgba(60,80,100,0) 0%, rgba(50,70,90,0.9) 100%);
       height: 32px;
@@ -442,9 +455,9 @@
       0%, 100% { transform: scaleX(1);   opacity: 0.3; }
       50%       { transform: scaleX(1.05); opacity: 0.5; }
     }
-    body[data-scene="light-rain"] .puddle,
-    body[data-scene="heavy-rain"] .puddle,
-    body[data-scene="storm"] .puddle { opacity: 0.3; }
+    body[data-precip="light-rain"] .puddle,
+    body[data-precip="heavy-rain"] .puddle,
+    body[data-precip="storm"] .puddle { opacity: 0.3; }
 
     /* ═══════════════════════════════════════════════
        LIGHTNING
@@ -466,7 +479,7 @@
       94%            { opacity: 0; }
     }
     /* Only visible in storm */
-    body:not([data-scene="storm"]) .lightning-overlay { display: none; }
+    body:not([data-precip="storm"]) .lightning-overlay { display: none; }
 
     /* ═══════════════════════════════════════════════
        SNOWFLAKES
@@ -484,11 +497,15 @@
       top: -30px;
       font-size: var(--size, 1rem);
       opacity: 0;
-      animation: fallSnow var(--dur, 4s) linear infinite var(--delay, 0s);
+      animation: none; /* animation is off by default — only runs when forecast is actually snowing */
       color: rgba(220,235,255,0.9);
       user-select: none;
     }
-    body[data-scene="snow"] .snowflake { opacity: 1; }
+    /* Only animate AND show snowflakes when precip is actually snow */
+    body[data-precip="snow"] .snowflake {
+      opacity: 1;
+      animation: fallSnow var(--dur, 4s) linear infinite var(--delay, 0s);
+    }
 
     @keyframes fallSnow {
       0%   { top: -30px;  transform: translateX(0) rotate(0deg);  opacity: 0.8; }
@@ -515,7 +532,7 @@
     .fog2 { top: 40%; animation: fogDrift2 32s ease-in-out infinite 8s; height: 150px; background: rgba(210,215,220,0.5); }
     .fog3 { top: 60%; animation: fogDrift1 20s ease-in-out infinite 4s; height: 100px; background: rgba(230,233,236,0.6); }
 
-    body[data-scene="fog"] .fog-layer { opacity: 1; }
+    body[data-sky="fog"] .fog-layer { opacity: 1; }
 
     @keyframes fogDrift1 {
       0%, 100% { transform: translateX(0); }
@@ -1156,41 +1173,49 @@
         };
       }
 
-      // ── Scene name from WMO code + optional wind speed ───────────────────────
+      // ── Weather layers from WMO code + optional wind speed ──────────────────
+      // Returns { sky, precip } as independent layers.
+      // sky   = background sky condition (sunny | partly-cloudy | overcast | fog | windy | night)
+      // precip = precipitation overlay   ('' | light-rain | heavy-rain | storm | snow)
+      //
       // Full WMO code coverage per Open-Meteo docs:
       // 0=clear, 1=mainly clear, 2=partly cloudy, 3=overcast
       // 45/48=fog, 51/53/55=drizzle, 56/57=freezing drizzle
       // 61/63/65=rain, 66/67=freezing rain
       // 71/73/75=snow, 77=snow grains, 80/81/82=showers
       // 85/86=snow showers, 95/96/99=thunderstorm
-      function getScene(wmoCode, windSpeedMph) {
-        if (wmoCode === 0) return 'sunny';
+      function getWeatherLayers(wmoCode, windSpeedMph) {
+        // Sunny / clear
+        if (wmoCode === 0) return { sky: 'sunny', precip: '' };
+        // Partly cloudy / mainly clear
         if (wmoCode === 1 || wmoCode === 2) {
-          if (windSpeedMph && windSpeedMph > 25) return 'windy';
-          return 'partly-cloudy';
+          const sky = (windSpeedMph && windSpeedMph > 25) ? 'windy' : 'partly-cloudy';
+          return { sky, precip: '' };
         }
-        if (wmoCode === 3) return 'overcast';
-        if (wmoCode === 45 || wmoCode === 48) return 'fog';
+        // Overcast, no precipitation
+        if (wmoCode === 3) return { sky: 'overcast', precip: '' };
+        // Fog
+        if (wmoCode === 45 || wmoCode === 48) return { sky: 'fog', precip: '' };
         // Drizzle (light & freezing)
-        if (wmoCode === 51 || wmoCode === 53 || wmoCode === 56) return 'light-rain';
-        if (wmoCode === 55 || wmoCode === 57) return 'light-rain';
+        if (wmoCode === 51 || wmoCode === 53 || wmoCode === 56) return { sky: 'overcast', precip: 'light-rain' };
+        if (wmoCode === 55 || wmoCode === 57) return { sky: 'overcast', precip: 'light-rain' };
         // Rain
-        if (wmoCode === 61) return 'light-rain';
-        if (wmoCode === 63 || wmoCode === 65) return 'heavy-rain';
+        if (wmoCode === 61) return { sky: 'overcast', precip: 'light-rain' };
+        if (wmoCode === 63 || wmoCode === 65) return { sky: 'overcast', precip: 'heavy-rain' };
         // Freezing rain
-        if (wmoCode === 66) return 'light-rain';
-        if (wmoCode === 67) return 'heavy-rain';
+        if (wmoCode === 66) return { sky: 'overcast', precip: 'light-rain' };
+        if (wmoCode === 67) return { sky: 'overcast', precip: 'heavy-rain' };
         // Snow
-        if (wmoCode >= 71 && wmoCode <= 77) return 'snow';
+        if (wmoCode >= 71 && wmoCode <= 77) return { sky: 'overcast', precip: 'snow' };
         // Rain showers
-        if (wmoCode === 80) return 'light-rain';
-        if (wmoCode === 81) return 'heavy-rain';
-        if (wmoCode === 82) return 'storm';          // violent showers → storm scene
+        if (wmoCode === 80) return { sky: 'overcast', precip: 'light-rain' };
+        if (wmoCode === 81) return { sky: 'overcast', precip: 'heavy-rain' };
+        if (wmoCode === 82) return { sky: 'overcast', precip: 'storm' };  // violent showers
         // Snow showers
-        if (wmoCode === 85 || wmoCode === 86) return 'snow';
+        if (wmoCode === 85 || wmoCode === 86) return { sky: 'overcast', precip: 'snow' };
         // Thunderstorm
-        if (wmoCode >= 95) return 'storm';
-        return 'sunny';
+        if (wmoCode >= 95) return { sky: 'overcast', precip: 'storm' };
+        return { sky: 'sunny', precip: '' };
       }
 
       // ── Reverse-geocode lat/lon → city name (Nominatim) ─────────────────────
@@ -1327,9 +1352,15 @@
           const refCode = currentHour < 11 ? morningCode : afternoonCode;
           const refWind = currentHour < 11 ? morningWind : afternoonWind;
 
-          // Set weather scene — only shows snow/rain etc. if forecast actually expects it
-          const scene = getScene(refCode, refWind);
-          document.body.dataset.scene = scene;
+          // Set independent weather layers — sky background and precipitation are separate elements.
+          // Snow/rain only appear if the forecast actually expects them.
+          const { sky, precip } = getWeatherLayers(refCode, refWind);
+          document.body.dataset.sky = sky;
+          if (precip) {
+            document.body.dataset.precip = precip;
+          } else {
+            delete document.body.dataset.precip;
+          }
 
           // Show suggestion banner based on relevant forecast period
           const { icon, text, style } = getSuggestion(refCode);
