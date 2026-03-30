@@ -1044,8 +1044,8 @@
 
     <div class="loc-switcher">
       <button class="loc-btn active" id="btn-current"    onclick="switchLocation('current')">📍 Current</button>
-      <button class="loc-btn"        id="btn-sandiego"   onclick="switchLocation('sandiego')">🌴 San Diego</button>
-      <button class="loc-btn"        id="btn-schaumburg" onclick="switchLocation('schaumburg')">🏘 Schaumburg</button>
+      <button class="loc-btn"        id="btn-sandiego"   onclick="switchLocation('sandiego')">🌴 Poway</button>
+      <button class="loc-btn"        id="btn-schaumburg" onclick="switchLocation('schaumburg')">🏙️ Schaumburg</button>
     </div>
 
     <div class="weather-loading" id="weather-loading">Fetching your local weather...</div>
@@ -1319,7 +1319,7 @@
 
       // ── Fixed location coords ────────────────────────────────────────────────
       const LOCATIONS = {
-        sandiego:   { lat: 32.7157, lon: -117.1611, city: 'San Diego' },
+        sandiego:   { lat: 32.9728, lon: -117.0359, city: 'Poway' },
         schaumburg: { lat: 42.0334, lon: -88.0834,  city: 'Schaumburg' },
       };
       let _currentCoords = null; // cached GPS/IP coords
