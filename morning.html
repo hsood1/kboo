@@ -322,10 +322,12 @@
     .birds {
       position: fixed;
       top: 22%;
-      left: -60px;
+      left: 0;
       z-index: 4;
+      transform: translateX(-200px);
       animation: birdFly 35s linear infinite 8s;
       transition: opacity 1s;
+      will-change: transform;
     }
     .bird {
       width: 28px;
@@ -342,7 +344,10 @@
       0%   { transform: scaleY(1); }
       100% { transform: scaleY(-0.4); }
     }
-    @keyframes birdFly { to { left: 110vw; } }
+    @keyframes birdFly {
+      from { transform: translateX(-200px); }
+      to   { transform: translateX(115vw); }
+    }
 
     /* Faster birds in windy scene */
     body[data-sky="windy"] .birds { animation: birdFly 10s linear infinite; }
