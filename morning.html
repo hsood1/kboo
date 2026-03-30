@@ -9,8 +9,8 @@
 
     body {
       font-family: 'Georgia', serif;
-      min-height: 100vh;
-      overflow: hidden;
+      min-height: 100dvh;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -18,21 +18,94 @@
       position: relative;
     }
 
-    /* ── Sky background ── */
+    @media (max-width: 600px) {
+      body {
+        justify-content: flex-end;
+        padding-top: 44vh;
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+      }
+      .card {
+        margin-bottom: 0;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════
+       SKY LAYER (fixed background)
+    ═══════════════════════════════════════════════ */
     .sky {
       position: fixed;
       inset: 0;
-      background: linear-gradient(180deg, #87ceeb 0%, #b8e4f9 50%, #fde68a 100%);
-      animation: skyShift 12s ease-in-out infinite alternate;
       z-index: 0;
-    }
-    @keyframes skyShift {
-      0%   { background: linear-gradient(180deg, #87ceeb 0%, #b8e4f9 55%, #fde68a 100%); }
-      50%  { background: linear-gradient(180deg, #56b4e9 0%, #9dd9f3 50%, #f9c74f 100%); }
-      100% { background: linear-gradient(180deg, #87ceeb 0%, #b8e4f9 55%, #ffe5a0 100%); }
+      transition: background 2s ease;
     }
 
-    /* ── Sun ── */
+    /* Default / sunny */
+    body[data-scene="sunny"] .sky,
+    body:not([data-scene]) .sky {
+      background: linear-gradient(180deg, #1a90d9 0%, #87ceeb 45%, #b8e4f9 75%, #fde68a 100%);
+      animation: skyShift 12s ease-in-out infinite alternate;
+    }
+    @keyframes skyShift {
+      0%   { background: linear-gradient(180deg, #1a90d9 0%, #87ceeb 45%, #b8e4f9 75%, #fde68a 100%); }
+      50%  { background: linear-gradient(180deg, #1480c8 0%, #56b4e9 40%, #9dd9f3 70%, #f9c74f 100%); }
+      100% { background: linear-gradient(180deg, #1a90d9 0%, #87ceeb 45%, #b8e4f9 75%, #ffe5a0 100%); }
+    }
+
+    /* Partly cloudy */
+    body[data-scene="partly-cloudy"] .sky {
+      background: linear-gradient(180deg, #4aa3d9 0%, #a4d4ed 50%, #d0eaf8 80%, #f0f4c3 100%);
+    }
+
+    /* Overcast */
+    body[data-scene="overcast"] .sky {
+      background: linear-gradient(180deg, #7a8a9a 0%, #b0bec5 60%, #cfd8dc 100%);
+    }
+
+    /* Light rain */
+    body[data-scene="light-rain"] .sky {
+      background: linear-gradient(180deg, #5a6a7a 0%, #8a9aaa 50%, #b0bec5 100%);
+    }
+
+    /* Heavy rain */
+    body[data-scene="heavy-rain"] .sky {
+      background: linear-gradient(180deg, #3a4a55 0%, #5a6a75 50%, #7a8a95 100%);
+    }
+
+    /* Storm */
+    body[data-scene="storm"] .sky {
+      background: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 40%, #3d3050 100%);
+      animation: stormFlicker 8s ease-in-out infinite;
+    }
+    @keyframes stormFlicker {
+      0%, 95%, 100% { filter: brightness(1); }
+      96%            { filter: brightness(1.3); }
+      97%            { filter: brightness(1); }
+      98%            { filter: brightness(1.5); }
+    }
+
+    /* Snow */
+    body[data-scene="snow"] .sky {
+      background: linear-gradient(180deg, #c8d8e8 0%, #dde8f2 50%, #e8eef4 100%);
+    }
+
+    /* Fog */
+    body[data-scene="fog"] .sky {
+      background: linear-gradient(180deg, #c8cdd2 0%, #d8dde2 50%, #e8eaec 100%);
+    }
+
+    /* Windy */
+    body[data-scene="windy"] .sky {
+      background: linear-gradient(180deg, #4a7a9a 0%, #7aaabf 50%, #a8c8d8 100%);
+    }
+
+    /* Night */
+    body[data-scene="night"] .sky {
+      background: linear-gradient(180deg, #0a0e27 0%, #1a1f4e 50%, #2a2060 100%);
+    }
+
+    /* ═══════════════════════════════════════════════
+       SUN
+    ═══════════════════════════════════════════════ */
     .sun {
       position: fixed;
       top: 8%;
@@ -44,14 +117,14 @@
       background: radial-gradient(circle, #fff7a1 30%, #f9c74f 70%, #f4a226 100%);
       box-shadow: 0 0 60px 30px rgba(249,199,79,0.5), 0 0 120px 60px rgba(249,199,79,0.2);
       animation: sunPulse 4s ease-in-out infinite;
-      z-index: 1;
+      z-index: 2;
+      transition: opacity 1.5s ease, transform 1.5s ease;
     }
     @keyframes sunPulse {
       0%, 100% { box-shadow: 0 0 60px 30px rgba(249,199,79,0.5), 0 0 120px 60px rgba(249,199,79,0.2); }
       50%       { box-shadow: 0 0 80px 40px rgba(249,199,79,0.7), 0 0 160px 80px rgba(249,199,79,0.3); }
     }
 
-    /* ── Sun rays ── */
     .rays {
       position: fixed;
       top: calc(8% - 20px);
@@ -60,7 +133,8 @@
       width: 130px;
       height: 130px;
       animation: spinRays 18s linear infinite;
-      z-index: 1;
+      z-index: 2;
+      transition: opacity 1.5s ease;
     }
     .rays::before, .rays::after {
       content: '';
@@ -75,20 +149,114 @@
     .rays::after { transform: rotate(15deg); opacity: 0.6; }
     @keyframes spinRays { to { transform: translateX(-50%) rotate(360deg); } }
 
-    /* ── Clouds ── */
+    /* Sun visibility per scene */
+    body[data-scene="sunny"] .sun,
+    body:not([data-scene]) .sun        { opacity: 1; }
+    body[data-scene="partly-cloudy"] .sun { opacity: 0.85; }
+    body[data-scene="overcast"] .sun   { opacity: 0; }
+    body[data-scene="light-rain"] .sun { opacity: 0; }
+    body[data-scene="heavy-rain"] .sun { opacity: 0; }
+    body[data-scene="storm"] .sun      { opacity: 0; }
+    body[data-scene="snow"] .sun       { opacity: 0.2; }
+    body[data-scene="fog"] .sun        { opacity: 0; }
+    body[data-scene="windy"] .sun      { opacity: 0.7; }
+    body[data-scene="night"] .sun      { opacity: 0; }
+
+    body[data-scene="sunny"] .rays,
+    body:not([data-scene]) .rays        { opacity: 1; }
+    body[data-scene="partly-cloudy"] .rays { opacity: 0.6; }
+    body[data-scene="overcast"] .rays   { opacity: 0; }
+    body[data-scene="light-rain"] .rays { opacity: 0; }
+    body[data-scene="heavy-rain"] .rays { opacity: 0; }
+    body[data-scene="storm"] .rays      { opacity: 0; }
+    body[data-scene="snow"] .rays       { opacity: 0; }
+    body[data-scene="fog"] .rays        { opacity: 0; }
+    body[data-scene="windy"] .rays      { opacity: 0.5; }
+    body[data-scene="night"] .rays      { opacity: 0; }
+
+    /* ═══════════════════════════════════════════════
+       MOON (night scene)
+    ═══════════════════════════════════════════════ */
+    .moon {
+      position: fixed;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #f0e68c;
+      box-shadow: 0 0 30px 15px rgba(240,230,140,0.3);
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    /* crescent cut-out */
+    .moon::after {
+      content: '';
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #1a1f4e;
+    }
+    body[data-scene="night"] .moon { opacity: 1; }
+
+    /* ═══════════════════════════════════════════════
+       STARS (night)
+    ═══════════════════════════════════════════════ */
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    body[data-scene="night"] .stars { opacity: 1; }
+
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50%       { opacity: 1;   transform: scale(1.3); }
+    }
+
+    /* ═══════════════════════════════════════════════
+       CLOUDS
+    ═══════════════════════════════════════════════ */
     .cloud {
       position: fixed;
-      background: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.9);
       border-radius: 50px;
-      z-index: 1;
+      z-index: 3;
       filter: blur(2px);
+      transition: opacity 1.5s ease, filter 1.5s ease, background 1.5s ease;
     }
     .cloud::before, .cloud::after {
       content: '';
       position: absolute;
-      background: rgba(255,255,255,0.88);
+      background: inherit;
       border-radius: 50%;
     }
+
+    /* Overcast / rain clouds become grey */
+    body[data-scene="overcast"] .cloud,
+    body[data-scene="light-rain"] .cloud { background: rgba(180,190,200,0.92); filter: blur(3px); }
+    body[data-scene="heavy-rain"] .cloud { background: rgba(120,130,140,0.95); filter: blur(4px); }
+    body[data-scene="storm"] .cloud      { background: rgba(60,55,75,0.97);    filter: blur(5px); }
+    body[data-scene="fog"] .cloud        { opacity: 0; }
+    body[data-scene="night"] .cloud      { opacity: 0.15; }
+
+    /* Cloud 1 — sunny scene: 3 clouds; overcast/rain scenes use more */
     .c1 { width:160px; height:45px; top:18%; left:-180px; animation: drift1 28s linear infinite; }
     .c1::before { width:80px; height:70px; top:-35px; left:20px; }
     .c1::after  { width:60px; height:55px; top:-28px; left:70px; }
@@ -101,24 +269,56 @@
     .c3::before { width:90px; height:80px; top:-42px; left:25px; }
     .c3::after  { width:75px; height:65px; top:-34px; left:90px; }
 
-    @keyframes drift1 { to { left: 110vw; } }
-    @keyframes drift2 { to { left: 110vw; } }
+    /* Extra clouds for overcast/rain/storm */
+    .c4 { width:240px; height:60px; top:8%;  left:-260px; animation: drift1 34s linear infinite 2s; opacity:0; }
+    .c4::before { width:100px; height:85px; top:-45px; left:30px; }
+    .c4::after  { width:80px;  height:70px; top:-36px; left:110px; }
 
-    /* ── Birds ── */
+    .c5 { width:180px; height:50px; top:22%; left:-200px; animation: drift2 42s linear infinite 8s; opacity:0; }
+    .c5::before { width:85px; height:75px; top:-40px; left:22px; }
+    .c5::after  { width:70px; height:60px; top:-32px; left:85px; }
+
+    .c6 { width:280px; height:70px; top:5%;  left:-300px; animation: drift1 25s linear infinite 1s; opacity:0; }
+    .c6::before { width:120px; height:100px; top:-55px; left:35px; }
+    .c6::after  { width:95px;  height:82px;  top:-44px; left:130px; }
+
+    /* Show extra clouds on heavy scenes */
+    body[data-scene="overcast"] .c4,
+    body[data-scene="overcast"] .c5,
+    body[data-scene="overcast"] .c6    { opacity: 0.9; }
+    body[data-scene="light-rain"] .c4,
+    body[data-scene="light-rain"] .c5  { opacity: 0.9; }
+    body[data-scene="heavy-rain"] .c4,
+    body[data-scene="heavy-rain"] .c5,
+    body[data-scene="heavy-rain"] .c6  { opacity: 1; }
+    body[data-scene="storm"] .c4,
+    body[data-scene="storm"] .c5,
+    body[data-scene="storm"] .c6       { opacity: 1; }
+
+    @keyframes drift1 { from { left: -280px; } to { left: 110vw; } }
+    @keyframes drift2 { from { left: -200px; } to { left: 110vw; } }
+
+    /* Fast windy clouds */
+    body[data-scene="windy"] .c1 { animation: drift1 8s linear infinite; }
+    body[data-scene="windy"] .c2 { animation: drift2 10s linear infinite 1s; }
+    body[data-scene="windy"] .c3 { animation: drift1 12s linear infinite 3s; }
+
+    /* ═══════════════════════════════════════════════
+       BIRDS
+    ═══════════════════════════════════════════════ */
     .birds {
       position: fixed;
       top: 22%;
       left: -60px;
-      z-index: 2;
+      z-index: 4;
       animation: birdFly 35s linear infinite 8s;
+      transition: opacity 1s;
     }
     .bird {
       width: 28px;
       height: 8px;
       border-top: 3px solid rgba(80,80,100,0.6);
       border-radius: 50% 50% 0 0;
-      border-left: none;
-      border-right: none;
       display: inline-block;
       margin: 0 4px;
       animation: flapWings 0.6s ease-in-out infinite alternate;
@@ -131,7 +331,18 @@
     }
     @keyframes birdFly { to { left: 110vw; } }
 
-    /* ── Grass strip ── */
+    /* Faster birds in windy scene */
+    body[data-scene="windy"] .birds { animation: birdFly 10s linear infinite; }
+
+    /* Hide birds in bad weather */
+    body[data-scene="heavy-rain"] .birds,
+    body[data-scene="storm"] .birds,
+    body[data-scene="snow"] .birds,
+    body[data-scene="night"] .birds { opacity: 0; pointer-events: none; }
+
+    /* ═══════════════════════════════════════════════
+       GRASS
+    ═══════════════════════════════════════════════ */
     .grass {
       position: fixed;
       bottom: 0;
@@ -140,9 +351,184 @@
       background: linear-gradient(180deg, #6abf4b 0%, #4e9a32 100%);
       border-radius: 60% 60% 0 0 / 30% 30% 0 0;
       z-index: 1;
+      transition: background 1.5s ease;
+    }
+    body[data-scene="overcast"] .grass  { background: linear-gradient(180deg, #7a9a6a 0%, #5a7a4a 100%); }
+    body[data-scene="light-rain"] .grass { background: linear-gradient(180deg, #6a8a5a 0%, #4a6a3a 100%); }
+    body[data-scene="heavy-rain"] .grass { background: linear-gradient(180deg, #5a7a4a 0%, #3a5a2a 100%); }
+    body[data-scene="storm"] .grass     { background: linear-gradient(180deg, #4a5a3a 0%, #2a3a1a 100%); }
+    body[data-scene="fog"] .grass       { background: linear-gradient(180deg, #8a9a8a 0%, #6a7a6a 100%); opacity: 0.6; }
+    body[data-scene="windy"] .grass     { background: linear-gradient(180deg, #5abf3b 0%, #3a8a1a 100%); }
+
+    /* Snow — white ground */
+    .snow-ground {
+      position: fixed;
+      bottom: 0;
+      left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(180deg, #e8eef4 0%, #f0f4f8 100%);
+      border-radius: 60% 60% 0 0 / 30% 30% 0 0;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    body[data-scene="snow"] .snow-ground { opacity: 1; }
+    body[data-scene="snow"] .grass       { opacity: 0; }
+
+    /* ═══════════════════════════════════════════════
+       RAIN
+    ═══════════════════════════════════════════════ */
+    .rain-container {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      overflow: hidden;
     }
 
-    /* ── Card ── */
+    .raindrop {
+      position: absolute;
+      top: -20px;
+      width: 2px;
+      border-radius: 2px;
+      opacity: 0;
+      animation: fallRain var(--dur, 1s) linear infinite var(--delay, 0s);
+    }
+
+    /* Light rain: thinner, slower, fewer visible */
+    body[data-scene="light-rain"] .raindrop {
+      opacity: 1;
+      background: linear-gradient(180deg, rgba(174,214,241,0) 0%, rgba(130,180,210,0.7) 100%);
+      height: 18px;
+      width: 1.5px;
+    }
+
+    /* Heavy rain: thicker, faster */
+    body[data-scene="heavy-rain"] .raindrop {
+      opacity: 1;
+      background: linear-gradient(180deg, rgba(100,130,160,0) 0%, rgba(80,110,140,0.85) 100%);
+      height: 28px;
+      width: 2px;
+    }
+
+    /* Storm: darkest, most dramatic */
+    body[data-scene="storm"] .raindrop {
+      opacity: 1;
+      background: linear-gradient(180deg, rgba(60,80,100,0) 0%, rgba(50,70,90,0.9) 100%);
+      height: 32px;
+      width: 2px;
+    }
+
+    @keyframes fallRain {
+      0%   { top: -30px;  transform: translateX(0); }
+      100% { top: 110vh;  transform: translateX(-15px); }
+    }
+
+    /* Puddle shimmer at bottom */
+    .puddle {
+      position: fixed;
+      bottom: 60px;
+      left: 10%;
+      right: 10%;
+      height: 8px;
+      background: rgba(130,180,220,0.3);
+      border-radius: 50%;
+      z-index: 6;
+      opacity: 0;
+      animation: puddle 2s ease-in-out infinite;
+      transition: opacity 1s;
+    }
+    @keyframes puddle {
+      0%, 100% { transform: scaleX(1);   opacity: 0.3; }
+      50%       { transform: scaleX(1.05); opacity: 0.5; }
+    }
+    body[data-scene="light-rain"] .puddle,
+    body[data-scene="heavy-rain"] .puddle,
+    body[data-scene="storm"] .puddle { opacity: 0.3; }
+
+    /* ═══════════════════════════════════════════════
+       LIGHTNING
+    ═══════════════════════════════════════════════ */
+    .lightning-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,230,0.8);
+      z-index: 8;
+      pointer-events: none;
+      opacity: 0;
+      animation: lightning 7s ease-in-out infinite 2s;
+    }
+    @keyframes lightning {
+      0%, 90%, 100% { opacity: 0; }
+      91%            { opacity: 0.85; }
+      92%            { opacity: 0; }
+      93%            { opacity: 0.6; }
+      94%            { opacity: 0; }
+    }
+    /* Only visible in storm */
+    body:not([data-scene="storm"]) .lightning-overlay { display: none; }
+
+    /* ═══════════════════════════════════════════════
+       SNOWFLAKES
+    ═══════════════════════════════════════════════ */
+    .snow-container {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -30px;
+      font-size: var(--size, 1rem);
+      opacity: 0;
+      animation: fallSnow var(--dur, 4s) linear infinite var(--delay, 0s);
+      color: rgba(220,235,255,0.9);
+      user-select: none;
+    }
+    body[data-scene="snow"] .snowflake { opacity: 1; }
+
+    @keyframes fallSnow {
+      0%   { top: -30px;  transform: translateX(0) rotate(0deg);  opacity: 0.8; }
+      80%  { opacity: 0.8; }
+      100% { top: 105vh;  transform: translateX(40px) rotate(360deg); opacity: 0; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOG LAYERS
+    ═══════════════════════════════════════════════ */
+    .fog-layer {
+      position: fixed;
+      height: 120px;
+      left: -100%;
+      right: -100%;
+      background: rgba(220,224,228,0.55);
+      filter: blur(12px);
+      z-index: 6;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      border-radius: 50%;
+    }
+    .fog1 { top: 20%; animation: fogDrift1 25s ease-in-out infinite; }
+    .fog2 { top: 40%; animation: fogDrift2 32s ease-in-out infinite 8s; height: 150px; background: rgba(210,215,220,0.5); }
+    .fog3 { top: 60%; animation: fogDrift1 20s ease-in-out infinite 4s; height: 100px; background: rgba(230,233,236,0.6); }
+
+    body[data-scene="fog"] .fog-layer { opacity: 1; }
+
+    @keyframes fogDrift1 {
+      0%, 100% { transform: translateX(0); }
+      50%       { transform: translateX(8%); }
+    }
+    @keyframes fogDrift2 {
+      0%, 100% { transform: translateX(0); }
+      50%       { transform: translateX(-6%); }
+    }
+
+    /* ═══════════════════════════════════════════════
+       CARD
+    ═══════════════════════════════════════════════ */
     .card {
       position: relative;
       z-index: 10;
@@ -170,7 +556,6 @@
       color: #7f8c8d;
       margin-bottom: 22px;
     }
-
     .date-pill {
       display: inline-block;
       background: rgba(249,199,79,0.35);
@@ -184,21 +569,18 @@
       letter-spacing: 0.3px;
     }
 
-    /* ── Forecast row (two cards side by side) ── */
+    /* ── Forecast row ── */
     .weather-loading {
       font-size: 0.95rem;
       color: #7f8c8d;
       padding: 18px 0 24px;
     }
-
     .forecast-row {
       display: none;
       gap: 12px;
       margin-bottom: 22px;
     }
-    .forecast-row.loaded {
-      display: flex;
-    }
+    .forecast-row.loaded { display: flex; }
 
     .forecast-card {
       flex: 1;
@@ -208,7 +590,6 @@
       padding: 18px 10px 16px;
       text-align: center;
     }
-
     .fc-label {
       font-size: 0.7rem;
       font-weight: 700;
@@ -218,53 +599,49 @@
       margin-bottom: 8px;
     }
     .fc-icon  { font-size: 2.4rem; line-height: 1; margin-bottom: 6px; }
-    .fc-temp  {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1a5276;
-      line-height: 1.1;
-    }
-    .fc-desc  {
-      font-size: 0.82rem;
-      color: #2980b9;
-      text-transform: capitalize;
-      margin: 4px 0 6px;
-      min-height: 1.1em;
-    }
-    .fc-feels {
-      font-size: 0.76rem;
-      color: #5d8aa8;
-    }
+    .fc-temp  { font-size: 2rem; font-weight: 700; color: #1a5276; line-height: 1.1; }
+    .fc-desc  { font-size: 0.82rem; color: #2980b9; text-transform: capitalize; margin: 4px 0 6px; min-height: 1.1em; }
+    .fc-feels { font-size: 0.76rem; color: #5d8aa8; }
 
-    /* ── Walk / Rain banners ── */
-    .walk-banner {
+    /* ── Suggestion banner ── */
+    .suggestion-banner {
       display: none;
+      border-radius: 16px;
+      padding: 14px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 22px;
+      line-height: 1.5;
+      transition: background 0.5s, border-color 0.5s, color 0.5s;
+    }
+    .suggestion-banner.show { display: block; }
+    .suggestion-banner .s-icon { font-size: 1.4rem; margin-right: 6px; vertical-align: middle; }
+
+    .suggestion-banner.s-green {
       background: linear-gradient(135deg, #d4efdf, #a9dfbf);
       border: 1px solid #7dcea0;
-      border-radius: 16px;
-      padding: 14px 20px;
-      font-size: 0.95rem;
       color: #1e8449;
-      font-weight: 600;
-      margin-bottom: 22px;
-      line-height: 1.5;
     }
-    .walk-banner.show { display: block; }
-    .walk-banner .walk-icon { font-size: 1.4rem; margin-right: 6px; vertical-align: middle; }
-
-    .rain-banner {
-      display: none;
+    .suggestion-banner.s-blue {
       background: linear-gradient(135deg, #d6eaf8, #aed6f1);
       border: 1px solid #85c1e9;
-      border-radius: 16px;
-      padding: 14px 20px;
-      font-size: 0.95rem;
       color: #1a5276;
-      font-weight: 600;
-      margin-bottom: 22px;
-      line-height: 1.5;
     }
-    .rain-banner.show { display: block; }
+    .suggestion-banner.s-grey {
+      background: linear-gradient(135deg, #ecf0f1, #d5dbdb);
+      border: 1px solid #aab7b8;
+      color: #4a5568;
+    }
+    .suggestion-banner.s-white {
+      background: linear-gradient(135deg, #eaf4fb, #d6eaf8);
+      border: 1px solid #a9cce3;
+      color: #2471a3;
+    }
+    .suggestion-banner.s-dark {
+      background: linear-gradient(135deg, #2c3e50, #3d4f60);
+      border: 1px solid #1a2530;
+      color: #ecf0f1;
+    }
 
     .footer-note {
       font-size: 0.8rem;
@@ -273,43 +650,341 @@
     }
     .heart { color: #e74c3c; }
 
-    /* ── Mobile tweaks ── */
+    /* ── Mobile card tweaks ── */
     @media (max-width: 420px) {
       .card { padding: 32px 24px; }
       .greeting { font-size: 1.9rem; }
       .fc-temp { font-size: 1.65rem; }
       .fc-icon { font-size: 2rem; }
     }
+
+    /* ═══════════════════════════════════════════════
+       BIRTHDAY PAGE
+    ═══════════════════════════════════════════════ */
+    body.birthday-mode {
+      min-height: 100dvh;
+      overflow-y: auto;
+      animation: rainbowBg 6s ease-in-out infinite;
+    }
+    @keyframes rainbowBg {
+      0%   { background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffecd2); }
+      25%  { background: linear-gradient(135deg, #a18cd1, #fbc2eb, #ffdde1); }
+      50%  { background: linear-gradient(135deg, #fccb90, #d57eeb, #f093fb); }
+      75%  { background: linear-gradient(135deg, #84fab0, #8fd3f4, #d4fc79); }
+      100% { background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffecd2); }
+    }
+    body.birthday-mode .sky,
+    body.birthday-mode .sun,
+    body.birthday-mode .rays,
+    body.birthday-mode .cloud,
+    body.birthday-mode .birds,
+    body.birthday-mode .grass,
+    body.birthday-mode .snow-ground,
+    body.birthday-mode .rain-container,
+    body.birthday-mode .snow-container,
+    body.birthday-mode .fog-layer,
+    body.birthday-mode .lightning-overlay,
+    body.birthday-mode .moon,
+    body.birthday-mode .stars,
+    body.birthday-mode .puddle { display: none; }
+
+    .birthday-card {
+      position: relative;
+      z-index: 10;
+      background: linear-gradient(135deg, rgba(255,192,203,0.85), rgba(255,215,0,0.75), rgba(216,191,216,0.85));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 3px solid transparent;
+      border-radius: 28px;
+      padding: 50px 52px;
+      max-width: 580px;
+      width: 92%;
+      text-align: center;
+      box-shadow: 0 8px 48px rgba(200,100,150,0.3);
+      animation: rainbowBorder 4s linear infinite;
+      display: none;
+    }
+    @keyframes rainbowBorder {
+      0%   { box-shadow: 0 0 0 3px #ff9a9e, 0 8px 48px rgba(200,100,150,0.3); }
+      25%  { box-shadow: 0 0 0 3px #a18cd1, 0 8px 48px rgba(160,100,200,0.3); }
+      50%  { box-shadow: 0 0 0 3px #f093fb, 0 8px 48px rgba(200,80,200,0.3); }
+      75%  { box-shadow: 0 0 0 3px #84fab0, 0 8px 48px rgba(80,200,150,0.3); }
+      100% { box-shadow: 0 0 0 3px #ff9a9e, 0 8px 48px rgba(200,100,150,0.3); }
+    }
+    body.birthday-mode .birthday-card { display: block; }
+    body.birthday-mode .card           { display: none; }
+
+    .bday-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #8b1a5e;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 8px rgba(180,80,120,0.2);
+      line-height: 1.2;
+    }
+    .bday-subtitle {
+      font-size: 1.15rem;
+      color: #6b3070;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+    .bday-cake {
+      font-size: 5rem;
+      display: block;
+      margin: 18px auto;
+      animation: cakeBounce 1.8s ease-in-out infinite;
+    }
+    @keyframes cakeBounce {
+      0%, 100% { transform: scale(1) rotate(-3deg); }
+      50%       { transform: scale(1.1) rotate(3deg); }
+    }
+    .bday-message {
+      font-size: 1rem;
+      color: #5a2d6e;
+      background: rgba(255,255,255,0.4);
+      border-radius: 16px;
+      padding: 14px 20px;
+      margin: 18px 0;
+      line-height: 1.7;
+    }
+    .bday-footer {
+      font-size: 0.85rem;
+      color: #a0609a;
+      margin-top: 16px;
+    }
+
+    /* Balloons */
+    .balloon-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .balloon {
+      position: absolute;
+      bottom: -120px;
+      width: 50px;
+      height: 65px;
+      border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+      animation: riseUp var(--dur, 7s) ease-in infinite var(--delay, 0s);
+      opacity: 0.85;
+    }
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1.5px;
+      height: 18px;
+      background: rgba(0,0,0,0.3);
+    }
+    @keyframes riseUp {
+      0%   { bottom: -120px; opacity: 0.85; transform: translateX(0); }
+      50%  { transform: translateX(20px); }
+      100% { bottom: 110vh;  opacity: 0;   transform: translateX(-10px); }
+    }
+    body:not(.birthday-mode) .balloon-container { display: none; }
+
+    /* Confetti */
+    .confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      top: -20px;
+      width: var(--w, 8px);
+      height: var(--h, 6px);
+      background: var(--col, #ff9a9e);
+      opacity: 0;
+      animation: confettiFall var(--dur, 4s) ease-in infinite var(--delay, 0s);
+    }
+    @keyframes confettiFall {
+      0%   { top: -20px;  opacity: 1; transform: rotate(0deg) translateX(0); }
+      100% { top: 110vh;  opacity: 0; transform: rotate(720deg) translateX(60px); }
+    }
+    body:not(.birthday-mode) .confetti-container { display: none; }
+
+    /* Sparkles */
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 3;
+      font-size: var(--size, 1.2rem);
+      animation: sparkleFade var(--dur, 2.5s) ease-in-out infinite var(--delay, 0s);
+    }
+    @keyframes sparkleFade {
+      0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+      50%       { opacity: 1; transform: scale(1.2) rotate(180deg); }
+    }
+    body:not(.birthday-mode) .sparkle { display: none; }
   </style>
 </head>
-<body>
+<body data-scene="sunny">
 
-  <!-- Sky & atmosphere -->
+  <!-- ── Sky & atmosphere ── -->
   <div class="sky"></div>
   <div class="rays"></div>
   <div class="sun"></div>
+  <div class="moon"></div>
+
+  <!-- Stars (night) -->
+  <div class="stars" id="stars-layer">
+    <div class="star" style="left:5%;  top:8%;  --dur:2.1s; --delay:0s;"></div>
+    <div class="star" style="left:12%; top:15%; --dur:3.4s; --delay:0.5s;"></div>
+    <div class="star" style="left:22%; top:5%;  --dur:2.8s; --delay:1s;"></div>
+    <div class="star" style="left:35%; top:12%; --dur:4s;   --delay:0.3s;"></div>
+    <div class="star" style="left:48%; top:6%;  --dur:2.3s; --delay:1.8s;"></div>
+    <div class="star" style="left:60%; top:18%; --dur:3.7s; --delay:0.7s;"></div>
+    <div class="star" style="left:72%; top:9%;  --dur:2.6s; --delay:2.1s;"></div>
+    <div class="star" style="left:83%; top:14%; --dur:3.1s; --delay:0.9s;"></div>
+    <div class="star" style="left:90%; top:4%;  --dur:4.2s; --delay:0.2s;"></div>
+    <div class="star" style="left:18%; top:25%; --dur:2.9s; --delay:1.4s;"></div>
+    <div class="star" style="left:55%; top:28%; --dur:3.5s; --delay:2.6s;"></div>
+    <div class="star" style="left:78%; top:22%; --dur:2.2s; --delay:0.6s;"></div>
+    <div class="star" style="left:42%; top:20%; --dur:4.5s; --delay:3.1s; width:4px; height:4px;"></div>
+    <div class="star" style="left:8%;  top:30%; --dur:3.3s; --delay:1.9s;"></div>
+    <div class="star" style="left:95%; top:25%; --dur:2.7s; --delay:0.4s;"></div>
+  </div>
+
+  <!-- Clouds -->
   <div class="cloud c1"></div>
   <div class="cloud c2"></div>
   <div class="cloud c3"></div>
+  <div class="cloud c4"></div>
+  <div class="cloud c5"></div>
+  <div class="cloud c6"></div>
+
+  <!-- Birds -->
   <div class="birds">
     <div class="bird"></div>
     <div class="bird"></div>
     <div class="bird"></div>
   </div>
-  <div class="grass"></div>
 
-  <!-- Main card -->
+  <!-- Grass / ground -->
+  <div class="grass"></div>
+  <div class="snow-ground"></div>
+  <div class="puddle"></div>
+
+  <!-- Rain -->
+  <div class="rain-container" id="rain-container">
+    <!-- 20 raindrops with varied positions, speeds, delays -->
+    <div class="raindrop" style="left:3%;  --dur:0.9s;  --delay:0.0s;"></div>
+    <div class="raindrop" style="left:8%;  --dur:1.1s;  --delay:0.2s;"></div>
+    <div class="raindrop" style="left:13%; --dur:0.8s;  --delay:0.5s;"></div>
+    <div class="raindrop" style="left:18%; --dur:1.2s;  --delay:0.1s;"></div>
+    <div class="raindrop" style="left:23%; --dur:0.95s; --delay:0.7s;"></div>
+    <div class="raindrop" style="left:28%; --dur:1.0s;  --delay:0.3s;"></div>
+    <div class="raindrop" style="left:33%; --dur:0.85s; --delay:0.9s;"></div>
+    <div class="raindrop" style="left:38%; --dur:1.15s; --delay:0.4s;"></div>
+    <div class="raindrop" style="left:43%; --dur:0.92s; --delay:0.6s;"></div>
+    <div class="raindrop" style="left:48%; --dur:1.05s; --delay:0.0s;"></div>
+    <div class="raindrop" style="left:53%; --dur:0.88s; --delay:0.8s;"></div>
+    <div class="raindrop" style="left:58%; --dur:1.18s; --delay:0.2s;"></div>
+    <div class="raindrop" style="left:63%; --dur:0.82s; --delay:0.5s;"></div>
+    <div class="raindrop" style="left:68%; --dur:1.08s; --delay:0.3s;"></div>
+    <div class="raindrop" style="left:73%; --dur:0.96s; --delay:0.7s;"></div>
+    <div class="raindrop" style="left:78%; --dur:1.22s; --delay:0.1s;"></div>
+    <div class="raindrop" style="left:83%; --dur:0.87s; --delay:0.9s;"></div>
+    <div class="raindrop" style="left:88%; --dur:1.03s; --delay:0.4s;"></div>
+    <div class="raindrop" style="left:93%; --dur:0.91s; --delay:0.6s;"></div>
+    <div class="raindrop" style="left:97%; --dur:1.14s; --delay:0.2s;"></div>
+  </div>
+
+  <!-- Snow -->
+  <div class="snow-container" id="snow-container">
+    <div class="snowflake" style="left:5%;  --dur:4.2s; --delay:0.0s; --size:1.1rem;">❄</div>
+    <div class="snowflake" style="left:12%; --dur:5.5s; --delay:1.2s; --size:0.9rem;">❄</div>
+    <div class="snowflake" style="left:20%; --dur:3.8s; --delay:0.5s; --size:1.3rem;">❄</div>
+    <div class="snowflake" style="left:28%; --dur:6.0s; --delay:2.1s; --size:0.8rem;">❄</div>
+    <div class="snowflake" style="left:35%; --dur:4.5s; --delay:0.8s; --size:1.0rem;">❄</div>
+    <div class="snowflake" style="left:43%; --dur:5.2s; --delay:1.5s; --size:1.2rem;">❄</div>
+    <div class="snowflake" style="left:50%; --dur:3.9s; --delay:0.3s; --size:0.9rem;">❄</div>
+    <div class="snowflake" style="left:58%; --dur:4.8s; --delay:1.9s; --size:1.1rem;">❄</div>
+    <div class="snowflake" style="left:65%; --dur:5.7s; --delay:0.7s; --size:1.4rem;">❄</div>
+    <div class="snowflake" style="left:73%; --dur:4.1s; --delay:2.4s; --size:0.85rem;">❄</div>
+    <div class="snowflake" style="left:80%; --dur:6.3s; --delay:1.0s; --size:1.0rem;">❄</div>
+    <div class="snowflake" style="left:88%; --dur:4.6s; --delay:0.2s; --size:1.2rem;">❄</div>
+    <div class="snowflake" style="left:94%; --dur:5.1s; --delay:1.7s; --size:0.9rem;">❄</div>
+    <div class="snowflake" style="left:9%;  --dur:3.7s; --delay:3.0s; --size:1.3rem;">❄</div>
+    <div class="snowflake" style="left:47%; --dur:5.9s; --delay:2.8s; --size:0.8rem;">❄</div>
+  </div>
+
+  <!-- Fog -->
+  <div class="fog-layer fog1"></div>
+  <div class="fog-layer fog2"></div>
+  <div class="fog-layer fog3"></div>
+
+  <!-- Lightning (storm only) -->
+  <div class="lightning-overlay"></div>
+
+  <!-- Birthday elements (hidden unless birthday-mode) -->
+  <div class="balloon-container">
+    <div class="balloon" style="left:5%;  background:#ff6b8a; --dur:6s;  --delay:0s;"></div>
+    <div class="balloon" style="left:15%; background:#ffb347; --dur:7.5s; --delay:1s;"></div>
+    <div class="balloon" style="left:25%; background:#a78bfa; --dur:5.5s; --delay:2s;"></div>
+    <div class="balloon" style="left:38%; background:#34d399; --dur:8s;   --delay:0.5s;"></div>
+    <div class="balloon" style="left:50%; background:#f472b6; --dur:6.5s; --delay:1.5s;"></div>
+    <div class="balloon" style="left:63%; background:#fbbf24; --dur:7s;   --delay:3s;"></div>
+    <div class="balloon" style="left:75%; background:#60a5fa; --dur:5s;   --delay:0.8s;"></div>
+    <div class="balloon" style="left:85%; background:#e879f9; --dur:9s;   --delay:2.2s;"></div>
+    <div class="balloon" style="left:92%; background:#f87171; --dur:6.8s; --delay:1.1s;"></div>
+  </div>
+
+  <div class="confetti-container">
+    <div class="confetti-piece" style="left:8%;  --col:#ff9a9e; --w:8px;  --h:5px;  --dur:3.8s; --delay:0.2s;"></div>
+    <div class="confetti-piece" style="left:15%; --col:#a18cd1; --w:6px;  --h:8px;  --dur:4.5s; --delay:0.8s;"></div>
+    <div class="confetti-piece" style="left:22%; --col:#ffd700; --w:10px; --h:5px;  --dur:3.2s; --delay:1.3s;"></div>
+    <div class="confetti-piece" style="left:30%; --col:#84fab0; --w:7px;  --h:7px;  --dur:5.1s; --delay:0.1s;"></div>
+    <div class="confetti-piece" style="left:37%; --col:#f472b6; --w:9px;  --h:4px;  --dur:4.0s; --delay:2.0s;"></div>
+    <div class="confetti-piece" style="left:45%; --col:#fbbf24; --w:6px;  --h:9px;  --dur:3.5s; --delay:0.6s;"></div>
+    <div class="confetti-piece" style="left:52%; --col:#60a5fa; --w:8px;  --h:6px;  --dur:4.8s; --delay:1.5s;"></div>
+    <div class="confetti-piece" style="left:60%; --col:#e879f9; --w:5px;  --h:8px;  --dur:3.9s; --delay:0.3s;"></div>
+    <div class="confetti-piece" style="left:68%; --col:#f87171; --w:10px; --h:5px;  --dur:4.2s; --delay:1.8s;"></div>
+    <div class="confetti-piece" style="left:75%; --col:#a78bfa; --w:7px;  --h:6px;  --dur:5.5s; --delay:0.9s;"></div>
+    <div class="confetti-piece" style="left:82%; --col:#34d399; --w:6px;  --h:9px;  --dur:3.7s; --delay:2.4s;"></div>
+    <div class="confetti-piece" style="left:90%; --col:#ffb347; --w:9px;  --h:4px;  --dur:4.4s; --delay:0.5s;"></div>
+    <div class="confetti-piece" style="left:4%;  --col:#f472b6; --w:8px;  --h:7px;  --dur:5.8s; --delay:3.1s;"></div>
+    <div class="confetti-piece" style="left:55%; --col:#ffd700; --w:6px;  --h:6px;  --dur:3.3s; --delay:1.1s;"></div>
+    <div class="confetti-piece" style="left:96%; --col:#60a5fa; --w:7px;  --h:8px;  --dur:4.9s; --delay:2.7s;"></div>
+  </div>
+
+  <div class="sparkle" style="left:10%; top:20%; --dur:2.2s; --delay:0s;   --size:1.4rem;">✨</div>
+  <div class="sparkle" style="left:25%; top:35%; --dur:3.1s; --delay:0.8s; --size:1.0rem;">⭐</div>
+  <div class="sparkle" style="left:70%; top:15%; --dur:2.7s; --delay:1.5s; --size:1.6rem;">✨</div>
+  <div class="sparkle" style="left:85%; top:40%; --dur:2.4s; --delay:0.3s; --size:1.1rem;">⭐</div>
+  <div class="sparkle" style="left:50%; top:10%; --dur:3.5s; --delay:2.0s; --size:1.3rem;">✨</div>
+
+  <!-- ── Birthday card ── -->
+  <div class="birthday-card">
+    <div class="bday-title">🎂 Happy Birthday, Kboo! 🎂</div>
+    <span class="bday-cake">🎂</span>
+    <div class="bday-subtitle">
+      Wishing you the most wonderful day filled with love, laughter, and cake! 🎉
+    </div>
+    <div class="bday-message">
+      Today is all about you — the most wonderful, kind, and brilliant person. 🌸<br><br>
+      May this year bring you everything your heart desires, endless adventures, and all the happiness in the world. You deserve every bit of it. 💖🥂
+    </div>
+    <div class="bday-footer">Made with <span class="heart">♥</span> just for you, Kboo 🎈</div>
+  </div>
+
+  <!-- ── Main weather card ── -->
   <div class="card">
     <div class="greeting">Good morning, Kboo ☀️</div>
     <div class="sub-greeting">Hope you slept well — it's a brand new day.</div>
 
     <div class="date-pill" id="date-display">Loading date...</div>
 
-    <!-- Weather -->
     <div class="weather-loading" id="weather-loading">Fetching your local weather...</div>
 
     <div class="forecast-row" id="forecast-row">
-      <!-- This Morning -->
       <div class="forecast-card">
         <div class="fc-label">This Morning</div>
         <div class="fc-icon"  id="morning-icon">🌤</div>
@@ -317,7 +992,6 @@
         <div class="fc-desc"  id="morning-desc">--</div>
         <div class="fc-feels" id="morning-feels">Feels like --°F</div>
       </div>
-      <!-- This Afternoon -->
       <div class="forecast-card">
         <div class="fc-label">This Afternoon</div>
         <div class="fc-icon"  id="afternoon-icon">🌤</div>
@@ -327,191 +1001,272 @@
       </div>
     </div>
 
-    <!-- Walk suggestion -->
-    <div class="walk-banner" id="walk-banner">
-      <span class="walk-icon">🚶‍♀️</span>
-      It looks lovely outside! Why not take a lunchtime walk today? A bit of fresh air and sunshine will do you the world of good. 🌿
-    </div>
-
-    <!-- Stay-in suggestion -->
-    <div class="rain-banner" id="rain-banner">
-      <span style="font-size:1.4rem;margin-right:6px;vertical-align:middle;">☔</span>
-      Not the best day for a walk — maybe enjoy a cosy lunch indoors today? 🍵
+    <!-- Single dynamic suggestion banner -->
+    <div class="suggestion-banner" id="suggestion-banner">
+      <span class="s-icon" id="suggestion-icon"></span>
+      <span id="suggestion-text"></span>
     </div>
 
     <div class="footer-note">Made with <span class="heart">♥</span> for Kboo · Weather via Open-Meteo</div>
   </div>
 
   <script>
-    // ── Date ──────────────────────────────────────────────────────────────────
-    (function () {
-      const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('date-display').textContent =
-        new Date().toLocaleDateString('en-GB', opts);
-    })();
+    // ── Birthday check ─────────────────────────────────────────────────────────
+    const now = new Date();
+    const isBirthday = now.getMonth() === 11 && now.getDate() === 30; // Dec 30
 
-    // ── WMO weather code → label + emoji ──────────────────────────────────────
-    function decodeWMO(code) {
-      const map = {
-        0:  ['Clear sky',               '☀️'],
-        1:  ['Mainly clear',            '🌤'],
-        2:  ['Partly cloudy',           '⛅'],
-        3:  ['Overcast',                '☁️'],
-        45: ['Foggy',                   '🌫'],
-        48: ['Icy fog',                 '🌫'],
-        51: ['Light drizzle',           '🌦'],
-        53: ['Moderate drizzle',        '🌦'],
-        55: ['Dense drizzle',           '🌧'],
-        61: ['Slight rain',             '🌧'],
-        63: ['Moderate rain',           '🌧'],
-        65: ['Heavy rain',              '🌧'],
-        71: ['Slight snow',             '🌨'],
-        73: ['Moderate snow',           '🌨'],
-        75: ['Heavy snow',              '❄️'],
-        77: ['Snow grains',             '🌨'],
-        80: ['Light showers',           '🌦'],
-        81: ['Moderate showers',        '🌧'],
-        82: ['Violent showers',         '⛈'],
-        85: ['Snow showers',            '🌨'],
-        86: ['Heavy snow showers',      '❄️'],
-        95: ['Thunderstorm',            '⛈'],
-        96: ['Thunderstorm + hail',     '⛈'],
-        99: ['Thunderstorm + hail',     '⛈'],
-      };
-      return map[code] || ['Unknown', '🌡'];
-    }
+    if (isBirthday) {
+      document.body.classList.add('birthday-mode');
+      // No weather fetching on birthday
+    } else {
+      // ── Date display ──────────────────────────────────────────────────────────
+      (function () {
+        const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('date-display').textContent =
+          new Date().toLocaleDateString('en-GB', opts);
+      })();
 
-    // ── Walk-worthy? (Fahrenheit threshold: 46 °F ≈ 8 °C) ───────────────────
-    function isNiceForWalk(wmoCode, tempF) {
-      return [0, 1, 2, 3].includes(wmoCode) && tempF >= 46;
-    }
-
-    // ── Geolocation: GPS → IP fallback → London ───────────────────────────────
-    // Works on file://, mobile Safari, and Chrome without a secure origin prompt.
-    function getLocation() {
-      return new Promise((resolve) => {
-
-        // Helper: IP-based fallback using ipwho.is (CORS-enabled, no API key)
-        async function ipFallback() {
-          try {
-            const r = await fetch('https://ipwho.is/');
-            const d = await r.json();
-            if (d && d.latitude) {
-              resolve({ lat: d.latitude, lon: d.longitude, city: d.city || '' });
-              return;
-            }
-          } catch (_) {}
-          // Hard fallback: London
-          resolve({ lat: 51.5074, lon: -0.1278, city: 'London' });
-        }
-
-        if (!navigator.geolocation) {
-          // Geolocation API not available (e.g. file:// on some Android browsers)
-          ipFallback();
-          return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-          (pos) => resolve({
-            lat: pos.coords.latitude,
-            lon: pos.coords.longitude,
-            city: ''
-          }),
-          () => ipFallback(),           // denied or timed out → IP fallback
-          { timeout: 6000, maximumAge: 300000 }
-        );
-      });
-    }
-
-    // ── Find the hourly index closest to a target hour ────────────────────────
-    // Open-Meteo returns times like "2025-03-30T09:00" — we match today's date.
-    function findHourIndex(times, targetHour) {
-      const todayPrefix = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
-      const target = `${todayPrefix}T${String(targetHour).padStart(2,'0')}:00`;
-      const idx = times.indexOf(target);
-      // If exact match not found (e.g. timezone offset edge case), scan nearest
-      if (idx !== -1) return idx;
-      // Fallback: find any entry for today closest to targetHour
-      let best = -1, bestDiff = Infinity;
-      times.forEach((t, i) => {
-        if (!t.startsWith(todayPrefix)) return;
-        const h = parseInt(t.slice(11, 13), 10);
-        const diff = Math.abs(h - targetHour);
-        if (diff < bestDiff) { bestDiff = diff; best = i; }
-      });
-      return best;
-    }
-
-    // ── Main weather loader ────────────────────────────────────────────────────
-    async function loadWeather() {
-      try {
-        const { lat, lon } = await getLocation();
-
-        // Open-Meteo hourly forecast — temperature_unit=fahrenheit requested directly
-        const url = 'https://api.open-meteo.com/v1/forecast'
-          + `?latitude=${lat}&longitude=${lon}`
-          + '&hourly=temperature_2m,apparent_temperature,weather_code'
-          + '&temperature_unit=fahrenheit'
-          + '&wind_speed_unit=mph'
-          + '&timezone=auto'
-          + '&forecast_days=1';
-
-        const res  = await fetch(url);
-        const data = await res.json();
-        const { time, temperature_2m, apparent_temperature, weather_code } = data.hourly;
-
-        // Pick 9 am (morning) and 2 pm (afternoon) slots
-        const slots = [
-          { id: 'morning',   hour: 9,  label: 'This Morning'    },
-          { id: 'afternoon', hour: 14, label: 'This Afternoon'  },
-        ];
-
-        // Track afternoon data for walk suggestion
-        let afternoonCode = 99, afternoonTemp = 32;
-
-        slots.forEach(({ id, hour }) => {
-          const idx = findHourIndex(time, hour);
-          if (idx === -1) return;
-
-          const temp   = Math.round(temperature_2m[idx]);
-          const feels  = Math.round(apparent_temperature[idx]);
-          const code   = weather_code[idx];
-          const [desc, icon] = decodeWMO(code);
-
-          document.getElementById(`${id}-icon`).textContent  = icon;
-          document.getElementById(`${id}-temp`).textContent  = `${temp}°F`;
-          document.getElementById(`${id}-desc`).textContent  = desc;
-          document.getElementById(`${id}-feels`).textContent = `Feels like ${feels}°F`;
-
-          if (id === 'afternoon') { afternoonCode = code; afternoonTemp = temp; }
-        });
-
-        // Show forecast cards, hide spinner
-        document.getElementById('weather-loading').style.display = 'none';
-        document.getElementById('forecast-row').classList.add('loaded');
-
-        // Walk / rain suggestion based on afternoon forecast
-        if (isNiceForWalk(afternoonCode, afternoonTemp)) {
-          document.getElementById('walk-banner').classList.add('show');
-        } else {
-          document.getElementById('rain-banner').classList.add('show');
-        }
-
-        // Dim the sun on bad weather days
-        if (afternoonCode >= 51) {
-          document.querySelector('.sky').style.background =
-            'linear-gradient(180deg, #5d7a8a 0%, #8aaabb 50%, #b0bec5 100%)';
-          document.querySelector('.sun').style.opacity  = '0.2';
-          document.querySelector('.rays').style.opacity = '0.1';
-        }
-
-      } catch (err) {
-        document.getElementById('weather-loading').textContent =
-          'Weather unavailable — enjoy your day! ☀️';
+      // ── WMO weather code → label + emoji ────────────────────────────────────
+      function decodeWMO(code) {
+        const map = {
+          0:  ['Clear sky',          '☀️'],
+          1:  ['Mainly clear',       '🌤'],
+          2:  ['Partly cloudy',      '⛅'],
+          3:  ['Overcast',           '☁️'],
+          45: ['Foggy',              '🌫'],
+          48: ['Icy fog',            '🌫'],
+          51: ['Light drizzle',      '🌦'],
+          53: ['Moderate drizzle',   '🌦'],
+          55: ['Dense drizzle',      '🌧'],
+          61: ['Slight rain',        '🌧'],
+          63: ['Moderate rain',      '🌧'],
+          65: ['Heavy rain',         '🌧'],
+          71: ['Slight snow',        '🌨'],
+          73: ['Moderate snow',      '🌨'],
+          75: ['Heavy snow',         '❄️'],
+          77: ['Snow grains',        '🌨'],
+          80: ['Light showers',      '🌦'],
+          81: ['Moderate showers',   '🌧'],
+          82: ['Violent showers',    '⛈'],
+          85: ['Snow showers',       '🌨'],
+          86: ['Heavy snow showers', '❄️'],
+          95: ['Thunderstorm',       '⛈'],
+          96: ['Thunderstorm + hail','⛈'],
+          99: ['Thunderstorm + hail','⛈'],
+        };
+        return map[code] || ['Unknown', '🌡'];
       }
-    }
 
-    loadWeather();
+      // ── Walk suggestion based on WMO code ──────────────────────────────────
+      function getSuggestion(wmoCode) {
+        if (wmoCode === 0) {
+          return {
+            icon: '🌞🚶‍♀️',
+            text: "It's a glorious clear day out there — the perfect excuse to get outside! Why not take a lunchtime walk and soak up that sunshine? You'll feel amazing. 🌿",
+            style: 's-green'
+          };
+        }
+        if (wmoCode === 1 || wmoCode === 2) {
+          return {
+            icon: '🌤',
+            text: "It's a nice afternoon — mostly clear with a few clouds to keep things interesting. A walk sounds like a lovely idea! Enjoy the fresh air. 🌿",
+            style: 's-green'
+          };
+        }
+        if (wmoCode === 3) {
+          return {
+            icon: '☁️🍵',
+            text: "It's fully overcast today — a bit grey and dull outside. Might be a perfect cosy indoor lunch day. Warm drink and something delicious? ☁️",
+            style: 's-grey'
+          };
+        }
+        if (wmoCode === 45 || wmoCode === 48) {
+          return {
+            icon: '🌫',
+            text: "Foggy conditions this afternoon — visibility isn't great out there. Best to stay safe and stick close to home or indoors. Drive carefully if you're heading out! 🌫",
+            style: 's-grey'
+          };
+        }
+        if (wmoCode >= 51 && wmoCode <= 55) {
+          return {
+            icon: '🌦',
+            text: "Just a light drizzle this afternoon — if you fancy a quick walk, pop on a jacket and you should be fine! Nothing a bit of light mist can't handle. 🌦",
+            style: 's-blue'
+          };
+        }
+        if (wmoCode >= 61 && wmoCode <= 65) {
+          return {
+            icon: '☔',
+            text: "It's raining this afternoon — best to stay dry and enjoy a cosy lunch indoors. Save the walk for a sunnier day! ☔🍵",
+            style: 's-blue'
+          };
+        }
+        if ((wmoCode >= 71 && wmoCode <= 77) || wmoCode === 85 || wmoCode === 86) {
+          return {
+            icon: '❄️',
+            text: "Snow today! Whether you want to wrap up warm and go explore, or stay cosy inside with something hot — either sounds perfect. Stay safe out there! ❄️🧣",
+            style: 's-white'
+          };
+        }
+        if (wmoCode === 80) {
+          return {
+            icon: '🌦',
+            text: "Light showers expected this afternoon — if you fancy a quick outing, pop on a light jacket and you should be just fine! 🌦",
+            style: 's-blue'
+          };
+        }
+        if (wmoCode === 81 || wmoCode === 82) {
+          return {
+            icon: '🌧',
+            text: "Heavy showers forecast this afternoon — best to stay dry and cosy indoors. Save the walk for a nicer day! 🌧☕",
+            style: 's-blue'
+          };
+        }
+        if (wmoCode >= 95) {
+          return {
+            icon: '⛈',
+            text: "Thunderstorms this afternoon — definitely stay inside! Curl up somewhere safe and let the storm do its thing outside. ⛈ Stay cosy in there! ☕",
+            style: 's-dark'
+          };
+        }
+        // fallback
+        return {
+          icon: '🌤',
+          text: "Have a wonderful afternoon, whatever the weather brings! 🌿",
+          style: 's-green'
+        };
+      }
+
+      // ── Scene name from WMO code + optional wind speed ───────────────────────
+      function getScene(wmoCode, windSpeedMph) {
+        if (wmoCode === 0) return 'sunny';
+        if (wmoCode === 1 || wmoCode === 2) {
+          if (windSpeedMph && windSpeedMph > 25) return 'windy';
+          return 'partly-cloudy';
+        }
+        if (wmoCode === 3) return 'overcast';
+        if (wmoCode === 45 || wmoCode === 48) return 'fog';
+        if (wmoCode >= 51 && wmoCode <= 55) return 'light-rain';
+        if (wmoCode === 61) return 'light-rain';
+        if (wmoCode >= 62 && wmoCode <= 65) return 'heavy-rain';
+        if (wmoCode >= 71 && wmoCode <= 77) return 'snow';
+        if (wmoCode === 80) return 'light-rain';
+        if (wmoCode === 81 || wmoCode === 82) return 'heavy-rain';
+        if (wmoCode === 85 || wmoCode === 86) return 'snow';
+        if (wmoCode >= 95) return 'storm';
+        return 'sunny';
+      }
+
+      // ── Geolocation: GPS → IP fallback → London ──────────────────────────────
+      function getLocation() {
+        return new Promise((resolve) => {
+          async function ipFallback() {
+            try {
+              const r = await fetch('https://ipwho.is/');
+              const d = await r.json();
+              if (d && d.latitude) {
+                resolve({ lat: d.latitude, lon: d.longitude, city: d.city || '' });
+                return;
+              }
+            } catch (_) {}
+            resolve({ lat: 51.5074, lon: -0.1278, city: 'London' });
+          }
+
+          if (!navigator.geolocation) { ipFallback(); return; }
+
+          navigator.geolocation.getCurrentPosition(
+            (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude, city: '' }),
+            () => ipFallback(),
+            { timeout: 6000, maximumAge: 300000 }
+          );
+        });
+      }
+
+      // ── Find hourly index closest to target hour ──────────────────────────────
+      function findHourIndex(times, targetHour) {
+        const todayPrefix = new Date().toISOString().slice(0, 10);
+        const target = `${todayPrefix}T${String(targetHour).padStart(2,'0')}:00`;
+        const idx = times.indexOf(target);
+        if (idx !== -1) return idx;
+        let best = -1, bestDiff = Infinity;
+        times.forEach((t, i) => {
+          if (!t.startsWith(todayPrefix)) return;
+          const h = parseInt(t.slice(11, 13), 10);
+          const diff = Math.abs(h - targetHour);
+          if (diff < bestDiff) { bestDiff = diff; best = i; }
+        });
+        return best;
+      }
+
+      // ── Main weather loader ───────────────────────────────────────────────────
+      async function loadWeather() {
+        try {
+          const { lat, lon } = await getLocation();
+
+          const url = 'https://api.open-meteo.com/v1/forecast'
+            + `?latitude=${lat}&longitude=${lon}`
+            + '&hourly=temperature_2m,apparent_temperature,weather_code,wind_speed_10m'
+            + '&temperature_unit=fahrenheit'
+            + '&wind_speed_unit=mph'
+            + '&timezone=auto'
+            + '&forecast_days=1';
+
+          const res  = await fetch(url);
+          const data = await res.json();
+          const { time, temperature_2m, apparent_temperature, weather_code, wind_speed_10m } = data.hourly;
+
+          const slots = [
+            { id: 'morning',   hour: 9  },
+            { id: 'afternoon', hour: 14 },
+          ];
+
+          let afternoonCode = 0, afternoonTemp = 60, afternoonWind = 0;
+
+          slots.forEach(({ id, hour }) => {
+            const idx = findHourIndex(time, hour);
+            if (idx === -1) return;
+
+            const temp   = Math.round(temperature_2m[idx]);
+            const feels  = Math.round(apparent_temperature[idx]);
+            const code   = weather_code[idx];
+            const wind   = wind_speed_10m ? wind_speed_10m[idx] : 0;
+            const [desc, icon] = decodeWMO(code);
+
+            document.getElementById(`${id}-icon`).textContent  = icon;
+            document.getElementById(`${id}-temp`).textContent  = `${temp}°F`;
+            document.getElementById(`${id}-desc`).textContent  = desc;
+            document.getElementById(`${id}-feels`).textContent = `Feels like ${feels}°F`;
+
+            if (id === 'afternoon') {
+              afternoonCode = code;
+              afternoonTemp = temp;
+              afternoonWind = wind;
+            }
+          });
+
+          // Show forecast cards
+          document.getElementById('weather-loading').style.display = 'none';
+          document.getElementById('forecast-row').classList.add('loaded');
+
+          // Set weather scene
+          const scene = getScene(afternoonCode, afternoonWind);
+          document.body.dataset.scene = scene;
+
+          // Show suggestion banner
+          const { icon, text, style } = getSuggestion(afternoonCode);
+          const banner = document.getElementById('suggestion-banner');
+          document.getElementById('suggestion-icon').textContent = icon;
+          document.getElementById('suggestion-text').textContent = text;
+          banner.className = `suggestion-banner ${style} show`;
+
+        } catch (err) {
+          document.getElementById('weather-loading').textContent =
+            'Weather unavailable — enjoy your day! ☀️';
+        }
+      }
+
+      loadWeather();
+    }
   </script>
 </body>
 </html>
