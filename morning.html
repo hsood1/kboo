@@ -839,7 +839,7 @@
     body:not(.birthday-mode) .sparkle { display: none; }
   </style>
 </head>
-<body data-scene="sunny">
+<body>
 
   <!-- ── Sky & atmosphere ── -->
   <div class="sky"></div>
@@ -1002,17 +1002,17 @@
     <div class="forecast-row" id="forecast-row">
       <div class="forecast-card">
         <div class="fc-label">Morning</div>
-        <div class="fc-desc"  id="morning-desc">--</div>
         <div class="fc-icon"  id="morning-icon">🌤</div>
         <div class="fc-temp"  id="morning-temp">--°F</div>
         <div class="fc-feels" id="morning-feels">Feels like --°F</div>
+        <div class="fc-desc"  id="morning-desc">--</div>
       </div>
       <div class="forecast-card">
         <div class="fc-label">Afternoon</div>
-        <div class="fc-desc"  id="afternoon-desc">--</div>
         <div class="fc-icon"  id="afternoon-icon">🌤</div>
         <div class="fc-temp"  id="afternoon-temp">--°F</div>
         <div class="fc-feels" id="afternoon-feels">Feels like --°F</div>
+        <div class="fc-desc"  id="afternoon-desc">--</div>
       </div>
     </div>
 
@@ -1289,7 +1289,8 @@
             { id: 'afternoon', hour: 14 },
           ];
 
-          let afternoonCode = 0, afternoonTemp = 60, afternoonWind = 0;
+          let morningCode = 0, morningWind = 0;
+          let afternoonCode = 0, afternoonWind = 0;
 
           slots.forEach(({ id, hour }) => {
             const idx = findHourIndex(time, hour);
@@ -1299,16 +1300,19 @@
             const feels  = Math.round(apparent_temperature[idx]);
             const code   = weather_code[idx];
             const wind   = wind_speed_10m ? wind_speed_10m[idx] : 0;
-            const [desc, icon] = decodeWMO(code);
+            const [desc, wIcon] = decodeWMO(code);
 
-            document.getElementById(`${id}-icon`).textContent  = icon;
+            document.getElementById(`${id}-icon`).textContent  = wIcon;
             document.getElementById(`${id}-temp`).textContent  = `${temp}°F`;
             document.getElementById(`${id}-desc`).textContent  = desc;
             document.getElementById(`${id}-feels`).textContent = `Feels like ${feels}°F`;
 
+            if (id === 'morning') {
+              morningCode = code;
+              morningWind = wind;
+            }
             if (id === 'afternoon') {
               afternoonCode = code;
-              afternoonTemp = temp;
               afternoonWind = wind;
             }
           });
@@ -1317,12 +1321,18 @@
           document.getElementById('weather-loading').style.display = 'none';
           document.getElementById('forecast-row').classList.add('loaded');
 
-          // Set weather scene
-          const scene = getScene(afternoonCode, afternoonWind);
+          // Before 11am: use morning forecast for background & suggestion
+          // At/after 11am: use afternoon forecast for background & suggestion
+          const currentHour = new Date().getHours();
+          const refCode = currentHour < 11 ? morningCode : afternoonCode;
+          const refWind = currentHour < 11 ? morningWind : afternoonWind;
+
+          // Set weather scene — only shows snow/rain etc. if forecast actually expects it
+          const scene = getScene(refCode, refWind);
           document.body.dataset.scene = scene;
 
-          // Show suggestion banner
-          const { icon, text, style } = getSuggestion(afternoonCode);
+          // Show suggestion banner based on relevant forecast period
+          const { icon, text, style } = getSuggestion(refCode);
           const banner = document.getElementById('suggestion-banner');
           document.getElementById('suggestion-icon').textContent = icon;
           document.getElementById('suggestion-text').textContent = text;
