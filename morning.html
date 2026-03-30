@@ -567,27 +567,19 @@
       margin-bottom: 4px;
       white-space: nowrap;
     }
-    .greeting-line {
-      font-size: clamp(1.5rem, 7vw, 2.4rem);
+    .greeting-title {
+      font-size: clamp(1.1rem, 5.5vw, 2.2rem);
       color: #2c3e50;
       font-weight: 700;
       letter-spacing: -0.5px;
       white-space: nowrap;
       line-height: 1.15;
-      margin-bottom: 2px;
-    }
-    .greeting-name {
-      font-size: clamp(1.7rem, 8vw, 2.8rem);
-      color: #2c3e50;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      white-space: nowrap;
-      line-height: 1.1;
       margin-bottom: 10px;
     }
     .sub-greeting {
-      font-size: clamp(0.82rem, 3.8vw, 1.05rem);
+      font-size: clamp(0.7rem, 3.3vw, 1rem);
       color: #7f8c8d;
+      white-space: nowrap;
       line-height: 1.5;
       margin-bottom: 22px;
     }
@@ -702,8 +694,7 @@
     /* ── Mobile card tweaks ── */
     @media (max-width: 420px) {
       .card { padding: 32px 24px; }
-      .greeting-line { font-size: clamp(1.4rem, 6.5vw, 1.9rem); }
-      .greeting-name { font-size: clamp(1.6rem, 7.5vw, 2.2rem); }
+      .greeting-title { font-size: clamp(1rem, 5.5vw, 1.8rem); }
       .fc-temp { font-size: 1.65rem; }
       .fc-icon { font-size: 2rem; }
     }
@@ -1028,9 +1019,8 @@
   <!-- ── Main weather card ── -->
   <div class="card">
     <div class="greeting-emoji">☀️</div>
-    <div class="greeting-line">Good morning,</div>
-    <div class="greeting-name">Kboo</div>
-    <div class="sub-greeting">Hope you slept well —<br>it's a brand new day.</div>
+    <div class="greeting-title">Good morning, Kboo</div>
+    <div class="sub-greeting">Hope you slept well — it's a brand new day.</div>
 
     <div class="date-pill" id="date-display">Loading date...</div>
     <div class="location-display" id="location-display"></div>
