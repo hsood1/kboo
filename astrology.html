@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Astrology ✨</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      font-family: 'Georgia', serif;
+      min-height: 100dvh;
+      width: 100%;
+      background: radial-gradient(ellipse at 50% 30%, #1a0a3e 0%, #0d0520 45%, #000510 100%);
+    }
+
+    /* ═══════════════════════════════════════════════
+       BACK BUTTON
+    ═══════════════════════════════════════════════ */
+    .back-btn {
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top, 16px));
+      left: 16px;
+      z-index: 200;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      background: rgba(30, 10, 70, 0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(160, 100, 255, 0.4);
+      border-radius: 50px;
+      color: rgba(220, 190, 255, 0.9);
+      font-family: 'Georgia', serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(80, 20, 180, 0.35);
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+    .back-btn:hover {
+      background: rgba(50, 20, 100, 0.8);
+      border-color: rgba(200, 150, 255, 0.6);
+      color: #f0e0ff;
+    }
+
+    /* ═══════════════════════════════════════════════
+       ASTROLOGY VIEW
+    ═══════════════════════════════════════════════ */
+    .astrology-view {
+      display: flex;
+      min-height: 100dvh;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: max(80px, calc(env(safe-area-inset-top, 16px) + 64px));
+      padding-bottom: max(24px, env(safe-area-inset-bottom, 24px));
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Twinkling stars */
+    .astro-stars-bg {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .astro-star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: astroTwinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+    }
+    @keyframes astroTwinkle {
+      0%, 100% { opacity: 0.15; transform: scale(0.8); }
+      50%       { opacity: 1;   transform: scale(1.3); }
+    }
+
+    /* Constellation overlay */
+    .astro-constellation {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ── Horoscope sign selector tabs ── */
+    .astro-sign-tabs {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0 16px;
+    }
+    .astro-sign-btn {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(160,110,255,0.35);
+      border-radius: 50px;
+      color: rgba(200,170,255,0.75);
+      font-family: Georgia, serif;
+      font-size: 0.88rem;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: all 0.25s;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      white-space: nowrap;
+    }
+    .astro-sign-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: #e8d5ff;
+    }
+    .astro-sign-btn.active {
+      background: rgba(140,80,255,0.38);
+      border-color: rgba(180,130,255,0.7);
+      color: #f0e0ff;
+      box-shadow: 0 0 18px rgba(140,80,255,0.4);
+    }
+
+    /* ── Scrollable content area ── */
+    .astro-content {
+      position: relative;
+      z-index: 10;
+      width: calc(100% - 32px);
+      max-width: 820px;
+      overflow-y: auto;
+      flex: 1;
+      -webkit-overflow-scrolling: touch;
+    }
+    .astro-content::-webkit-scrollbar { width: 4px; }
+    .astro-content::-webkit-scrollbar-track { background: transparent; }
+    .astro-content::-webkit-scrollbar-thumb { background: rgba(160,100,255,0.35); border-radius: 4px; }
+
+    /* ── Panels ── */
+    .astro-panel { display: none; flex-direction: column; gap: 14px; padding-bottom: 20px; }
+    .astro-panel.active { display: flex; }
+
+    /* ── Full sign card ── */
+    .astro-sign-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(160,110,255,0.3);
+      border-radius: 22px;
+      padding: 26px 26px 22px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 0 50px rgba(100,40,200,0.15), 0 6px 32px rgba(0,0,0,0.5);
+    }
+    .astro-sign-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .astro-sign-glyph  { font-size: 2.6rem; line-height: 1; }
+    .astro-sign-name   { font-size: 1.5rem; font-weight: 700; color: #ead5ff; letter-spacing: 0.04em; text-shadow: 0 0 20px rgba(180,110,255,0.6); }
+    .astro-sign-dates  { font-size: 0.78rem; color: rgba(180,150,220,0.6); margin-top: 2px; }
+    .astro-date-tag    { font-size: 0.75rem; color: rgba(180,150,230,0.55); margin-bottom: 12px; letter-spacing: 0.07em; text-transform: uppercase; }
+    .astro-horoscope-text { font-size: 1rem; line-height: 1.72; color: rgba(230,210,255,0.9); margin-bottom: 18px; }
+    .astro-meta-row    { display: flex; flex-wrap: wrap; gap: 8px; }
+    .astro-meta-pill {
+      background: rgba(140,80,255,0.18);
+      border: 1px solid rgba(160,110,255,0.28);
+      border-radius: 50px;
+      padding: 5px 13px;
+      font-size: 0.78rem;
+      color: rgba(210,185,255,0.85);
+    }
+    .astro-meta-pill span { color: rgba(180,150,220,0.5); margin-right: 5px; }
+
+    /* ── Together / Compatibility panel ── */
+    .astro-compat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 480px) { .astro-compat-grid { grid-template-columns: 1fr; } }
+    .astro-compat-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(160,110,255,0.28);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .astro-compat-sign { font-size: 1.05rem; font-weight: 700; color: #ead5ff; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .astro-compat-text { font-size: 0.86rem; line-height: 1.62; color: rgba(220,200,255,0.82); }
+    .astro-compat-meta { margin-top: 10px; font-size: 0.76rem; color: rgba(180,150,220,0.55); }
+
+    .astro-together-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(200,150,255,0.4);
+      border-radius: 22px;
+      padding: 22px 24px 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 0 60px rgba(140,60,255,0.2);
+    }
+    .astro-together-title  { font-size: 1.1rem; font-weight: 700; color: #f0e0ff; margin-bottom: 10px; text-align: center; text-shadow: 0 0 18px rgba(200,130,255,0.7); }
+    .astro-together-text   { font-size: 0.94rem; line-height: 1.72; color: rgba(225,205,255,0.88); text-align: center; }
+    .astro-heart-bar       { display: flex; justify-content: center; gap: 6px; margin: 10px 0; font-size: 1.25rem; }
+    .astro-together-colors { margin-top: 12px; font-size: 0.8rem; color: rgba(180,150,220,0.55); text-align: center; }
+
+    /* ── Loading / error states ── */
+    .astro-loading { text-align: center; padding: 36px 0; color: rgba(200,170,255,0.55); font-size: 0.92rem; animation: astroPulse 1.4s ease-in-out infinite; }
+    @keyframes astroPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+    .astro-error   { text-align: center; padding: 20px; color: rgba(255,180,180,0.75); font-size: 0.88rem; line-height: 1.6; }
+  </style>
+</head>
+<body data-tab="astrology">
+
+  <!-- Back button -->
+  <a class="back-btn" href="morning.html">☀️ Morning</a>
+
+  <!-- Twinkling stars (generated by JS) -->
+  <div class="astro-stars-bg" id="astro-stars-bg"></div>
+
+  <!-- Constellation lines -->
+  <svg class="astro-constellation" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- Orion-ish (upper-left) -->
+    <circle cx="310" cy="195" r="2.5" fill="#c8b8ff"/>
+    <circle cx="370" cy="155" r="2"   fill="#c8b8ff"/>
+    <circle cx="432" cy="175" r="3"   fill="#c8b8ff"/>
+    <circle cx="355" cy="258" r="2.5" fill="#c8b8ff"/>
+    <circle cx="395" cy="258" r="2"   fill="#c8b8ff"/>
+    <circle cx="430" cy="255" r="2"   fill="#c8b8ff"/>
+    <circle cx="342" cy="318" r="2"   fill="#c8b8ff"/>
+    <circle cx="400" cy="305" r="2.5" fill="#c8b8ff"/>
+    <line x1="310" y1="195" x2="370" y2="155" stroke="#c8b8ff" stroke-width="0.8"/>
+    <line x1="370" y1="155" x2="432" y2="175" stroke="#c8b8ff" stroke-width="0.8"/>
+    <line x1="310" y1="195" x2="355" y2="258" stroke="#c8b8ff" stroke-width="0.8"/>
+    <line x1="432" y1="175" x2="430" y2="255" stroke="#c8b8ff" stroke-width="0.8"/>
+    <line x1="355" y1="258" x2="395" y2="258" stroke="#c8b8ff" stroke-width="0.8"/>
+    <line x1="395" y1="258" x2="430" y2="255" stroke="#c8b8ff" stroke-width="0.8"/>
+    <line x1="355" y1="258" x2="342" y2="318" stroke="#c8b8ff" stroke-width="0.8"/>
+    <line x1="430" y1="255" x2="400" y2="305" stroke="#c8b8ff" stroke-width="0.8"/>
+
+    <!-- Cassiopeia-ish (upper-right) -->
+    <circle cx="1040" cy="115" r="2.5" fill="#c8d8ff"/>
+    <circle cx="1095" cy="148" r="2"   fill="#c8d8ff"/>
+    <circle cx="1148" cy="126" r="3"   fill="#c8d8ff"/>
+    <circle cx="1200" cy="155" r="2.5" fill="#c8d8ff"/>
+    <circle cx="1255" cy="135" r="2"   fill="#c8d8ff"/>
+    <line x1="1040" y1="115" x2="1095" y2="148" stroke="#c8d8ff" stroke-width="0.8"/>
+    <line x1="1095" y1="148" x2="1148" y2="126" stroke="#c8d8ff" stroke-width="0.8"/>
+    <line x1="1148" y1="126" x2="1200" y2="155" stroke="#c8d8ff" stroke-width="0.8"/>
+    <line x1="1200" y1="155" x2="1255" y2="135" stroke="#c8d8ff" stroke-width="0.8"/>
+
+    <!-- Big Dipper (lower-left) -->
+    <circle cx="115" cy="600" r="2.5" fill="#d8c8ff"/>
+    <circle cx="168" cy="578" r="2"   fill="#d8c8ff"/>
+    <circle cx="222" cy="598" r="2.5" fill="#d8c8ff"/>
+    <circle cx="274" cy="577" r="2"   fill="#d8c8ff"/>
+    <circle cx="315" cy="538" r="2.5" fill="#d8c8ff"/>
+    <circle cx="352" cy="508" r="2"   fill="#d8c8ff"/>
+    <circle cx="405" cy="528" r="3"   fill="#d8c8ff"/>
+    <line x1="115" y1="600" x2="168" y2="578" stroke="#d8c8ff" stroke-width="0.8"/>
+    <line x1="168" y1="578" x2="222" y2="598" stroke="#d8c8ff" stroke-width="0.8"/>
+    <line x1="222" y1="598" x2="274" y2="577" stroke="#d8c8ff" stroke-width="0.8"/>
+    <line x1="274" y1="577" x2="315" y2="538" stroke="#d8c8ff" stroke-width="0.8"/>
+    <line x1="315" y1="538" x2="352" y2="508" stroke="#d8c8ff" stroke-width="0.8"/>
+    <line x1="352" y1="508" x2="405" y2="528" stroke="#d8c8ff" stroke-width="0.8"/>
+
+    <!-- Southern Cross (lower-right) -->
+    <circle cx="1180" cy="720" r="3"   fill="#ffe8c0"/>
+    <circle cx="1240" cy="695" r="2.5" fill="#ffe8c0"/>
+    <circle cx="1300" cy="720" r="3.5" fill="#ffe8c0"/>
+    <circle cx="1240" cy="745" r="2.5" fill="#ffe8c0"/>
+    <circle cx="1240" cy="668" r="2"   fill="#ffe8c0"/>
+    <line x1="1180" y1="720" x2="1300" y2="720" stroke="#ffe8c0" stroke-width="0.8"/>
+    <line x1="1240" y1="668" x2="1240" y2="745" stroke="#ffe8c0" stroke-width="0.8"/>
+
+    <!-- Scattered bright stars -->
+    <circle cx="720"  cy="75"  r="3.5" fill="white" opacity="0.9"/>
+    <circle cx="580"  cy="210" r="2.5" fill="white" opacity="0.7"/>
+    <circle cx="870"  cy="320" r="2"   fill="white" opacity="0.75"/>
+    <circle cx="490"  cy="440" r="3"   fill="#ffe0a0" opacity="0.8"/>
+    <circle cx="760"  cy="690" r="2.5" fill="white" opacity="0.65"/>
+    <circle cx="1350" cy="480" r="2"   fill="white" opacity="0.6"/>
+    <circle cx="185"  cy="355" r="2.5" fill="#ffd0d0" opacity="0.65"/>
+    <circle cx="1060" cy="680" r="3"   fill="#c0e8ff" opacity="0.7"/>
+    <circle cx="630"  cy="550" r="2"   fill="white" opacity="0.55"/>
+    <circle cx="960"  cy="130" r="2"   fill="white" opacity="0.7"/>
+  </svg>
+
+  <!-- ── Astrology View ── -->
+  <div class="astrology-view">
+
+    <!-- Horoscope sign selector -->
+    <div class="astro-sign-tabs">
+      <button class="astro-sign-btn active" onclick="showAstroPanel('capricorn',this)">♑ Capricorn</button>
+      <button class="astro-sign-btn"        onclick="showAstroPanel('virgo',this)">♍ Virgo</button>
+      <button class="astro-sign-btn"        onclick="showAstroPanel('together',this)">♾ Together</button>
+    </div>
+
+    <!-- Horoscope content -->
+    <div class="astro-content" id="astro-content">
+
+      <!-- ♑ Capricorn panel -->
+      <div class="astro-panel active" id="astro-panel-capricorn">
+        <div class="astro-sign-card" id="astro-card-capricorn">
+          <div class="astro-loading">✨ Reading the stars…</div>
+        </div>
+      </div>
+
+      <!-- ♍ Virgo panel -->
+      <div class="astro-panel" id="astro-panel-virgo">
+        <div class="astro-sign-card" id="astro-card-virgo">
+          <div class="astro-loading">✨ Reading the stars…</div>
+        </div>
+      </div>
+
+      <!-- ♾ Together panel -->
+      <div class="astro-panel" id="astro-panel-together">
+        <div class="astro-compat-grid">
+          <div class="astro-compat-card" id="astro-compat-capricorn">
+            <div class="astro-loading">✨ Loading…</div>
+          </div>
+          <div class="astro-compat-card" id="astro-compat-virgo">
+            <div class="astro-loading">✨ Loading…</div>
+          </div>
+        </div>
+        <div class="astro-together-card" id="astro-together-insight">
+          <div class="astro-loading">✨ Calculating your connection…</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ── Astro star generator ── -->
+  <script>
+    (function () {
+      const bg = document.getElementById('astro-stars-bg');
+      if (!bg) return;
+      const sizes = [1, 1.5, 2, 2.5, 3];
+      for (let i = 0; i < 200; i++) {
+        const s = document.createElement('div');
+        s.className = 'astro-star';
+        const sz = sizes[Math.floor(Math.random() * sizes.length)];
+        s.style.cssText = [
+          'left:'   + (Math.random() * 100) + '%',
+          'top:'    + (Math.random() * 100) + '%',
+          'width:'  + sz + 'px',
+          'height:' + sz + 'px',
+          '--dur:'  + (2 + Math.random() * 4) + 's',
+          '--delay:-' + (Math.random() * 4) + 's',
+          'opacity:' + (0.2 + Math.random() * 0.8)
+        ].join(';');
+        bg.appendChild(s);
+      }
+    })();
+  </script>
+
+  <!-- ── Horoscope engine ── -->
+  <script>
+  (function () {
+    const SIGNS = {
+      capricorn: { glyph: '♑', name: 'Capricorn', dates: 'Dec 22 – Jan 19' },
+      virgo:     { glyph: '♍', name: 'Virgo',     dates: 'Aug 23 – Sep 22' }
+    };
+    const cache = {};
+
+    async function fetchHoroscope(sign) {
+      if (cache[sign]) return cache[sign];
+      const url = 'https://horoscope-app-api.netlify.app/api/v1/get-horoscope/daily?sign=' + sign + '&day=TODAY';
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('API ' + res.status);
+      const json = await res.json();
+      if (!json.success) throw new Error('API returned failure');
+      cache[sign] = json.data;
+      return json.data;
+    }
+
+    function renderSignCard(containerId, signKey, data) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const info = SIGNS[signKey];
+      el.innerHTML =
+        '<div class="astro-sign-header">' +
+          '<div class="astro-sign-glyph">' + info.glyph + '</div>' +
+          '<div>' +
+            '<div class="astro-sign-name">' + info.name + '</div>' +
+            '<div class="astro-sign-dates">' + info.dates + '</div>' +
+          '</div>' +
+        '</div>' +
+        (data.date ? '<div class="astro-date-tag">' + data.date + '</div>' : '') +
+        '<div class="astro-horoscope-text">' + (data.horoscope_data || '—') + '</div>' +
+        '<div class="astro-meta-row">' +
+          pill('Mood', data.mood) +
+          pill('Color', data.color) +
+          pill('Lucky #', data.lucky_number) +
+          pill('Lucky Time', data.lucky_time) +
+          pill('Compatible with', data.compatibility) +
+        '</div>';
+    }
+
+    function renderCompatCard(containerId, signKey, data) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const info = SIGNS[signKey];
+      el.innerHTML =
+        '<div class="astro-compat-sign">' + info.glyph + ' ' + info.name + '</div>' +
+        '<div class="astro-compat-text">' + (data.horoscope_data || '—') + '</div>' +
+        (data.mood ? '<div class="astro-compat-meta">Mood: ' + data.mood + '</div>' : '');
+    }
+
+    function renderTogetherInsight(capData, virData) {
+      const el = document.getElementById('astro-together-insight');
+      if (!el) return;
+      const capMood = (capData.mood  || '').toLowerCase();
+      const virMood = (virData.mood  || '').toLowerCase();
+      const capColor = capData.color || '';
+      const virColor = virData.color || '';
+      const capLikesVir = (capData.compatibility || '').toLowerCase().includes('virgo');
+      const virLikesCap = (virData.compatibility || '').toLowerCase().includes('capricorn');
+      const moodLine = (capMood && virMood)
+        ? 'With Capricorn feeling <em>' + capMood + '</em> and Virgo in a <em>' + virMood + '</em> mood, '
+        : '';
+      const compatLine = (capLikesVir && virLikesCap)
+        ? 'the stars show a strong mutual pull between you today — a rare and beautiful alignment. '
+        : (capLikesVir || virLikesCap)
+        ? 'the cosmic current flows favourably between you right now. '
+        : 'even when the stars point elsewhere, the earth-sign bond between you runs deep. ';
+      const insight = moodLine + compatLine +
+        'Both earth signs share a foundation of loyalty, practicality, and quiet devotion. ' +
+        'Today is a good day to lean into that grounded connection — support each other\'s goals, share a laugh, and let the small moments matter.';
+      const colors = [capColor, virColor].filter(Boolean).join(' & ');
+      el.innerHTML =
+        '<div class="astro-together-title">♑ × ♍ Today\'s Connection</div>' +
+        '<div class="astro-heart-bar">💜 ✨ 💜</div>' +
+        '<div class="astro-together-text">' + insight + '</div>' +
+        (colors ? '<div class="astro-together-colors">Today\'s colors: ' + colors + '</div>' : '');
+    }
+
+    function pill(label, value) {
+      if (!value) return '';
+      return '<div class="astro-meta-pill"><span>' + label + '</span>' + value + '</div>';
+    }
+
+    function errHTML(msg) {
+      return '<div class="astro-error">🌌 ' + (msg || 'Unable to reach the stars right now.<br>Please try again later.') + '</div>';
+    }
+
+    async function loadHoroscopes() {
+      try {
+        const [capData, virData] = await Promise.all([
+          fetchHoroscope('Capricorn'),
+          fetchHoroscope('Virgo')
+        ]);
+        renderSignCard('astro-card-capricorn', 'capricorn', capData);
+        renderSignCard('astro-card-virgo',     'virgo',     virData);
+        renderCompatCard('astro-compat-capricorn', 'capricorn', capData);
+        renderCompatCard('astro-compat-virgo',     'virgo',     virData);
+        renderTogetherInsight(capData, virData);
+      } catch (err) {
+        console.warn('Horoscope API error:', err);
+        const msg = 'Unable to reach the stars right now.<br>Please try again later.';
+        ['astro-card-capricorn','astro-card-virgo',
+         'astro-compat-capricorn','astro-compat-virgo','astro-together-insight'].forEach(function(id) {
+          var el = document.getElementById(id);
+          if (el) el.innerHTML = errHTML(msg);
+        });
+      }
+    }
+
+    // Panel switcher
+    window.showAstroPanel = function(which, btn) {
+      document.querySelectorAll('.astro-sign-btn').forEach(function(b){ b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      document.querySelectorAll('.astro-panel').forEach(function(p){ p.classList.remove('active'); });
+      var panel = document.getElementById('astro-panel-' + which);
+      if (panel) panel.classList.add('active');
+    };
+
+    // Load horoscopes immediately on page load
+    loadHoroscopes();
+  })();
+  </script>
+
+</body>
+</html>
