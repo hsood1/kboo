@@ -2252,9 +2252,10 @@
       const q = QUOTES[dayIndex];
       const quoteText = '\u201c' + q.quote + '\u201d \u2014 ' + q.author;
 
-      var CHAR_SPEED = 30; // ms per character
+      var CHAR_SPEED  = 30; // ms per character typed
+      var ERASE_SPEED = 18; // ms per character erased (slightly faster)
 
-      // Type text char-by-char into textNode, then call cb
+      // Type text char-by-char, then call cb
       function typeText(text, cb) {
         textNode.textContent = '';
         if (cursor) cursor.classList.add('active');
@@ -2269,26 +2270,41 @@
         })();
       }
 
-      // Type text, hold for totalMs total (typing + display), then fade out and call nextFn
-      function runAndSwitch(text, totalMs, nextFn) {
-        var typingMs = text.length * CHAR_SPEED;
-        typeText(text, function () {
-          var holdMs = Math.max(600, totalMs - typingMs);
-          setTimeout(function () {
+      // Erase text char-by-char (backspace), then call cb
+      function eraseText(cb) {
+        if (cursor) cursor.classList.add('active');
+        (function tick() {
+          var txt = textNode.textContent;
+          if (txt.length > 0) {
+            textNode.textContent = txt.slice(0, -1);
+            setTimeout(tick, ERASE_SPEED);
+          } else {
             if (cursor) cursor.classList.remove('active');
-            el.style.opacity = '0';
-            setTimeout(nextFn, 600); // wait for fade-out then switch
+            if (cb) cb();
+          }
+        })();
+      }
+
+      // Type text, hold for holdMs, backspace it out, then call nextFn
+      function runAndSwitch(text, totalMs, nextFn) {
+        var typingMs  = text.length * CHAR_SPEED;
+        var erasingMs = text.length * ERASE_SPEED;
+        var holdMs    = Math.max(500, totalMs - typingMs - erasingMs);
+        el.style.opacity = '1';
+        typeText(text, function () {
+          setTimeout(function () {
+            eraseText(function () {
+              setTimeout(nextFn, 300); // brief pause before next phrase
+            });
           }, holdMs);
         });
       }
 
       function showGreeting() {
-        el.style.opacity = '1';
         runAndSwitch(SUBTITLE_TEXT, 5000, showQuote);
       }
 
       function showQuote() {
-        el.style.opacity = '1';
         runAndSwitch(quoteText, 15000, showGreeting);
       }
 
