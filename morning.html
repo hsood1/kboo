@@ -583,6 +583,7 @@
       line-height: 1.5;
       margin-bottom: 22px;
       min-height: 2em;
+      transition: opacity 0.5s ease;
     }
     .typing-cursor {
       display: inline-block;
@@ -1066,7 +1067,7 @@
   <!-- ── Main weather card ── -->
   <div class="card">
     <div class="greeting-title">Good morning, Kboo</div>
-    <div class="sub-greeting" id="sub-greeting">Hope you slept well — it's a brand new day.<span class="typing-cursor" id="typing-cursor"></span></div>
+    <div class="sub-greeting" id="sub-greeting"><span id="sub-greeting-text">Hope you slept well — it's a brand new day.</span></div>
 
     <div class="date-pill" id="date-display">Loading date...</div>
     <div class="time-display" id="time-display"></div>
@@ -2246,11 +2247,15 @@
 
   <script>
     (function () {
+      // DEV FLAG: set to false to restore April 1st-only behaviour
+      const SAGAN_ALWAYS_SHOW = true;
+
       const now   = new Date();
       const month = now.getMonth(); // 0-indexed: 3 = April
       const day   = now.getDate();
+      const isAprilFirst = (month === 3 && day === 1);
 
-      if (month === 3 && day === 1) {
+      if (SAGAN_ALWAYS_SHOW || isAprilFirst) {
         // Calculate age
         const age = now.getFullYear() - 2022;
         document.getElementById('sagan-age').textContent = age;
