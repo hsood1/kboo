@@ -584,9 +584,26 @@
     .sub-greeting {
       font-size: clamp(0.7rem, 3.3vw, 1rem);
       color: #7f8c8d;
-      white-space: nowrap;
       line-height: 1.5;
       margin-bottom: 22px;
+      min-height: 2em;
+    }
+    .typing-cursor {
+      display: inline-block;
+      width: 1.5px;
+      height: 0.85em;
+      background: #7f8c8d;
+      margin-left: 1px;
+      vertical-align: text-bottom;
+      opacity: 0;
+      animation: cursorBlink 0.75s step-end infinite;
+    }
+    .typing-cursor.active {
+      opacity: 1;
+    }
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
     }
     .date-pill {
       display: inline-block;
@@ -1043,7 +1060,7 @@
   <div class="card">
     <div class="greeting-emoji">☀️</div>
     <div class="greeting-title">Good morning, Kboo</div>
-    <div class="sub-greeting">Hope you slept well — it's a brand new day.</div>
+    <div class="sub-greeting" id="sub-greeting">Hope you slept well — it's a brand new day.<span class="typing-cursor" id="typing-cursor"></span></div>
 
     <div class="date-pill" id="date-display">Loading date...</div>
 
@@ -1438,6 +1455,427 @@
 
       loadWeather();
     }
+
+    // ── Daily motivational quote typewriter ────────────────────────────────────
+    (function () {
+      const QUOTES = [
+        "Every day is a fresh start — make it yours. 🌸",
+        "You've got this. One step at a time. 👣",
+        "Small progress is still progress. Keep going. 🌱",
+        "Be the sunshine you wish to see today. ☀️",
+        "Good things take time. You're right on schedule. 🕰️",
+        "You are capable of amazing things. 💪",
+        "Today is full of possibility — embrace it. ✨",
+        "Your kindness makes the world brighter. 💛",
+        "Believe in yourself a little extra today. 🌟",
+        "Every expert was once a beginner. Keep learning. 📚",
+        "You bring something special to every room. 🌺",
+        "One kind thought can change everything. 🤍",
+        "You are enough, exactly as you are. 🌿",
+        "Today's the perfect day for a fresh idea. 💡",
+        "The best is yet to come — keep going. 🚀",
+        "Breathe in courage, breathe out doubt. 🌬️",
+        "You make today better just by being in it. 🌼",
+        "Dream it. Believe it. Do it. ⭐",
+        "Magic happens when you step outside your comfort zone. 🦋",
+        "You are braver than you think. 🦁",
+        "Chase progress, not perfection. 🏃‍♀️",
+        "Every moment is a chance to start fresh. 🌅",
+        "Your effort today is tomorrow's reward. 🎁",
+        "Be proud of how far you've come. 🏆",
+        "Kindness is always in style. 💗",
+        "The little things? They're the big things. 🌟",
+        "You've survived every hard day so far. Keep it up! 💪",
+        "Today, choose joy. 🌈",
+        "Great things never came from staying comfortable. 🌊",
+        "Your potential is limitless — don't forget it. 🔥",
+        "Be gentle with yourself today. 🌙",
+        "Do something today your future self will thank you for. 🌟",
+        "Energy flows where attention goes. Focus up! ⚡",
+        "You are exactly where you need to be. 🗺️",
+        "One day at a time, one step at a time. 👟",
+        "Happiness is a choice — choose it today. 😊",
+        "Your smile is someone else's sunshine. ☀️",
+        "Trust the process — it's working. 🔄",
+        "You don't have to be perfect to be amazing. 🌸",
+        "Make today so good that yesterday gets jealous. 😄",
+        "Every sunrise is a new chapter — write it well. 📖",
+        "You've got the strength. You just need to use it. 💎",
+        "The world is better because you're in it. 🌍",
+        "Sprinkle kindness like confetti today. 🎊",
+        "You are worthy of everything you desire. 🌺",
+        "Push a little harder — you're closer than you think. 🏁",
+        "A positive mind finds opportunity in every obstacle. 🌱",
+        "Your vibe attracts your tribe. Keep it high! ✨",
+        "Celebrate the small wins — they add up. 🎉",
+        "You were made for this moment. 🌟",
+        "Take up space. You deserve to be here. 🌻",
+        "Good things happen to those who hustle. 🙌",
+        "Let your light shine unapologetically today. 💫",
+        "Be the reason someone smiles today. 😁",
+        "You are a work in progress, and that's beautiful. 🎨",
+        "Stay curious — the best ideas come from wondering. 🔍",
+        "Your story isn't over yet. Keep writing. 📝",
+        "Doubt is just excitement in disguise. Go for it! 🎯",
+        "One good decision can change everything. 🌠",
+        "You bring so much value to the people around you. 💛",
+        "Be kind to your mind today. 🧠",
+        "The comeback is always stronger than the setback. 🌊",
+        "Consistency beats perfection every time. ⏱️",
+        "Today is a gift — that's why it's called the present. 🎁",
+        "Your hard work is paying off, even if you can't see it yet. 🌱",
+        "Shine on, you extraordinary human. 🌟",
+        "You are more resilient than you realise. 🌿",
+        "Do it with passion or not at all. ❤️",
+        "Something wonderful is about to happen. 🌈",
+        "You are the author of your own adventure. 📚",
+        "Keep planting seeds — your garden is growing. 🌻",
+        "Be brave enough to be bad at something new. 🎸",
+        "You are doing better than you think. 🤍",
+        "Success starts with one brave step. 👟",
+        "The future belongs to those who believe in their dreams. 💭",
+        "You have everything you need inside you. 🌟",
+        "Make waves — the world needs your ripple. 🌊",
+        "Take a deep breath. You've totally got this. 😌",
+        "Be so good they can't ignore you. 🔥",
+        "Every day is another chance to be the best you. 💪",
+        "Think big, start small, act now. 🚀",
+        "Life is better when you're laughing. 😂",
+        "Your energy is contagious — make it a good one. ⚡",
+        "Dare to be different today. 🦄",
+        "Gratitude turns what you have into enough. 🙏",
+        "You are magnetic — people are drawn to your warmth. 🌟",
+        "Keep showing up — that's the whole secret. 🚪",
+        "Plant goodness, harvest greatness. 🌱",
+        "Courage is feeling fear and doing it anyway. 🦁",
+        "Every big achievement started as a small idea. 💡",
+        "Your journey is uniquely, beautifully yours. 🗺️",
+        "Fill your own cup first. ☕",
+        "Progress, not perfection — always. 📈",
+        "You are a force of nature. 🌪️",
+        "Mistakes are proof that you're trying. 🌸",
+        "Give yourself credit for how far you've come. 🏅",
+        "Kindness is free — spend it wildly. 💸",
+        "You are built for this season of your life. 🍂",
+        "Keep your face to the sunshine. 🌻",
+        "Hard days build strong people. 🏔️",
+        "You radiate good energy — share it generously. ✨",
+        "Today won't come again — make it count. ⏳",
+        "Bloom where you are planted. 🌷",
+        "The magic is in you, not in the circumstances. 🪄",
+        "You are a priority, not an afterthought. 👑",
+        "Let go of what no longer serves you. 🍃",
+        "You have more to offer than you know. 🎁",
+        "Rise up and attack the day with enthusiasm. 🌅",
+        "Be patient with yourself — growth takes time. 🌳",
+        "Your determination is your superpower. ⚡",
+        "A new day means a new chance. Take it. 🌄",
+        "You are exactly enough. 💫",
+        "Positivity is a practice — practice it today. 🧘",
+        "Every challenge is a chance to grow. 🌱",
+        "You are worthy of love and belonging. 🤍",
+        "Stay focused — your goals are closer than they appear. 🎯",
+        "Good energy is your birthright. Claim it! ✨",
+        "Your best days are ahead of you. 🌅",
+        "Be the version of you that you admire. 🪞",
+        "Curiosity is the beginning of every great thing. 🔍",
+        "Comparison is the thief of joy — stay in your lane. 🛣️",
+        "You are creating something wonderful. 🎨",
+        "Trust your instincts — they know the way. 🧭",
+        "Choose progress over perfection, every time. 📈",
+        "You light up every space you enter. 💡",
+        "One day you'll look back and be so glad you kept going. 🌟",
+        "Your enthusiasm is infectious — keep sharing it. 🎊",
+        "Mindset is everything. Set yours to thrive. 🧠",
+        "You are a beautiful work in progress. 🖌️",
+        "Believe in the magic of new beginnings. ✨",
+        "Tiny steps in the right direction beat giant leaps sideways. 🐣",
+        "You are not behind — you're right on time. 🕐",
+        "Your strength amazes the people around you. 💛",
+        "Today, invest in yourself. It always pays off. 💰",
+        "Show up for yourself today. You deserve it. 🌷",
+        "Life rewards the bold. Be bold today. 🦋",
+        "Be the energy you want to attract. 🌟",
+        "You are creating memories that will last forever. 📸",
+        "Turn your can'ts into cans and your dreams into plans. 💪",
+        "Every breath is a new beginning. 🌬️",
+        "You are the hero of your own story. 🦸",
+        "Surround yourself with people who lift you higher. 🎈",
+        "Your potential is bigger than any setback. 🌊",
+        "Today, let joy be your compass. 🧭",
+        "You are capable of more than you imagine. 🌌",
+        "Keep your eyes on the stars and your feet on the ground. ⭐",
+        "Today's effort is tomorrow's confidence. 🌱",
+        "Shine from the inside out. 💎",
+        "What you focus on grows. Focus on the good. 🌻",
+        "You are rare and irreplaceable. Never forget it. 🦋",
+        "The universe is rooting for you. 🌙",
+        "Make today a little bit better than yesterday. 📈",
+        "You are braver than you believe and stronger than you seem. 🦁",
+        "Your dreams deserve your undivided attention. 💭",
+        "Good things come to those who work for them. 🙌",
+        "Stay humble, stay hungry, stay kind. 🌿",
+        "You are writing your legacy one day at a time. 📖",
+        "The sky isn't the limit — your mind is. 🚀",
+        "You are allowed to take up space. 🌟",
+        "Every stumble is setting up the comeback. 🌊",
+        "The best time to start was yesterday. The next best is now. ⏰",
+        "You are a masterpiece in progress. 🎨",
+        "Stay the course — you're doing brilliantly. 🏆",
+        "Gratitude is the fastest path to happiness. 🙏",
+        "You are seen, valued, and appreciated. 💛",
+        "Keep dreaming — those dreams are directions. 🗺️",
+        "Your hard work is a love letter to your future self. 💌",
+        "Be present. This moment is a gift. 🎁",
+        "You carry a light that darkness cannot extinguish. 🕯️",
+        "Small acts of courage add up to a great life. 🦋",
+        "You are doing something no one else can do — being you. 🌟",
+        "Today is a good day to have a great day. 😊",
+        "Passion is the fuel — go full throttle. 🔥",
+        "You are love, and you are loved. 💗",
+        "Keep walking — the path reveals itself. 🌿",
+        "Everything you need is already within you. 🔮",
+        "You are the most capable person you know. 💪",
+        "Celebrate today just for showing up. 🎉",
+        "Your potential has no ceiling. Dream bigger. ☁️",
+        "You are planting seeds you'll harvest later. 🌱",
+        "Choose kindness — it's always the right move. 💙",
+        "You were born to make an impact. Go make one. 🌊",
+        "Let your light shine a little brighter today. 💫",
+        "Resilience is your superpower — use it. 🦸",
+        "Today is a blank canvas — paint it beautifully. 🖼️",
+        "Wonderful surprises are on their way to you. 🎊",
+        "You are more than enough, and then some. ✨",
+        "Take a moment to appreciate how far you've come. 🌅",
+        "Your unique perspective is exactly what the world needs. 🌍",
+        "Be the change you wish to see — starting today. 🌱",
+        "You are stronger than any storm. ⚡",
+        "Today, dare to ask for what you truly want. 🙋",
+        "Happiness lives in the little moments. Collect them. 🌸",
+        "You make a difference every single day. 💫",
+        "Keep your heart open — magic finds open hearts. 🪄",
+        "Your journey is worth every step. 🗺️",
+        "Be the kind of person who makes others feel important. 💛",
+        "You are exactly where you're meant to be right now. 🌟",
+        "Own your morning, own your day. ☀️",
+        "You are a gift to every person who knows you. 🎁",
+        "The best project you can work on is yourself. 💡",
+        "Believe in your journey, even when the path gets steep. 🏔️",
+        "You are growing in ways you haven't even noticed yet. 🌱",
+        "What a wonderful world it is with you in it. 🌍",
+        "Your positivity is someone's refuge. Keep shining. 🌟",
+        "Challenges are just opportunities wearing a disguise. 🎭",
+        "You've got the grit, the grace, and the greatness. 🌺",
+        "Let today be the day you love yourself fiercely. 💗",
+        "You are the architect of your own happiness. 🏗️",
+        "The best is always worth working for. 🏆",
+        "You are thoughtful, talented, and tremendous. 🌟",
+        "Today, let your heart lead the way. 💛",
+        "Courage lives in the heart of those who try. 🦁",
+        "You are enough — and then you are more. 💎",
+        "Be relentless in pursuit of what sets your soul on fire. 🔥",
+        "You are a ray of sunshine on a cloudy day. ☀️",
+        "Everything begins with a single step. Take yours. 👟",
+        "You are turning ordinary moments into extraordinary ones. ✨",
+        "Stay wild, stay kind, stay curious. 🌿",
+        "You've already done the hardest part — you started. 🏁",
+        "Your intuition is smarter than you think. Trust it. 🔮",
+        "Love what you're building, and it will love you back. 🏗️",
+        "You are so much more than your to-do list. 📋",
+        "Big journeys begin with small, brave steps. 🐾",
+        "You are someone's answered prayer today. 🙏",
+        "The world needs your specific brand of magic. 🪄",
+        "You are steadily becoming who you were meant to be. 🌸",
+        "Keep your standards high and your spirit higher. ⭐",
+        "You are not alone — you are wonderfully supported. 🤝",
+        "Your story is still being written. Make it epic. 📖",
+        "Believe you can, and you're halfway there. 🌟",
+        "You deserve rest as much as you deserve success. 🌙",
+        "Today, let your work speak for itself. 💪",
+        "You are a diamond — formed under pressure, stunning in light. 💎",
+        "Keep going. You're doing beautifully. 🌈",
+        "Greatness is built in the ordinary moments. ⏰",
+        "You are surrounded by opportunity. Open your eyes. 👀",
+        "Your presence matters more than you know. 💛",
+        "Let today's good outweigh yesterday's doubt. ⚖️",
+        "You are made of stardust and determination. ⭐",
+        "Make your health a priority today. You're worth it. 🍏",
+        "You are a champion at life — even on the tough days. 🏅",
+        "The right people will always recognise your worth. 🌟",
+        "Today, give yourself permission to be brilliant. ✨",
+        "You are capable of extraordinary things. Go prove it. 🚀",
+        "Every small step forward is still forward. Keep walking. 🌿",
+        "You bring depth, warmth, and wonder to the world. 🌎",
+        "Success is a series of small steps taken consistently. 🪜",
+        "You are brave enough to start over if you need to. 🌅",
+        "Keep nurturing your dreams — they're listening. 🌱",
+        "You are the secret ingredient to making today great. ✨",
+        "Stay grounded, stay grateful, stay growing. 🌳",
+        "You deserve everything you're working so hard for. 🎯",
+        "Look at you — still here, still trying. That's everything. 💛",
+        "Your dreams are valid and absolutely worth chasing. 🌠",
+        "Be soft in heart and fierce in spirit. 🌸🔥",
+        "You are precisely what the world ordered. 🌍",
+        "Today, trust the timing of your life. 🕊️",
+        "You turn every challenge into a lesson. That's wisdom. 📚",
+        "Let kindness be the first language you speak today. 💬",
+        "You are vibrant, vital, and completely irreplaceable. 💫",
+        "Momentum builds with every brave step you take. 🏃",
+        "You are a gift — beautifully wrapped in your own unique way. 🎁",
+        "Today's a great day to create something you're proud of. 🎨",
+        "You are the calm in someone else's storm. 🌊",
+        "Your perseverance is writing a story others will be inspired by. 📖",
+        "Be curious. Be compassionate. Be you. 🌟",
+        "You are so close to your breakthrough. Keep pushing. 💥",
+        "Life is better because you're in it — truly. 🌍",
+        "You have a spark that can't be dimmed. Shine on. 💡",
+        "Today, do one thing that makes your heart sing. 🎶",
+        "You are endlessly resilient and wonderfully human. 🌿",
+        "The best view comes after the hardest climb. 🏔️",
+        "You are worthy of all the good things coming your way. 🌸",
+        "Every day is a chance to rewrite your narrative. ✍️",
+        "You are the reason someone's world is a little brighter. 🌟",
+        "Chase the life you want — not the one you settled for. 🏃",
+        "You are growing into someone wonderful. 🌱",
+        "Celebrate being alive today. Not everyone gets this day. 🌅",
+        "Your consistency is quietly impressive. Keep it up. 💪",
+        "You are the answer to a question the world has been asking. 🌍",
+        "Think less. Feel more. Do the thing. 💫",
+        "You are proof that hard work pays off. 🔑",
+        "Today, let love guide every decision. 💗",
+        "You have what it takes — you always have. 🦋",
+        "Your efforts are never wasted. Trust the process. 🌿",
+        "Be bold enough to use your voice today. 📢",
+        "You are a living, breathing miracle. Don't forget it. 🌟",
+        "Make today about progress — however small. 📈",
+        "You matter in ways you can't even begin to measure. 💛",
+        "Keep being wonderfully, unapologetically you. 🎨",
+        "You are fuelled by purpose and powered by passion. 🔥",
+        "Today holds more magic than you yet know. 🪄",
+        "You are strong enough to bend without breaking. 🌿",
+        "Every day you show up is a victory worth celebrating. 🎉",
+        "Your light doesn't take anything from anyone else — shine! 💡",
+        "You are exactly the person this world needs right now. 🌍",
+        "Do one thing today that your future self will high-five you for. 🙌",
+        "You are a wellspring of ideas, love, and possibility. 🌸",
+        "Keep the faith — your season is coming. 🌦️",
+        "You are not a drop in the ocean — you are the entire ocean in a drop. 🌊",
+        "Today, be someone's reason to believe things get better. 💛",
+        "You are building something incredible, one day at a time. 🏗️",
+        "Believe in the power of your own story. 📖",
+        "You are blooming beautifully, even when you can't see it. 🌷",
+        "Each morning you wake up is another gift. Unwrap it. 🎁",
+        "You are driven, dedicated, and destined for great things. ⭐",
+        "Today, the world is ready for what you have to give. 🌍",
+        "You are unstoppable when you believe in yourself. 🚀",
+        "Sow seeds of greatness every single day. 🌾",
+        "Your best is always good enough. 💛",
+        "Walk boldly into what scares you — that's where growth lives. 🦋",
+        "You carry the strength of everyone who believed in you. 💪",
+        "Let your dreams be bigger than your fears. 🌠",
+        "Be gentle with yourself — you are a work of art. 🖼️",
+        "You are not the same person you were a year ago. That's growth. 🌱",
+        "The world is full of wonderful things waiting for you. 🌍",
+        "You are worthy of rest, joy, and peace. 🌙",
+        "Your efforts ripple outward in ways you'll never fully see. 🌊",
+        "Take it one beautiful breath at a time. 🌬️",
+        "You are a lighthouse — steady, bright, and essential. 🏮",
+        "Everything you want is on the other side of fear. 🚪",
+        "You are exactly the kind of person the world needs more of. 🌟",
+        "Even the smallest light can brighten the darkest room. 💡",
+        "You are building the life you deserve. Keep building. 🏗️",
+        "Your consistency is your greatest competitive advantage. 🔑",
+        "Today, lead with love — it opens every door. 💗",
+        "You are more valuable than you could possibly understand. 💎",
+        "Keep going. Rest if you must, but don't give up. 🌿",
+        "Your heart already knows the way. Follow it. 🧭",
+        "You have done hard things before — and you'll do them again. 💪",
+        "Be so busy improving yourself that you have no time to criticise others. 🌸",
+        "You are the product of your choices. Choose wisely today. 🎯",
+        "The best chapters of your story are still ahead. 📖",
+        "You are irreplaceable, invaluable, and incredible. 🌟",
+        "Take one meaningful step forward today. That's enough. 👟",
+        "You are allowed to outgrow old versions of yourself. 🦋",
+        "Your imagination is the preview of life's coming attractions. 🎬",
+        "You are someone's favourite person — remember that. 💛",
+        "Start where you are. Use what you have. Do what you can. 🌱",
+        "You are a quiet revolution — changing the world your way. 🌍",
+        "Difficult roads often lead to the most beautiful destinations. 🏔️",
+        "You are the melody in someone else's story. 🎶",
+        "Let today's sunshine clear away yesterday's clouds. ☀️",
+        "You are growing stronger with every obstacle you overcome. 💪",
+        "Your presence is a present — give it generously today. 🎁",
+        "Feed your focus. Starve your doubts. 🔥",
+        "You are a universe of potential in human form. 🌌",
+        "Act as if what you do makes a difference — because it does. 🌊",
+        "You are perfectly imperfect, and that's perfectly fine. 🌸",
+        "Kindness costs nothing but means everything. 💙",
+        "You are creating ripples of goodness that travel far. 🌊",
+        "Today, invest in your happiness. It's the best ROI. 😊",
+        "You are enough of a reason to celebrate today. 🥂",
+        "Your passion is your compass — always trust it. 🧭",
+        "Even on slow days, you are still moving forward. 🐢",
+        "You deserve to feel proud of yourself today. 🌟",
+        "The foundation you're building now will hold everything. 🏛️",
+        "You are someone's definition of inspiring. 💫",
+        "Be the most enthusiastic person in the room today. 🙌",
+        "You have survived 100% of your hardest days. That's remarkable. 💪",
+        "Let your values guide you and your vision drive you. 🌅",
+        "You are not just surviving — you are absolutely thriving. 🌺",
+        "Today, dare to ask for exactly what you need. 🗣️",
+        "You are the sunrise this world has been waiting for. 🌄",
+        "Happy leap day! You are extra special — just like today. 🐸✨"
+      ];
+
+      function getDayOfYear() {
+        const now = new Date();
+        const start = new Date(now.getFullYear(), 0, 0);
+        const diff = now - start;
+        const oneDay = 1000 * 60 * 60 * 24;
+        return Math.floor(diff / oneDay); // 1–366
+      }
+
+      const el = document.getElementById('sub-greeting');
+      const cursor = document.getElementById('typing-cursor');
+      if (!el || !cursor) return;
+
+      const originalText = 'Hope you slept well — it\'s a brand new day.';
+      const dayIndex = (getDayOfYear() - 1 + QUOTES.length) % QUOTES.length;
+      const quote = QUOTES[dayIndex];
+
+      cursor.classList.add('active');
+
+      function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+      async function runTypewriter() {
+        await sleep(2000); // pause so user reads the subtitle first
+
+        // Backspace out original text
+        let text = originalText;
+        while (text.length > 0) {
+          text = text.slice(0, -1);
+          el.firstChild.textContent = text;
+          await sleep(38);
+        }
+
+        await sleep(300);
+
+        // Type in the quote
+        let typed = '';
+        for (const char of quote) {
+          typed += char;
+          el.firstChild.textContent = typed;
+          await sleep(42);
+        }
+
+        // Remove cursor blink after typing finishes
+        await sleep(2500);
+        cursor.style.animation = 'none';
+        cursor.style.opacity = '1';
+      }
+
+      runTypewriter();
+    })();
   </script>
 </body>
 </html>
