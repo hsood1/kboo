@@ -2388,43 +2388,16 @@
       height: 160px;
     }
 
-    /* ── Cat SVG bounce animation ── */
+    /* ── Cat bob animation ── */
     @keyframes sagan-bounce {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-6px); }
-    }
-    @keyframes sagan-tail {
-      0%, 100% { transform-origin: bottom left; transform: rotate(0deg); }
-      50%       { transform-origin: bottom left; transform: rotate(22deg); }
-    }
-    @keyframes sagan-blink {
-      0%, 90%, 100% { transform: scaleY(1); }
-      95%           { transform: scaleY(0.1); }
-    }
-    @keyframes sagan-ear-twitch {
-      0%, 80%, 100% { transform: rotate(0deg); }
-      85%           { transform: rotate(-8deg); }
-      90%           { transform: rotate(5deg); }
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-10px); }
     }
 
     #sagan-cat-group {
-      animation: sagan-bounce 2s ease-in-out infinite;
+      animation: sagan-bounce 1.8s ease-in-out infinite;
       position: relative;
       display: inline-block;
-    }
-
-    .sagan-eyes-group {
-      animation: sagan-blink 3.5s ease-in-out infinite;
-      transform-origin: center;
-    }
-
-    .sagan-tail {
-      animation: sagan-tail 1.8s ease-in-out infinite;
-    }
-
-    .sagan-ear-l {
-      animation: sagan-ear-twitch 4s ease-in-out infinite;
-      transform-origin: 40px 55px;
     }
 
     /* ── Speech bubble ── */
@@ -2504,21 +2477,10 @@
       <div id="sagan-subtitle">April 1st — The best day of the year</div>
 
       <div id="sagan-scene">
-        <!-- Cat drawn in SVG -->
+        <!-- Clip-art style gray cat — flat design, bold outlines, 4 paws clearly visible -->
         <div id="sagan-cat-group">
-          <svg width="110" height="168" viewBox="0 0 110 168" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <svg width="110" height="170" viewBox="0 0 110 170" xmlns="http://www.w3.org/2000/svg" overflow="visible">
             <defs>
-              <!-- Radial gradient for 3-D body shading -->
-              <radialGradient id="sg-body" cx="38%" cy="30%" r="65%" gradientUnits="objectBoundingBox">
-                <stop offset="0%" stop-color="#d8d8d8"/>
-                <stop offset="100%" stop-color="#a0a0a0"/>
-              </radialGradient>
-              <!-- Radial gradient for head shading -->
-              <radialGradient id="sg-head" cx="38%" cy="28%" r="68%" gradientUnits="objectBoundingBox">
-                <stop offset="0%" stop-color="#dcdcdc"/>
-                <stop offset="100%" stop-color="#a6a6a6"/>
-              </radialGradient>
-              <!-- Party hat gradient -->
               <linearGradient id="hat-grad" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stop-color="#ff6b9d"/>
                 <stop offset="50%" stop-color="#ffd93d"/>
@@ -2595,12 +2557,12 @@
             <g class="sagan-eyes-group">
               <!-- left eye -->
               <ellipse cx="43" cy="70" rx="7.5" ry="7.5" fill="#fff"/>
-              <ellipse cx="43" cy="71"  rx="5"   ry="5.5" fill="#7ecb50"/>
+              <ellipse cx="43" cy="71"  rx="5"   ry="5.5" fill="#f5c200"/>
               <ellipse cx="43" cy="71.5" rx="3"  ry="3.5" fill="#111"/>
               <ellipse cx="45" cy="69"  rx="1.5" ry="1.5" fill="#fff"/>
               <!-- right eye -->
               <ellipse cx="67" cy="70" rx="7.5" ry="7.5" fill="#fff"/>
-              <ellipse cx="67" cy="71"  rx="5"   ry="5.5" fill="#7ecb50"/>
+              <ellipse cx="67" cy="71"  rx="5"   ry="5.5" fill="#f5c200"/>
               <ellipse cx="67" cy="71.5" rx="3"  ry="3.5" fill="#111"/>
               <ellipse cx="69" cy="69"  rx="1.5" ry="1.5" fill="#fff"/>
             </g>
