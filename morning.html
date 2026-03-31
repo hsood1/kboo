@@ -1066,7 +1066,7 @@
   <!-- ── Main weather card ── -->
   <div class="card">
     <div class="greeting-title">Good morning, Kboo</div>
-    <div class="sub-greeting" id="sub-greeting"><span id="sub-greeting-text">Hope you slept well — it's a brand new day.</span></div>
+    <div class="sub-greeting" id="sub-greeting"><span id="sub-greeting-text"></span><span class="typing-cursor" id="typing-cursor"></span></div>
 
     <div class="date-pill" id="date-display">Loading date...</div>
     <div class="time-display" id="time-display"></div>
@@ -2245,34 +2245,55 @@
 
       const el = document.getElementById('sub-greeting');
       const textNode = document.getElementById('sub-greeting-text');
+      const cursor = document.getElementById('typing-cursor');
       if (!el || !textNode) return;
 
       const dayIndex = getDayOfYear() % QUOTES.length;
       const q = QUOTES[dayIndex];
       const quoteText = '\u201c' + q.quote + '\u201d \u2014 ' + q.author;
 
-      // Cycle: subtitle for 5s, quote for 15s, repeat
-      function fadeToSubtitle() {
-        el.style.opacity = '0';
-        setTimeout(function () {
-          textNode.textContent = SUBTITLE_TEXT;
-          el.style.opacity = '1';
-          setTimeout(fadeToQuote, 5000);
-        }, 500);
+      var CHAR_SPEED = 30; // ms per character
+
+      // Type text char-by-char into textNode, then call cb
+      function typeText(text, cb) {
+        textNode.textContent = '';
+        if (cursor) cursor.classList.add('active');
+        var i = 0;
+        (function tick() {
+          if (i < text.length) {
+            textNode.textContent += text[i++];
+            setTimeout(tick, CHAR_SPEED);
+          } else {
+            if (cb) cb();
+          }
+        })();
       }
 
-      function fadeToQuote() {
-        el.style.opacity = '0';
-        setTimeout(function () {
-          textNode.textContent = quoteText;
-          el.style.opacity = '1';
-          setTimeout(fadeToSubtitle, 15000);
-        }, 500);
+      // Type text, hold for totalMs total (typing + display), then fade out and call nextFn
+      function runAndSwitch(text, totalMs, nextFn) {
+        var typingMs = text.length * CHAR_SPEED;
+        typeText(text, function () {
+          var holdMs = Math.max(600, totalMs - typingMs);
+          setTimeout(function () {
+            if (cursor) cursor.classList.remove('active');
+            el.style.opacity = '0';
+            setTimeout(nextFn, 600); // wait for fade-out then switch
+          }, holdMs);
+        });
       }
 
-      // Start with subtitle visible for 5s, then begin cycling
-      el.style.opacity = '1';
-      setTimeout(fadeToQuote, 5000);
+      function showGreeting() {
+        el.style.opacity = '1';
+        runAndSwitch(SUBTITLE_TEXT, 5000, showQuote);
+      }
+
+      function showQuote() {
+        el.style.opacity = '1';
+        runAndSwitch(quoteText, 15000, showGreeting);
+      }
+
+      // Kick off — start typing greeting immediately on load
+      runAndSwitch(SUBTITLE_TEXT, 5000, showQuote);
     })();
   </script>
 
