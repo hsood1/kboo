@@ -1402,10 +1402,9 @@
         loadingEl.style.display = 'none';
         forecastRow.classList.add('loaded');
 
-        // Before 11am → morning forecast drives background & suggestion; after → afternoon
-        const currentHour = new Date().getHours();
-        const refCode = currentHour < 11 ? morningCode : afternoonCode;
-        const refWind = currentHour < 11 ? morningWind : afternoonWind;
+        // Always use morning forecast — retain morning conditions regardless of load time
+        const refCode = morningCode;
+        const refWind = morningWind;
 
         const { sky, precip } = getWeatherLayers(refCode, refWind);
         document.body.dataset.sky = sky;
