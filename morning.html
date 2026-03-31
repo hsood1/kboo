@@ -1326,7 +1326,8 @@
 
       // ── Find hourly index closest to target hour ──────────────────────────────
       function findHourIndex(times, targetHour) {
-        const todayPrefix = new Date().toISOString().slice(0, 10);
+        const _d = new Date();
+        const todayPrefix = `${_d.getFullYear()}-${String(_d.getMonth()+1).padStart(2,'0')}-${String(_d.getDate()).padStart(2,'0')}`;
         const target = `${todayPrefix}T${String(targetHour).padStart(2,'0')}:00`;
         const idx = times.indexOf(target);
         if (idx !== -1) return idx;
@@ -1459,27 +1460,39 @@
 
     // ── Daily motivational quote typewriter ────────────────────────────────────
     (function () {
-      // ── Fetch from ZenQuotes with 5s timeout, fall back to local if needed ──
+      // ── Fetch a motivational quote — tries ZenQuotes first, then dummyjson ──
+      // Note: when opened as file://, browsers send Origin: null which isn't
+      // covered by Access-Control-Allow-Origin: * — so we try two APIs.
       async function fetchZenQuote() {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 5000);
+        // ── Attempt 1: ZenQuotes ─────────────────────────────────────────────
         try {
-          const res = await fetch('https://zenquotes.io/api/random', { signal: controller.signal });
-          clearTimeout(timer);
-          const data = await res.json();
-          if (data && data[0] && data[0].q) {
-            const q = data[0].q.trim();
-            const a = data[0].a ? data[0].a.trim() : '';
-            // Skip generic placeholder authors ZenQuotes sometimes returns
-            if (a && a !== 'zenquotes.io') {
-              return `"${q}" — ${a}`;
-            }
+          const ctrl1 = new AbortController();
+          const t1 = setTimeout(() => ctrl1.abort(), 5000);
+          const res1 = await fetch('https://zenquotes.io/api/random', { signal: ctrl1.signal });
+          clearTimeout(t1);
+          const d1 = await res1.json();
+          if (d1 && d1[0] && d1[0].q) {
+            const q = d1[0].q.trim();
+            const a = d1[0].a ? d1[0].a.trim() : '';
+            if (a && a !== 'zenquotes.io') return `"${q}" — ${a}`;
             return `"${q}"`;
           }
-        } catch (e) {
-          clearTimeout(timer);
-          // Network error or timeout — fall through to local quotes
-        }
+        } catch (e) { /* CORS or timeout — try backup */ }
+
+        // ── Attempt 2: dummyjson (CORS-permissive, handles null origin) ──────
+        try {
+          const ctrl2 = new AbortController();
+          const t2 = setTimeout(() => ctrl2.abort(), 3000);
+          const res2 = await fetch('https://dummyjson.com/quotes/random', { signal: ctrl2.signal });
+          clearTimeout(t2);
+          const d2 = await res2.json();
+          if (d2 && d2.quote) {
+            const q = d2.quote.trim();
+            const a = d2.author ? d2.author.trim() : '';
+            return a ? `"${q}" — ${a}` : `"${q}"`;
+          }
+        } catch (e) { /* fall through to local quotes */ }
+
         return null;
       }
 
