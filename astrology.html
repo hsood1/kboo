@@ -400,20 +400,122 @@
       };
     }
 
+    // ── Self-contained daily horoscope generator ──────────────────────────
+    // Generates a fresh, seeded reading every day — no external API needed.
+    const HOROSCOPE_POOLS = {
+      capricorn: {
+        opening: [
+          'Saturn, your ruling planet, casts a purposeful light on your path today, reminding you that steady effort always outlasts sudden impulse.',
+          'The cosmic energy today aligns perfectly with your methodical nature, Capricorn — structures you have been quietly building are about to show their strength.',
+          'A grounded yet quietly electric energy surrounds you today, Capricorn. The planets favour those who plan and those who persist.',
+          'Mars lends its fire to your ambitions today, and with your natural discipline behind it, there is almost nothing you cannot set in motion.',
+          'The mountain goat climbs not by luck but by patience, and today the stars reward exactly that quality in you.',
+          'Venus moves through your chart in a way that softens your edges just enough — people are drawn to your calm authority right now.',
+          'Mercury sharpens your already-keen mind today, making this an ideal time for negotiations, contracts, or any conversation that matters.',
+          'The Moon\'s energy asks you to pause and reassess one commitment that may no longer serve your highest ambitions.'
+        ],
+        career: [
+          'A professional opportunity that seemed distant is suddenly within reach — trust your instincts and make the move.',
+          'Your reputation for reliability opens a door today. Do not underestimate the power of showing up consistently.',
+          'A colleague\'s input offers an angle you hadn\'t considered. Staying open to collaboration brings an unexpected advantage.',
+          'Focus on long-term strategy over short-term wins. The foundation you lay today will matter greatly in three months.',
+          'Financial intuition is sharp today. Review figures, revisit a budget, or look at a deal with fresh eyes.',
+          'Leadership energy is strong. Those around you are looking to your steadiness more than they may openly admit.'
+        ],
+        relationships: [
+          'Someone close to you is offering subtle signals of appreciation — slow down enough to notice and receive them.',
+          'A relationship that has felt stagnant is ready to shift. A single honest conversation can change the whole dynamic.',
+          'Your loyalty is one of your greatest gifts, and today it is seen and valued by someone who matters deeply.',
+          'Romantic energy is warm but understated. Shared silence can be as connecting as shared words right now.',
+          'A friend or partner needs your grounded perspective today. Your presence alone is a form of support.'
+        ],
+        closing: [
+          'Trust the timeline. What you are building is worth every careful step.',
+          'End the day by acknowledging one thing you did well — self-recognition is not vanity; it is fuel.',
+          'Patience is not passivity. It is active trust in the process, and you have mastered it.',
+          'Release any tendency to control what cannot be controlled. Focus on your next deliberate move.',
+          'The stars do not rush, and neither should you. Steady progress is real progress.',
+          'Take time tonight to rest deeply. Your ambitions need your energy replenished, not depleted.'
+        ]
+      },
+      virgo: {
+        opening: [
+          'Mercury, your ruling planet, is working in your favour today — your mind is sharp, your perception clear, your words precise.',
+          'The analytical gift that defines you, Virgo, is at its peak today. Details that others overlook will hand you the advantage.',
+          'A quiet but powerful clarity descends on your day. Trust what you notice, because you notice things others simply miss.',
+          'Today\'s planetary energy rewards care and craftsmanship. Your natural instinct to do things properly is your superpower right now.',
+          'The cosmos invites you to blend your logical brilliance with a touch more self-compassion today — you are doing better than you think.',
+          'Venus softens Mercury\'s edge today, balancing your precision with warmth. This is an excellent day for both thought and connection.',
+          'The Moon moves into a position that heightens your intuition, adding emotional intelligence to your already formidable mental clarity.',
+          'Practical magic is available to you today, Virgo. Small, careful actions taken now will compound beautifully over the coming weeks.'
+        ],
+        career: [
+          'A project that has required meticulous effort is ready to move to its next stage. Your thoroughness has laid perfect groundwork.',
+          'Your eye for quality spots a flaw that saves the day. Do not hesitate to speak up — your observation is the most valuable one in the room.',
+          'Systems and processes respond well to your attention today. Organising or refining your workflow now will pay dividends for weeks.',
+          'A creative solution to a persistent problem becomes clear — trust that flash of insight and act on it before it fades.',
+          'Someone in your professional sphere recognises your effort today. Acknowledgement, quiet or loud, is heading your way.',
+          'Step back from perfectionism just enough to let something be finished. Done and good beats perpetually perfect.'
+        ],
+        relationships: [
+          'Your capacity for deep care is especially visible to those closest to you today. Let yourself be appreciated without deflecting.',
+          'Communication with a loved one flows more easily than usual. Say the thing you have been holding back — the timing is right.',
+          'You tend to show love through acts of service, and today someone receives that message exactly as you intended it.',
+          'A friend or partner mirrors back your own best qualities today. Take note — it is a reminder of who you already are.',
+          'Resist the urge to analyse a relationship dynamic. Some things simply need to be felt, not solved.'
+        ],
+        closing: [
+          'You cannot edit life into perfection, but you can tend to it with love — and that is more than enough.',
+          'Let the small victories count today. Progress is still progress, even when it is quiet.',
+          'Your standards are high because you care deeply. Just remember to apply that same compassion to yourself.',
+          'Rest is part of the work, Virgo. Allow your mind to be still before tomorrow begins.',
+          'Something you have been quietly tending is closer to blooming than you realise. Keep going.',
+          'Trust the details you have handled. The bigger picture is forming exactly as it should.'
+        ]
+      }
+    };
+
+    function seededRand(seed) {
+      // Simple but effective LCG seeded PRNG — consistent for a given seed
+      let s = seed >>> 0;
+      return function() {
+        s = Math.imul(s ^ (s >>> 13), 0x9e3779b9) >>> 0;
+        s = Math.imul(s ^ (s >>> 17), 0x6c62272e) >>> 0;
+        s = (s ^ (s >>> 5)) >>> 0;
+        return s / 0xFFFFFFFF;
+      };
+    }
+
+    function generateHoroscope(signKey) {
+      const today = new Date();
+      const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+      const signOffset = signKey === 'capricorn' ? 0 : 999983;
+      const rand = seededRand(dateSeed + signOffset);
+      const pick = function(arr) { return arr[Math.floor(rand() * arr.length)]; };
+
+      const pools = HOROSCOPE_POOLS[signKey];
+      const text = [
+        pick(pools.opening),
+        pick(pools.career),
+        pick(pools.relationships),
+        pick(pools.closing)
+      ].join(' ');
+
+      // Format today's date nicely
+      const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+      return { date: dateStr, horoscope_data: text };
+    }
+
     async function fetchHoroscope(sign) {
       const key = sign.toLowerCase();
       if (cache[key]) return cache[key];
-      // ohmanda free horoscope API (no key required, CORS-open)
-      const url = 'https://ohmanda.com/api/horoscope/' + key + '/';
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('API ' + res.status);
-      const json = await res.json();
-      if (!json.horoscope) throw new Error('Empty response');
-      // Merge in deterministic daily extras (mood, colour, lucky #, etc.)
+      // Generate daily reading locally — fully seeded by date, no API needed
+      const generated = generateHoroscope(key);
       const extras = dailyExtras(key);
       const data = {
-        date:           json.date       || '',
-        horoscope_data: json.horoscope  || '',
+        date:           generated.date,
+        horoscope_data: generated.horoscope_data,
         mood:           extras.mood,
         color:          extras.color,
         lucky_number:   extras.lucky_number,
@@ -495,25 +597,15 @@
     }
 
     async function loadHoroscopes() {
-      try {
-        const [capData, virData] = await Promise.all([
-          fetchHoroscope('capricorn'),
-          fetchHoroscope('virgo')
-        ]);
-        renderSignCard('astro-card-capricorn', 'capricorn', capData);
-        renderSignCard('astro-card-virgo',     'virgo',     virData);
-        renderCompatCard('astro-compat-capricorn', 'capricorn', capData);
-        renderCompatCard('astro-compat-virgo',     'virgo',     virData);
-        renderTogetherInsight(capData, virData);
-      } catch (err) {
-        console.warn('Horoscope API error:', err);
-        const msg = 'Unable to reach the stars right now.<br>Please try again later.';
-        ['astro-card-capricorn','astro-card-virgo',
-         'astro-compat-capricorn','astro-compat-virgo','astro-together-insight'].forEach(function(id) {
-          var el = document.getElementById(id);
-          if (el) el.innerHTML = errHTML(msg);
-        });
-      }
+      const [capData, virData] = await Promise.all([
+        fetchHoroscope('capricorn'),
+        fetchHoroscope('virgo')
+      ]);
+      renderSignCard('astro-card-capricorn', 'capricorn', capData);
+      renderSignCard('astro-card-virgo',     'virgo',     virData);
+      renderCompatCard('astro-compat-capricorn', 'capricorn', capData);
+      renderCompatCard('astro-compat-virgo',     'virgo',     virData);
+      renderTogetherInsight(capData, virData);
     }
 
     // Panel switcher
