@@ -221,6 +221,42 @@
     .astro-loading { text-align: center; padding: 36px 0; color: rgba(200,170,255,0.55); font-size: 0.92rem; animation: astroPulse 1.4s ease-in-out infinite; }
     @keyframes astroPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
     .astro-error   { text-align: center; padding: 20px; color: rgba(255,180,180,0.75); font-size: 0.88rem; line-height: 1.6; }
+
+    /* ── Footer ── */
+    .astro-footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 18px 16px max(24px, env(safe-area-inset-bottom, 24px));
+      width: 100%;
+    }
+    .astro-source-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      padding: 4px 14px;
+      border-radius: 50px;
+      border: 1px solid rgba(160,110,255,0.28);
+      color: rgba(180,150,220,0.55);
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 8px;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .astro-source-badge.live {
+      border-color: rgba(80,200,120,0.45);
+      color: rgba(140,220,160,0.85);
+      background: rgba(0,80,20,0.15);
+    }
+    .astro-source-badge.generated {
+      border-color: rgba(160,120,255,0.35);
+      color: rgba(190,160,240,0.65);
+    }
+    .footer-note {
+      font-size: 0.8rem;
+      color: rgba(170,140,210,0.45);
+      margin-top: 4px;
+    }
+    .heart { color: #c06090; }
   </style>
 </head>
 <body data-tab="astrology">
@@ -336,6 +372,12 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- Footer -->
+    <div class="astro-footer">
+      <div id="astro-source-badge" class="astro-source-badge">✨ Loading reading…</div>
+      <div class="footer-note">Made with <span class="heart">♥</span> for Kboo</div>
     </div>
 
   </div>
@@ -499,22 +541,62 @@
       return { date: dateStr, horoscope_data: text };
     }
 
+    // Try the aztro free API — no key, no account, CORS-open
+    async function fetchFromAztro(sign) {
+      const controller = new AbortController();
+      const tid = setTimeout(function(){ controller.abort(); }, 6000);
+      try {
+        const res = await fetch(
+          'https://aztro.sameerkumar.website/?sign=' + sign + '&day=today',
+          { method: 'POST', signal: controller.signal }
+        );
+        clearTimeout(tid);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const json = await res.json();
+        if (!json.description) throw new Error('empty');
+        // Normalise to our internal shape
+        return {
+          date:           json.current_date  || '',
+          horoscope_data: json.description   || '',
+          mood:           json.mood          || '',
+          color:          json.color         || '',
+          lucky_number:   json.lucky_number  || '',
+          lucky_time:     json.lucky_time    || '',
+          compatibility:  json.compatibility || ''
+        };
+      } catch (e) {
+        clearTimeout(tid);
+        throw e;
+      }
+    }
+
     async function fetchHoroscope(sign) {
       const key = sign.toLowerCase();
       if (cache[key]) return cache[key];
-      // Generate daily reading locally — fully seeded by date, no API needed
-      const generated = generateHoroscope(key);
-      const extras = dailyExtras(key);
-      const data = {
-        date:           generated.date,
-        horoscope_data: generated.horoscope_data,
-        mood:           extras.mood,
-        color:          extras.color,
-        lucky_number:   extras.lucky_number,
-        lucky_time:     extras.lucky_time,
-        compatibility:  extras.compatibility
-      };
-      cache[key] = data;
+
+      let data  = null;
+      let source = 'generated';
+
+      try {
+        data   = await fetchFromAztro(key);
+        source = 'api';
+      } catch (e) {
+        // API failed — fall back to deterministic self-generated reading
+        const generated = generateHoroscope(key);
+        const extras    = dailyExtras(key);
+        data = {
+          date:           generated.date,
+          horoscope_data: generated.horoscope_data,
+          mood:           extras.mood,
+          color:          extras.color,
+          lucky_number:   extras.lucky_number,
+          lucky_time:     extras.lucky_time,
+          compatibility:  extras.compatibility
+        };
+      }
+
+      cache[key]         = data;
+      cache[key]._source = source;   // stash source on the cached object
       return data;
     }
 
@@ -588,6 +670,21 @@
       return '<div class="astro-error">🌌 ' + (msg || 'Unable to reach the stars right now.<br>Please try again later.') + '</div>';
     }
 
+    function updateSourceBadge(capData, virData) {
+      const badge   = document.getElementById('astro-source-badge');
+      if (!badge) return;
+      const capSrc  = (capData  && capData._source)  || 'generated';
+      const virSrc  = (virData  && virData._source)  || 'generated';
+      const usedApi = (capSrc === 'api' || virSrc === 'api');
+      if (usedApi) {
+        badge.className   = 'astro-source-badge live';
+        badge.textContent = '🟢 Live reading via aztro API';
+      } else {
+        badge.className   = 'astro-source-badge generated';
+        badge.textContent = '🔮 Self-generated daily reading';
+      }
+    }
+
     async function loadHoroscopes() {
       const [capData, virData] = await Promise.all([
         fetchHoroscope('capricorn'),
@@ -598,6 +695,7 @@
       renderCompatCard('astro-compat-capricorn', 'capricorn', capData);
       renderCompatCard('astro-compat-virgo',     'virgo',     virData);
       renderTogetherInsight(capData, virData);
+      updateSourceBadge(capData, virData);
     }
 
     // Panel switcher
