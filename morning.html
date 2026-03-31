@@ -1162,7 +1162,7 @@
         if (wmoCode === 1 || wmoCode === 2) {
           return {
             icon: '🌤',
-            text: "It's a nice afternoon — mostly clear with a few clouds to keep things interesting. A walk sounds like a lovely idea! Enjoy the fresh air. 🌿",
+            text: "It's a nice morning — mostly clear with a few clouds to keep things interesting. A walk sounds like a lovely idea! Enjoy the fresh air. 🌿",
             style: 's-green'
           };
         }
@@ -1176,21 +1176,21 @@
         if (wmoCode === 45 || wmoCode === 48) {
           return {
             icon: '🌫',
-            text: "Foggy conditions this afternoon — visibility isn't great out there. Best to stay safe and stick close to home or indoors. Drive carefully if you're heading out! 🌫",
+            text: "Foggy conditions this morning — visibility isn't great out there. Best to stay safe and stick close to home or indoors. Drive carefully if you're heading out! 🌫",
             style: 's-grey'
           };
         }
         if (wmoCode >= 51 && wmoCode <= 55) {
           return {
             icon: '🌦',
-            text: "Just a light drizzle this afternoon — if you fancy a quick walk, pop on a jacket and you should be fine! Nothing a bit of light mist can't handle. 🌦",
+            text: "Just a light drizzle this morning — if you fancy a quick walk, pop on a jacket and you should be fine! Nothing a bit of light mist can't handle. 🌦",
             style: 's-blue'
           };
         }
         if (wmoCode >= 61 && wmoCode <= 65) {
           return {
             icon: '☔',
-            text: "It's raining this afternoon — best to stay dry and enjoy a cosy lunch indoors. Save the walk for a sunnier day! ☔🍵",
+            text: "It's raining this morning — best to stay dry and enjoy a cosy breakfast indoors. Save the walk for a sunnier day! ☔🍵",
             style: 's-blue'
           };
         }
@@ -1204,28 +1204,28 @@
         if (wmoCode === 80) {
           return {
             icon: '🌦',
-            text: "Light showers expected this afternoon — if you fancy a quick outing, pop on a light jacket and you should be just fine! 🌦",
+            text: "Light showers expected this morning — if you fancy a quick outing, pop on a light jacket and you should be just fine! 🌦",
             style: 's-blue'
           };
         }
         if (wmoCode === 81 || wmoCode === 82) {
           return {
             icon: '🌧',
-            text: "Heavy showers forecast this afternoon — best to stay dry and cosy indoors. Save the walk for a nicer day! 🌧☕",
+            text: "Heavy showers forecast this morning — best to stay dry and cosy indoors. Save the walk for a nicer day! 🌧☕",
             style: 's-blue'
           };
         }
         if (wmoCode >= 95) {
           return {
             icon: '⛈',
-            text: "Thunderstorms this afternoon — definitely stay inside! Curl up somewhere safe and let the storm do its thing outside. ⛈ Stay cosy in there! ☕",
+            text: "Thunderstorms this morning — definitely stay inside! Curl up somewhere safe and let the storm do its thing outside. ⛈ Stay cosy in there! ☕",
             style: 's-dark'
           };
         }
         // fallback
         return {
           icon: '🌤',
-          text: "Have a wonderful afternoon, whatever the weather brings! 🌿",
+          text: "Have a wonderful morning, whatever the weather brings! 🌿",
           style: 's-green'
         };
       }
