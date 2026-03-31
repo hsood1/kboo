@@ -674,8 +674,8 @@
       line-height: 1.5;
       transition: background 0.5s, border-color 0.5s, color 0.5s;
     }
-    .suggestion-banner.show { display: flex; align-items: flex-start; gap: 8px; }
-    .suggestion-banner .s-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1.5; }
+    .suggestion-banner.show { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+    .suggestion-banner .s-icon { font-size: 1.6rem; line-height: 1; }
 
     .suggestion-banner.s-green {
       background: linear-gradient(135deg, #d4efdf, #a9dfbf);
@@ -1126,16 +1126,19 @@
           new Date().toLocaleDateString('en-GB', opts);
       })();
 
-      // ── Time display (live, updates every minute) ─────────────────────────────
+      // ── Time display (live, updates every minute, timezone-aware) ────────────
+      let _displayTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const _timeEl = document.getElementById('time-display');
+      function updateTimeDisplay() {
+        _timeEl.textContent = new Date().toLocaleTimeString('en-US', {
+          hour: 'numeric', minute: '2-digit', hour12: true, timeZone: _displayTimezone
+        });
+      }
+      updateTimeDisplay();
       (function () {
-        const el = document.getElementById('time-display');
-        function updateTime() {
-          el.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-        }
-        updateTime();
-        const now = new Date();
-        const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-        setTimeout(function () { updateTime(); setInterval(updateTime, 60000); }, msUntilNextMinute);
+        const n = new Date();
+        const msUntilNextMinute = (60 - n.getSeconds()) * 1000 - n.getMilliseconds();
+        setTimeout(function () { updateTimeDisplay(); setInterval(updateTimeDisplay, 60000); }, msUntilNextMinute);
       })();
 
       // ── WMO weather code → label + emoji ────────────────────────────────────
@@ -1401,6 +1404,9 @@
         // lookups are correct for Poway, Schaumburg, or any GPS location — not just
         // the user's device timezone.
         const locationTimezone = data.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+        // Update clock to show the selected location's local time
+        _displayTimezone = locationTimezone;
+        updateTimeDisplay();
 
         const slots = [
           { id: 'morning',   hour: 9  },
@@ -1433,9 +1439,13 @@
         loadingEl.style.display = 'none';
         forecastRow.classList.add('loaded');
 
-        // Always use morning forecast — retain morning conditions regardless of load time
-        const refCode = morningCode;
-        const refWind = morningWind;
+        // Use afternoon conditions if it's already past 11am at the selected location
+        const locationHour = parseInt(
+          new Date().toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: locationTimezone }), 10
+        );
+        const isAfternoon = locationHour >= 11;
+        const refCode = isAfternoon ? afternoonCode : morningCode;
+        const refWind = isAfternoon ? afternoonWind : morningWind;
 
         const { sky, precip } = getWeatherLayers(refCode, refWind);
         document.body.dataset.sky = sky;
