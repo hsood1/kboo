@@ -1946,5 +1946,347 @@
       runTypewriter();
     })();
   </script>
+
+  <!-- ═══════════════════════════════════════════════
+       SAGAN BIRTHDAY POPUP
+  ═══════════════════════════════════════════════ -->
+  <style>
+    /* ── Backdrop ── */
+    #sagan-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    #sagan-backdrop.visible {
+      display: flex;
+    }
+
+    /* ── Card ── */
+    #sagan-card {
+      background: #fff9f0;
+      border-radius: 24px;
+      padding: 24px 20px 20px;
+      max-width: 360px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* ── Close button ── */
+    #sagan-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #888;
+      line-height: 1;
+      padding: 4px;
+      z-index: 2;
+    }
+    #sagan-close:hover { color: #333; }
+
+    /* ── Title banner ── */
+    #sagan-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #e05f9a;
+      margin-bottom: 4px;
+      font-family: Georgia, serif;
+      letter-spacing: 0.03em;
+    }
+    #sagan-subtitle {
+      font-size: 0.78rem;
+      color: #b07030;
+      margin-bottom: 14px;
+      font-family: Georgia, serif;
+    }
+
+    /* ── Cat scene wrapper ── */
+    #sagan-scene {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 12px;
+      height: 160px;
+    }
+
+    /* ── Cat SVG bounce animation ── */
+    @keyframes sagan-bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+    @keyframes sagan-tail {
+      0%, 100% { transform-origin: bottom left; transform: rotate(0deg); }
+      50%       { transform-origin: bottom left; transform: rotate(22deg); }
+    }
+    @keyframes sagan-blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95%           { transform: scaleY(0.1); }
+    }
+    @keyframes sagan-ear-twitch {
+      0%, 80%, 100% { transform: rotate(0deg); }
+      85%           { transform: rotate(-8deg); }
+      90%           { transform: rotate(5deg); }
+    }
+
+    #sagan-cat-group {
+      animation: sagan-bounce 2s ease-in-out infinite;
+      position: relative;
+      display: inline-block;
+    }
+
+    .sagan-eyes-group {
+      animation: sagan-blink 3.5s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .sagan-tail {
+      animation: sagan-tail 1.8s ease-in-out infinite;
+    }
+
+    .sagan-ear-l {
+      animation: sagan-ear-twitch 4s ease-in-out infinite;
+      transform-origin: 38px 52px;
+    }
+
+    /* ── Speech bubble ── */
+    #sagan-bubble {
+      position: relative;
+      background: #fff;
+      border: 2px solid #e8c4e8;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #444;
+      font-family: Georgia, serif;
+      max-width: 220px;
+      text-align: left;
+      align-self: flex-start;
+      margin-bottom: 12px;
+      margin-left: -8px;
+      flex-shrink: 0;
+    }
+    #sagan-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: 24px;
+      left: -12px;
+      border: 7px solid transparent;
+      border-right-color: #e8c4e8;
+    }
+    #sagan-bubble::before {
+      content: '';
+      position: absolute;
+      bottom: 25px;
+      left: -9px;
+      border: 6px solid transparent;
+      border-right-color: #fff;
+      z-index: 1;
+    }
+
+    /* ── Confetti ── */
+    .sagan-confetti {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 24px;
+    }
+    .sagan-confetti span {
+      position: absolute;
+      top: -10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      opacity: 0;
+      animation: sagan-fall linear infinite;
+    }
+    @keyframes sagan-fall {
+      0%   { transform: translateY(-10px) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(420px) rotate(720deg); opacity: 0.3; }
+    }
+
+    /* ── Footer ── */
+    #sagan-footer {
+      font-size: 0.7rem;
+      color: #aaa;
+      font-family: Georgia, serif;
+    }
+  </style>
+
+  <!-- Birthday popup HTML -->
+  <div id="sagan-backdrop">
+    <!-- Confetti layer -->
+    <div class="sagan-confetti" id="sagan-confetti-layer"></div>
+
+    <div id="sagan-card">
+      <button id="sagan-close" aria-label="Close">&times;</button>
+      <div id="sagan-title">🎂 Happy Birthday, Sagan! 🎉</div>
+      <div id="sagan-subtitle">April 1st — The best day of the year</div>
+
+      <div id="sagan-scene">
+        <!-- Cat drawn in SVG -->
+        <div id="sagan-cat-group">
+          <svg width="110" height="150" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+            <!-- TAIL (behind body) -->
+            <g class="sagan-tail">
+              <path d="M58 130 Q90 120 95 100 Q100 82 80 78" stroke="#9a9a9a" stroke-width="7" fill="none" stroke-linecap="round"/>
+              <path d="M58 130 Q90 120 95 100 Q100 82 80 78" stroke="#bdbdbd" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="4 6"/>
+            </g>
+
+            <!-- BODY -->
+            <ellipse cx="55" cy="118" rx="28" ry="32" fill="#b0b0b0"/>
+            <!-- body stripe markings -->
+            <path d="M40 100 Q46 110 42 125" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+            <path d="M55 98 Q56 115 55 130" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+            <path d="M68 100 Q64 112 66 126" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+
+            <!-- FRONT PAWS -->
+            <ellipse cx="42" cy="148" rx="10" ry="7" fill="#c8c8c8"/>
+            <ellipse cx="68" cy="148" rx="10" ry="7" fill="#c8c8c8"/>
+            <!-- paw toe lines -->
+            <line x1="37" y1="149" x2="37" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="42" y1="150" x2="42" y2="154" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="47" y1="149" x2="47" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="63" y1="149" x2="63" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="68" y1="150" x2="68" y2="154" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="73" y1="149" x2="73" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+
+            <!-- HEAD -->
+            <ellipse cx="55" cy="72" rx="26" ry="24" fill="#b8b8b8"/>
+            <!-- head stripe markings -->
+            <path d="M44 60 Q48 68 44 76" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.65"/>
+            <path d="M55 57 Q56 65 55 74" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.65"/>
+            <path d="M66 60 Q62 68 66 76" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.65"/>
+
+            <!-- EARS -->
+            <g class="sagan-ear-l">
+              <polygon points="32,58 26,40 44,52" fill="#b8b8b8"/>
+              <polygon points="33,56 29,44 42,53" fill="#e8a8b8" opacity="0.7"/>
+            </g>
+            <!-- Right ear (mirror) -->
+            <polygon points="78,58 84,40 66,52" fill="#b8b8b8"/>
+            <polygon points="77,56 81,44 68,53" fill="#e8a8b8" opacity="0.7"/>
+
+            <!-- EYES (blinking group) -->
+            <g class="sagan-eyes-group">
+              <ellipse cx="44" cy="72" rx="6" ry="6.5" fill="#fff"/>
+              <ellipse cx="66" cy="72" rx="6" ry="6.5" fill="#fff"/>
+              <ellipse cx="44" cy="73" rx="4" ry="4.5" fill="#5a8a3a"/>
+              <ellipse cx="66" cy="73" rx="4" ry="4.5" fill="#5a8a3a"/>
+              <ellipse cx="44" cy="73" rx="2.5" ry="3" fill="#111"/>
+              <ellipse cx="66" cy="73" rx="2.5" ry="3" fill="#111"/>
+              <!-- eye shine -->
+              <ellipse cx="45.5" cy="71.5" rx="1.2" ry="1.2" fill="#fff"/>
+              <ellipse cx="67.5" cy="71.5" rx="1.2" ry="1.2" fill="#fff"/>
+            </g>
+
+            <!-- NOSE -->
+            <polygon points="55,81 52,84 58,84" fill="#e88090"/>
+            <!-- Mouth -->
+            <path d="M52,84 Q55,88 58,84" stroke="#cc6070" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+            <!-- WHISKERS -->
+            <line x1="30" y1="80" x2="50" y2="82" stroke="#888" stroke-width="1" opacity="0.8"/>
+            <line x1="30" y1="83" x2="50" y2="83" stroke="#888" stroke-width="1" opacity="0.8"/>
+            <line x1="30" y1="86" x2="50" y2="84" stroke="#888" stroke-width="1" opacity="0.8"/>
+            <line x1="80" y1="80" x2="60" y2="82" stroke="#888" stroke-width="1" opacity="0.8"/>
+            <line x1="80" y1="83" x2="60" y2="83" stroke="#888" stroke-width="1" opacity="0.8"/>
+            <line x1="80" y1="86" x2="60" y2="84" stroke="#888" stroke-width="1" opacity="0.8"/>
+
+            <!-- PARTY HAT -->
+            <!-- hat body - colourful triangle -->
+            <polygon points="55,16 35,60 75,60" fill="url(#hat-grad)"/>
+            <defs>
+              <linearGradient id="hat-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ff6b9d"/>
+                <stop offset="50%" stop-color="#ffd93d"/>
+                <stop offset="100%" stop-color="#6bcfff"/>
+              </linearGradient>
+            </defs>
+            <!-- hat polka dots -->
+            <circle cx="50" cy="38" r="3" fill="#fff" opacity="0.7"/>
+            <circle cx="60" cy="45" r="2.5" fill="#fff" opacity="0.7"/>
+            <circle cx="53" cy="52" r="2" fill="#fff" opacity="0.7"/>
+            <circle cx="63" cy="35" r="2" fill="#fff" opacity="0.7"/>
+            <!-- hat band -->
+            <rect x="35" y="57" width="40" height="6" rx="2" fill="#ff6b9d"/>
+            <!-- hat pompom -->
+            <circle cx="55" cy="14" r="6" fill="#ffd93d"/>
+            <circle cx="55" cy="14" r="4" fill="#ff9f43"/>
+            <!-- hat elastic -->
+            <path d="M35,60 Q30,75 38,78" stroke="#ccc" stroke-width="1.2" fill="none" stroke-dasharray="2 2"/>
+            <path d="M75,60 Q80,75 72,78" stroke="#ccc" stroke-width="1.2" fill="none" stroke-dasharray="2 2"/>
+          </svg>
+        </div>
+
+        <!-- Speech bubble to the right of cat -->
+        <div id="sagan-bubble" id="sagan-speech">
+          Hi! It's me, Sagan. Today is my birthday, and I am turning <strong id="sagan-age">?</strong> years old. Don't forget to give me lots of birthday treats!
+        </div>
+      </div>
+
+      <div id="sagan-footer">🐾 wishing you a pawsome day 🐾</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const now   = new Date();
+      const month = now.getMonth(); // 0-indexed: 3 = April
+      const day   = now.getDate();
+
+      if (month === 3 && day === 1) {
+        // Calculate age
+        const age = now.getFullYear() - 2022;
+        document.getElementById('sagan-age').textContent = age;
+
+        // Show backdrop
+        const backdrop = document.getElementById('sagan-backdrop');
+        backdrop.classList.add('visible');
+
+        // Close on X button
+        document.getElementById('sagan-close').addEventListener('click', function () {
+          backdrop.classList.remove('visible');
+        });
+
+        // Close on backdrop click (not card click)
+        backdrop.addEventListener('click', function (e) {
+          if (e.target === backdrop) {
+            backdrop.classList.remove('visible');
+          }
+        });
+
+        // Generate confetti
+        const confettiColors = ['#ff6b9d','#ffd93d','#6bcfff','#a8e063','#ff9f43','#e84393','#54c8e8'];
+        const layer = document.getElementById('sagan-confetti-layer');
+        for (let i = 0; i < 28; i++) {
+          const s = document.createElement('span');
+          s.style.left        = Math.random() * 100 + '%';
+          s.style.background  = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+          s.style.width       = (6 + Math.random() * 6) + 'px';
+          s.style.height      = (6 + Math.random() * 6) + 'px';
+          s.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+          const dur           = 2 + Math.random() * 3;
+          s.style.animationDuration = dur + 's';
+          s.style.animationDelay    = Math.random() * 3 + 's';
+          layer.appendChild(s);
+        }
+      }
+    })();
+  </script>
 </body>
 </html>
