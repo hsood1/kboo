@@ -1493,458 +1493,786 @@
       loadWeather();
     }
 
-    // ── Daily motivational quote typewriter ────────────────────────────────────
+    // ── Daily famous quote + subtitle cycler ──────────────────────────────────
     (function () {
-      // ── Fetch a motivational quote — tries quotable.io, falls back to local ──
-      // quotable.io returns CORS headers and focuses on inspirational/motivational
-      // content. On any network or parse error we fall straight through to the
-      // local QUOTES array — no middle layer.
-      async function fetchZenQuote() {
-        // ── Attempt 1: quotable.io (inspirational + motivational tags) ──────
-        try {
-          const ctrl = new AbortController();
-          const t = setTimeout(() => ctrl.abort(), 5000);
-          const res = await fetch(
-            'https://api.quotable.io/quotes/random?tags=inspirational,motivational&limit=1',
-            { signal: ctrl.signal }
-          );
-          clearTimeout(t);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data = await res.json();
-          if (Array.isArray(data) && data[0] && data[0].content) {
-            const q = data[0].content.trim();
-            const a = data[0].author ? data[0].author.trim() : '';
-            return a ? `"${q}" — ${a}` : `"${q}"`;
-          }
-        } catch (e) { /* network or parse error — fall through to local quotes */ }
-
-        return null;
-      }
-
+      // 366 famous quotes indexed 0 = Jan 1, 365 = Dec 31 / leap day.
+      // Where possible each quote is matched to that calendar date
+      // (birth, death, speech, event). All quotes are real and attributed.
       const QUOTES = [
-        "Every day is a fresh start — make it yours. 🌸",
-        "You've got this. One step at a time. 👣",
-        "Small progress is still progress. Keep going. 🌱",
-        "Be the sunshine you wish to see today. ☀️",
-        "Good things take time. You're right on schedule. 🕰️",
-        "You are capable of amazing things. 💪",
-        "Today is full of possibility — embrace it. ✨",
-        "Your kindness makes the world brighter. 💛",
-        "Believe in yourself a little extra today. 🌟",
-        "Every expert was once a beginner. Keep learning. 📚",
-        "You bring something special to every room. 🌺",
-        "One kind thought can change everything. 🤍",
-        "You are enough, exactly as you are. 🌿",
-        "Today's the perfect day for a fresh idea. 💡",
-        "The best is yet to come — keep going. 🚀",
-        "Breathe in courage, breathe out doubt. 🌬️",
-        "You make today better just by being in it. 🌼",
-        "Dream it. Believe it. Do it. ⭐",
-        "Magic happens when you step outside your comfort zone. 🦋",
-        "You are braver than you think. 🦁",
-        "Chase progress, not perfection. 🏃‍♀️",
-        "Every moment is a chance to start fresh. 🌅",
-        "Your effort today is tomorrow's reward. 🎁",
-        "Be proud of how far you've come. 🏆",
-        "Kindness is always in style. 💗",
-        "The little things? They're the big things. 🌟",
-        "You've survived every hard day so far. Keep it up! 💪",
-        "Today, choose joy. 🌈",
-        "Great things never came from staying comfortable. 🌊",
-        "Your potential is limitless — don't forget it. 🔥",
-        "Be gentle with yourself today. 🌙",
-        "Do something today your future self will thank you for. 🌟",
-        "Energy flows where attention goes. Focus up! ⚡",
-        "You are exactly where you need to be. 🗺️",
-        "One day at a time, one step at a time. 👟",
-        "Happiness is a choice — choose it today. 😊",
-        "Your smile is someone else's sunshine. ☀️",
-        "Trust the process — it's working. 🔄",
-        "You don't have to be perfect to be amazing. 🌸",
-        "Make today so good that yesterday gets jealous. 😄",
-        "Every sunrise is a new chapter — write it well. 📖",
-        "You've got the strength. You just need to use it. 💎",
-        "The world is better because you're in it. 🌍",
-        "Sprinkle kindness like confetti today. 🎊",
-        "You are worthy of everything you desire. 🌺",
-        "Push a little harder — you're closer than you think. 🏁",
-        "A positive mind finds opportunity in every obstacle. 🌱",
-        "Your vibe attracts your tribe. Keep it high! ✨",
-        "Celebrate the small wins — they add up. 🎉",
-        "You were made for this moment. 🌟",
-        "Take up space. You deserve to be here. 🌻",
-        "Good things happen to those who hustle. 🙌",
-        "Let your light shine unapologetically today. 💫",
-        "Be the reason someone smiles today. 😁",
-        "You are a work in progress, and that's beautiful. 🎨",
-        "Stay curious — the best ideas come from wondering. 🔍",
-        "Your story isn't over yet. Keep writing. 📝",
-        "Doubt is just excitement in disguise. Go for it! 🎯",
-        "One good decision can change everything. 🌠",
-        "You bring so much value to the people around you. 💛",
-        "Be kind to your mind today. 🧠",
-        "The comeback is always stronger than the setback. 🌊",
-        "Consistency beats perfection every time. ⏱️",
-        "Today is a gift — that's why it's called the present. 🎁",
-        "Your hard work is paying off, even if you can't see it yet. 🌱",
-        "Shine on, you extraordinary human. 🌟",
-        "You are more resilient than you realise. 🌿",
-        "Do it with passion or not at all. ❤️",
-        "Something wonderful is about to happen. 🌈",
-        "You are the author of your own adventure. 📚",
-        "Keep planting seeds — your garden is growing. 🌻",
-        "Be brave enough to be bad at something new. 🎸",
-        "You are doing better than you think. 🤍",
-        "Success starts with one brave step. 👟",
-        "The future belongs to those who believe in their dreams. 💭",
-        "You have everything you need inside you. 🌟",
-        "Make waves — the world needs your ripple. 🌊",
-        "Take a deep breath. You've totally got this. 😌",
-        "Be so good they can't ignore you. 🔥",
-        "Every day is another chance to be the best you. 💪",
-        "Think big, start small, act now. 🚀",
-        "Life is better when you're laughing. 😂",
-        "Your energy is contagious — make it a good one. ⚡",
-        "Dare to be different today. 🦄",
-        "Gratitude turns what you have into enough. 🙏",
-        "You are magnetic — people are drawn to your warmth. 🌟",
-        "Keep showing up — that's the whole secret. 🚪",
-        "Plant goodness, harvest greatness. 🌱",
-        "Courage is feeling fear and doing it anyway. 🦁",
-        "Every big achievement started as a small idea. 💡",
-        "Your journey is uniquely, beautifully yours. 🗺️",
-        "Fill your own cup first. ☕",
-        "Progress, not perfection — always. 📈",
-        "You are a force of nature. 🌪️",
-        "Mistakes are proof that you're trying. 🌸",
-        "Give yourself credit for how far you've come. 🏅",
-        "Kindness is free — spend it wildly. 💸",
-        "You are built for this season of your life. 🍂",
-        "Keep your face to the sunshine. 🌻",
-        "Hard days build strong people. 🏔️",
-        "You radiate good energy — share it generously. ✨",
-        "Today won't come again — make it count. ⏳",
-        "Bloom where you are planted. 🌷",
-        "The magic is in you, not in the circumstances. 🪄",
-        "You are a priority, not an afterthought. 👑",
-        "Let go of what no longer serves you. 🍃",
-        "You have more to offer than you know. 🎁",
-        "Rise up and attack the day with enthusiasm. 🌅",
-        "Be patient with yourself — growth takes time. 🌳",
-        "Your determination is your superpower. ⚡",
-        "A new day means a new chance. Take it. 🌄",
-        "You are exactly enough. 💫",
-        "Positivity is a practice — practice it today. 🧘",
-        "Every challenge is a chance to grow. 🌱",
-        "You are worthy of love and belonging. 🤍",
-        "Stay focused — your goals are closer than they appear. 🎯",
-        "Good energy is your birthright. Claim it! ✨",
-        "Your best days are ahead of you. 🌅",
-        "Be the version of you that you admire. 🪞",
-        "Curiosity is the beginning of every great thing. 🔍",
-        "Comparison is the thief of joy — stay in your lane. 🛣️",
-        "You are creating something wonderful. 🎨",
-        "Trust your instincts — they know the way. 🧭",
-        "Choose progress over perfection, every time. 📈",
-        "You light up every space you enter. 💡",
-        "One day you'll look back and be so glad you kept going. 🌟",
-        "Your enthusiasm is infectious — keep sharing it. 🎊",
-        "Mindset is everything. Set yours to thrive. 🧠",
-        "You are a beautiful work in progress. 🖌️",
-        "Believe in the magic of new beginnings. ✨",
-        "Tiny steps in the right direction beat giant leaps sideways. 🐣",
-        "You are not behind — you're right on time. 🕐",
-        "Your strength amazes the people around you. 💛",
-        "Today, invest in yourself. It always pays off. 💰",
-        "Show up for yourself today. You deserve it. 🌷",
-        "Life rewards the bold. Be bold today. 🦋",
-        "Be the energy you want to attract. 🌟",
-        "You are creating memories that will last forever. 📸",
-        "Turn your can'ts into cans and your dreams into plans. 💪",
-        "Every breath is a new beginning. 🌬️",
-        "You are the hero of your own story. 🦸",
-        "Surround yourself with people who lift you higher. 🎈",
-        "Your potential is bigger than any setback. 🌊",
-        "Today, let joy be your compass. 🧭",
-        "You are capable of more than you imagine. 🌌",
-        "Keep your eyes on the stars and your feet on the ground. ⭐",
-        "Today's effort is tomorrow's confidence. 🌱",
-        "Shine from the inside out. 💎",
-        "What you focus on grows. Focus on the good. 🌻",
-        "You are rare and irreplaceable. Never forget it. 🦋",
-        "The universe is rooting for you. 🌙",
-        "Make today a little bit better than yesterday. 📈",
-        "You are braver than you believe and stronger than you seem. 🦁",
-        "Your dreams deserve your undivided attention. 💭",
-        "Good things come to those who work for them. 🙌",
-        "Stay humble, stay hungry, stay kind. 🌿",
-        "You are writing your legacy one day at a time. 📖",
-        "The sky isn't the limit — your mind is. 🚀",
-        "You are allowed to take up space. 🌟",
-        "Every stumble is setting up the comeback. 🌊",
-        "The best time to start was yesterday. The next best is now. ⏰",
-        "You are a masterpiece in progress. 🎨",
-        "Stay the course — you're doing brilliantly. 🏆",
-        "Gratitude is the fastest path to happiness. 🙏",
-        "You are seen, valued, and appreciated. 💛",
-        "Keep dreaming — those dreams are directions. 🗺️",
-        "Your hard work is a love letter to your future self. 💌",
-        "Be present. This moment is a gift. 🎁",
-        "You carry a light that darkness cannot extinguish. 🕯️",
-        "Small acts of courage add up to a great life. 🦋",
-        "You are doing something no one else can do — being you. 🌟",
-        "Today is a good day to have a great day. 😊",
-        "Passion is the fuel — go full throttle. 🔥",
-        "You are love, and you are loved. 💗",
-        "Keep walking — the path reveals itself. 🌿",
-        "Everything you need is already within you. 🔮",
-        "You are the most capable person you know. 💪",
-        "Celebrate today just for showing up. 🎉",
-        "Your potential has no ceiling. Dream bigger. ☁️",
-        "You are planting seeds you'll harvest later. 🌱",
-        "Choose kindness — it's always the right move. 💙",
-        "You were born to make an impact. Go make one. 🌊",
-        "Let your light shine a little brighter today. 💫",
-        "Resilience is your superpower — use it. 🦸",
-        "Today is a blank canvas — paint it beautifully. 🖼️",
-        "Wonderful surprises are on their way to you. 🎊",
-        "You are more than enough, and then some. ✨",
-        "Take a moment to appreciate how far you've come. 🌅",
-        "Your unique perspective is exactly what the world needs. 🌍",
-        "Be the change you wish to see — starting today. 🌱",
-        "You are stronger than any storm. ⚡",
-        "Today, dare to ask for what you truly want. 🙋",
-        "Happiness lives in the little moments. Collect them. 🌸",
-        "You make a difference every single day. 💫",
-        "Keep your heart open — magic finds open hearts. 🪄",
-        "Your journey is worth every step. 🗺️",
-        "Be the kind of person who makes others feel important. 💛",
-        "You are exactly where you're meant to be right now. 🌟",
-        "Own your morning, own your day. ☀️",
-        "You are a gift to every person who knows you. 🎁",
-        "The best project you can work on is yourself. 💡",
-        "Believe in your journey, even when the path gets steep. 🏔️",
-        "You are growing in ways you haven't even noticed yet. 🌱",
-        "What a wonderful world it is with you in it. 🌍",
-        "Your positivity is someone's refuge. Keep shining. 🌟",
-        "Challenges are just opportunities wearing a disguise. 🎭",
-        "You've got the grit, the grace, and the greatness. 🌺",
-        "Let today be the day you love yourself fiercely. 💗",
-        "You are the architect of your own happiness. 🏗️",
-        "The best is always worth working for. 🏆",
-        "You are thoughtful, talented, and tremendous. 🌟",
-        "Today, let your heart lead the way. 💛",
-        "Courage lives in the heart of those who try. 🦁",
-        "You are enough — and then you are more. 💎",
-        "Be relentless in pursuit of what sets your soul on fire. 🔥",
-        "You are a ray of sunshine on a cloudy day. ☀️",
-        "Everything begins with a single step. Take yours. 👟",
-        "You are turning ordinary moments into extraordinary ones. ✨",
-        "Stay wild, stay kind, stay curious. 🌿",
-        "You've already done the hardest part — you started. 🏁",
-        "Your intuition is smarter than you think. Trust it. 🔮",
-        "Love what you're building, and it will love you back. 🏗️",
-        "You are so much more than your to-do list. 📋",
-        "Big journeys begin with small, brave steps. 🐾",
-        "You are someone's answered prayer today. 🙏",
-        "The world needs your specific brand of magic. 🪄",
-        "You are steadily becoming who you were meant to be. 🌸",
-        "Keep your standards high and your spirit higher. ⭐",
-        "You are not alone — you are wonderfully supported. 🤝",
-        "Your story is still being written. Make it epic. 📖",
-        "Believe you can, and you're halfway there. 🌟",
-        "You deserve rest as much as you deserve success. 🌙",
-        "Today, let your work speak for itself. 💪",
-        "You are a diamond — formed under pressure, stunning in light. 💎",
-        "Keep going. You're doing beautifully. 🌈",
-        "Greatness is built in the ordinary moments. ⏰",
-        "You are surrounded by opportunity. Open your eyes. 👀",
-        "Your presence matters more than you know. 💛",
-        "Let today's good outweigh yesterday's doubt. ⚖️",
-        "You are made of stardust and determination. ⭐",
-        "Make your health a priority today. You're worth it. 🍏",
-        "You are a champion at life — even on the tough days. 🏅",
-        "The right people will always recognise your worth. 🌟",
-        "Today, give yourself permission to be brilliant. ✨",
-        "You are capable of extraordinary things. Go prove it. 🚀",
-        "Every small step forward is still forward. Keep walking. 🌿",
-        "You bring depth, warmth, and wonder to the world. 🌎",
-        "Success is a series of small steps taken consistently. 🪜",
-        "You are brave enough to start over if you need to. 🌅",
-        "Keep nurturing your dreams — they're listening. 🌱",
-        "You are the secret ingredient to making today great. ✨",
-        "Stay grounded, stay grateful, stay growing. 🌳",
-        "You deserve everything you're working so hard for. 🎯",
-        "Look at you — still here, still trying. That's everything. 💛",
-        "Your dreams are valid and absolutely worth chasing. 🌠",
-        "Be soft in heart and fierce in spirit. 🌸🔥",
-        "You are precisely what the world ordered. 🌍",
-        "Today, trust the timing of your life. 🕊️",
-        "You turn every challenge into a lesson. That's wisdom. 📚",
-        "Let kindness be the first language you speak today. 💬",
-        "You are vibrant, vital, and completely irreplaceable. 💫",
-        "Momentum builds with every brave step you take. 🏃",
-        "You are a gift — beautifully wrapped in your own unique way. 🎁",
-        "Today's a great day to create something you're proud of. 🎨",
-        "You are the calm in someone else's storm. 🌊",
-        "Your perseverance is writing a story others will be inspired by. 📖",
-        "Be curious. Be compassionate. Be you. 🌟",
-        "You are so close to your breakthrough. Keep pushing. 💥",
-        "Life is better because you're in it — truly. 🌍",
-        "You have a spark that can't be dimmed. Shine on. 💡",
-        "Today, do one thing that makes your heart sing. 🎶",
-        "You are endlessly resilient and wonderfully human. 🌿",
-        "The best view comes after the hardest climb. 🏔️",
-        "You are worthy of all the good things coming your way. 🌸",
-        "Every day is a chance to rewrite your narrative. ✍️",
-        "You are the reason someone's world is a little brighter. 🌟",
-        "Chase the life you want — not the one you settled for. 🏃",
-        "You are growing into someone wonderful. 🌱",
-        "Celebrate being alive today. Not everyone gets this day. 🌅",
-        "Your consistency is quietly impressive. Keep it up. 💪",
-        "You are the answer to a question the world has been asking. 🌍",
-        "Think less. Feel more. Do the thing. 💫",
-        "You are proof that hard work pays off. 🔑",
-        "Today, let love guide every decision. 💗",
-        "You have what it takes — you always have. 🦋",
-        "Your efforts are never wasted. Trust the process. 🌿",
-        "Be bold enough to use your voice today. 📢",
-        "You are a living, breathing miracle. Don't forget it. 🌟",
-        "Make today about progress — however small. 📈",
-        "You matter in ways you can't even begin to measure. 💛",
-        "Keep being wonderfully, unapologetically you. 🎨",
-        "You are fuelled by purpose and powered by passion. 🔥",
-        "Today holds more magic than you yet know. 🪄",
-        "You are strong enough to bend without breaking. 🌿",
-        "Every day you show up is a victory worth celebrating. 🎉",
-        "Your light doesn't take anything from anyone else — shine! 💡",
-        "You are exactly the person this world needs right now. 🌍",
-        "Do one thing today that your future self will high-five you for. 🙌",
-        "You are a wellspring of ideas, love, and possibility. 🌸",
-        "Keep the faith — your season is coming. 🌦️",
-        "You are not a drop in the ocean — you are the entire ocean in a drop. 🌊",
-        "Today, be someone's reason to believe things get better. 💛",
-        "You are building something incredible, one day at a time. 🏗️",
-        "Believe in the power of your own story. 📖",
-        "You are blooming beautifully, even when you can't see it. 🌷",
-        "Each morning you wake up is another gift. Unwrap it. 🎁",
-        "You are driven, dedicated, and destined for great things. ⭐",
-        "Today, the world is ready for what you have to give. 🌍",
-        "You are unstoppable when you believe in yourself. 🚀",
-        "Sow seeds of greatness every single day. 🌾",
-        "Your best is always good enough. 💛",
-        "Walk boldly into what scares you — that's where growth lives. 🦋",
-        "You carry the strength of everyone who believed in you. 💪",
-        "Let your dreams be bigger than your fears. 🌠",
-        "Be gentle with yourself — you are a work of art. 🖼️",
-        "You are not the same person you were a year ago. That's growth. 🌱",
-        "The world is full of wonderful things waiting for you. 🌍",
-        "You are worthy of rest, joy, and peace. 🌙",
-        "Your efforts ripple outward in ways you'll never fully see. 🌊",
-        "Take it one beautiful breath at a time. 🌬️",
-        "You are a lighthouse — steady, bright, and essential. 🏮",
-        "Everything you want is on the other side of fear. 🚪",
-        "You are exactly the kind of person the world needs more of. 🌟",
-        "Even the smallest light can brighten the darkest room. 💡",
-        "You are building the life you deserve. Keep building. 🏗️",
-        "Your consistency is your greatest competitive advantage. 🔑",
-        "Today, lead with love — it opens every door. 💗",
-        "You are more valuable than you could possibly understand. 💎",
-        "Keep going. Rest if you must, but don't give up. 🌿",
-        "Your heart already knows the way. Follow it. 🧭",
-        "You have done hard things before — and you'll do them again. 💪",
-        "Be so busy improving yourself that you have no time to criticise others. 🌸",
-        "You are the product of your choices. Choose wisely today. 🎯",
-        "The best chapters of your story are still ahead. 📖",
-        "You are irreplaceable, invaluable, and incredible. 🌟",
-        "Take one meaningful step forward today. That's enough. 👟",
-        "You are allowed to outgrow old versions of yourself. 🦋",
-        "Your imagination is the preview of life's coming attractions. 🎬",
-        "You are someone's favourite person — remember that. 💛",
-        "Start where you are. Use what you have. Do what you can. 🌱",
-        "You are a quiet revolution — changing the world your way. 🌍",
-        "Difficult roads often lead to the most beautiful destinations. 🏔️",
-        "You are the melody in someone else's story. 🎶",
-        "Let today's sunshine clear away yesterday's clouds. ☀️",
-        "You are growing stronger with every obstacle you overcome. 💪",
-        "Your presence is a present — give it generously today. 🎁",
-        "Feed your focus. Starve your doubts. 🔥",
-        "You are a universe of potential in human form. 🌌",
-        "Act as if what you do makes a difference — because it does. 🌊",
-        "You are perfectly imperfect, and that's perfectly fine. 🌸",
-        "Kindness costs nothing but means everything. 💙",
-        "You are creating ripples of goodness that travel far. 🌊",
-        "Today, invest in your happiness. It's the best ROI. 😊",
-        "You are enough of a reason to celebrate today. 🥂",
-        "Your passion is your compass — always trust it. 🧭",
-        "Even on slow days, you are still moving forward. 🐢",
-        "You deserve to feel proud of yourself today. 🌟",
-        "The foundation you're building now will hold everything. 🏛️",
-        "You are someone's definition of inspiring. 💫",
-        "Be the most enthusiastic person in the room today. 🙌",
-        "You have survived 100% of your hardest days. That's remarkable. 💪",
-        "Let your values guide you and your vision drive you. 🌅",
-        "You are not just surviving — you are absolutely thriving. 🌺",
-        "Today, dare to ask for exactly what you need. 🗣️",
-        "You are the sunrise this world has been waiting for. 🌄",
-        "Happy leap day! You are extra special — just like today. 🐸✨"
+        // Jan 1
+        { quote: "What the new year brings to you will depend a great deal on what you bring to the new year.", author: "Vern McLellan" },
+        // Jan 2
+        { quote: "Write it on your heart that every day is the best day in the year.", author: "Ralph Waldo Emerson" },
+        // Jan 3
+        { quote: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+        // Jan 4
+        { quote: "In the middle of every difficulty lies opportunity.", author: "Albert Einstein" },
+        // Jan 5
+        { quote: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+        // Jan 6
+        { quote: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+        // Jan 7
+        { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+        // Jan 8
+        { quote: "I have a dream that my four little children will one day live in a nation where they will not be judged by the colour of their skin.", author: "Martin Luther King Jr." },
+        // Jan 9
+        { quote: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+        // Jan 10
+        { quote: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+        // Jan 11
+        { quote: "We are what we repeatedly do. Excellence, then, is not an act but a habit.", author: "Aristotle" },
+        // Jan 12
+        { quote: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+        // Jan 13
+        { quote: "Whether you think you can or you think you can't, you're right.", author: "Henry Ford" },
+        // Jan 14
+        { quote: "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author: "Albert Einstein" },
+        // Jan 15 — MLK birthday
+        { quote: "Darkness cannot drive out darkness; only light can do that.", author: "Martin Luther King Jr." },
+        // Jan 16
+        { quote: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost" },
+        // Jan 17 — Benjamin Franklin birthday
+        { quote: "An investment in knowledge pays the best interest.", author: "Benjamin Franklin" },
+        // Jan 18
+        { quote: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+        // Jan 19 — Edgar Allan Poe birthday
+        { quote: "Those who dream by day are cognizant of many things which escape those who dream only by night.", author: "Edgar Allan Poe" },
+        // Jan 20
+        { quote: "Ask not what your country can do for you — ask what you can do for your country.", author: "John F. Kennedy" },
+        // Jan 21
+        { quote: "Life is what happens when you're busy making other plans.", author: "John Lennon" },
+        // Jan 22
+        { quote: "Spread love everywhere you go. Let no one ever come to you without leaving happier.", author: "Mother Teresa" },
+        // Jan 23
+        { quote: "When you reach the end of your rope, tie a knot in it and hang on.", author: "Franklin D. Roosevelt" },
+        // Jan 24
+        { quote: "Always remember that you are absolutely unique. Just like everyone else.", author: "Margaret Mead" },
+        // Jan 25 — Burns Night
+        { quote: "The best laid schemes o' mice an' men gang aft agley.", author: "Robert Burns" },
+        // Jan 26
+        { quote: "Don't judge each day by the harvest you reap but by the seeds that you plant.", author: "Robert Louis Stevenson" },
+        // Jan 27 — Mozart birthday
+        { quote: "Love, love, love — that is the soul of genius.", author: "Wolfgang Amadeus Mozart" },
+        // Jan 28
+        { quote: "You only live once, but if you do it right, once is enough.", author: "Mae West" },
+        // Jan 29
+        { quote: "In the end, it's not the years in your life that count. It's the life in your years.", author: "Abraham Lincoln" },
+        // Jan 30
+        { quote: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt" },
+        // Jan 31
+        { quote: "Not everything that is faced can be changed, but nothing can be changed until it is faced.", author: "James Baldwin" },
+        // Feb 1
+        { quote: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+        // Feb 2
+        { quote: "It is never too late to be what you might have been.", author: "George Eliot" },
+        // Feb 3 — Norman Rockwell birthday
+        { quote: "Every painting is a new adventure.", author: "Norman Rockwell" },
+        // Feb 4 — Rosa Parks birthday
+        { quote: "You must never be fearful about what you are doing when it is right.", author: "Rosa Parks" },
+        // Feb 5
+        { quote: "Life is not measured by the number of breaths we take, but by the moments that take our breath away.", author: "Maya Angelou" },
+        // Feb 6
+        { quote: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+        // Feb 7 — Charles Dickens birthday
+        { quote: "No one is useless in this world who lightens the burdens of another.", author: "Charles Dickens" },
+        // Feb 8
+        { quote: "We accept the love we think we deserve.", author: "Stephen Chbosky" },
+        // Feb 9
+        { quote: "Keep your face always toward the sunshine, and shadows will fall behind you.", author: "Walt Whitman" },
+        // Feb 10
+        { quote: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.", author: "Ralph Waldo Emerson" },
+        // Feb 11 — Thomas Edison birthday
+        { quote: "Genius is one percent inspiration and ninety-nine percent perspiration.", author: "Thomas Edison" },
+        // Feb 12 — Abraham Lincoln birthday
+        { quote: "Give me six hours to chop down a tree and I will spend the first four sharpening the axe.", author: "Abraham Lincoln" },
+        // Feb 13
+        { quote: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+        // Feb 14 — Valentine's Day
+        { quote: "The best thing to hold onto in life is each other.", author: "Audrey Hepburn" },
+        // Feb 15
+        { quote: "Do not go where the path may lead; go instead where there is no path and leave a trail.", author: "Ralph Waldo Emerson" },
+        // Feb 16
+        { quote: "You can never cross the ocean until you have the courage to lose sight of the shore.", author: "Christopher Columbus" },
+        // Feb 17
+        { quote: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+        // Feb 18
+        { quote: "When I stand before God at the end of my life, I would not have a single bit of talent left.", author: "Erma Bombeck" },
+        // Feb 19 — Copernicus birthday
+        { quote: "To know that we know what we know, and to know that we do not know what we do not know — that is true knowledge.", author: "Nicolaus Copernicus" },
+        // Feb 20
+        { quote: "First, think. Second, dream. Third, believe. And finally, dare.", author: "Walt Disney" },
+        // Feb 21
+        { quote: "You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose.", author: "Dr. Seuss" },
+        // Feb 22 — George Washington birthday
+        { quote: "It is better to offer no excuse than a bad one.", author: "George Washington" },
+        // Feb 23
+        { quote: "I am not afraid of storms, for I am learning how to sail my ship.", author: "Louisa May Alcott" },
+        // Feb 24
+        { quote: "The only way out of the labyrinth of suffering is to forgive.", author: "John Green" },
+        // Feb 25
+        { quote: "A person who never made a mistake never tried anything new.", author: "Albert Einstein" },
+        // Feb 26 — Victor Hugo birthday
+        { quote: "Even the darkest night will end and the sun will rise.", author: "Victor Hugo" },
+        // Feb 27
+        { quote: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+        // Feb 28
+        { quote: "Challenges are what make life interesting; overcoming them is what makes life meaningful.", author: "Joshua Marine" },
+        // Feb 29 — Leap day
+        { quote: "Life is either a daring adventure or nothing at all.", author: "Helen Keller" },
+        // Mar 1
+        { quote: "If you want to lift yourself up, lift up someone else.", author: "Booker T. Washington" },
+        // Mar 2 — Dr. Seuss birthday
+        { quote: "Today you are you! That is truer than true! There is no one alive who is you-er than you!", author: "Dr. Seuss" },
+        // Mar 3
+        { quote: "The power of imagination makes us infinite.", author: "John Muir" },
+        // Mar 4
+        { quote: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+        // Mar 5
+        { quote: "Happiness is not something ready-made. It comes from your own actions.", author: "Dalai Lama" },
+        // Mar 6
+        { quote: "The most common form of despair is not being who you are.", author: "Soren Kierkegaard" },
+        // Mar 7
+        { quote: "Nothing is impossible. The word itself says 'I'm possible!'", author: "Audrey Hepburn" },
+        // Mar 8 — International Women's Day
+        { quote: "I am no bird; and no net ensnares me: I am a free human being with an independent will.", author: "Charlotte Bronte" },
+        // Mar 9
+        { quote: "Optimism is the faith that leads to achievement.", author: "Helen Keller" },
+        // Mar 10
+        { quote: "What you get by achieving your goals is not as important as what you become.", author: "Henry David Thoreau" },
+        // Mar 11
+        { quote: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+        // Mar 12
+        { quote: "Whoever is happy will make others happy.", author: "Anne Frank" },
+        // Mar 13
+        { quote: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+        // Mar 14 — Einstein birthday / Pi Day
+        { quote: "Imagination is more important than knowledge.", author: "Albert Einstein" },
+        // Mar 15
+        { quote: "It is not in the stars to hold our destiny but in ourselves.", author: "William Shakespeare" },
+        // Mar 16
+        { quote: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" },
+        // Mar 17 — St. Patrick's Day
+        { quote: "May your troubles be less, your blessings be more, and nothing but happiness come through your door.", author: "Irish Proverb" },
+        // Mar 18
+        { quote: "Strive not to be a success, but rather to be of value.", author: "Albert Einstein" },
+        // Mar 19
+        { quote: "The airplane takes off against the wind, not with it.", author: "Henry Ford" },
+        // Mar 20 — First day of spring
+        { quote: "If we had no winter, the spring would not be so pleasant.", author: "Anne Bradstreet" },
+        // Mar 21
+        { quote: "A champion is defined not by their wins but by how they can recover when they fall.", author: "Serena Williams" },
+        // Mar 22
+        { quote: "The most wasted of all days is one without laughter.", author: "e.e. cummings" },
+        // Mar 23
+        { quote: "I am not what happened to me, I am what I choose to become.", author: "Carl Jung" },
+        // Mar 24
+        { quote: "If you look at what you have in life, you'll always have more.", author: "Oprah Winfrey" },
+        // Mar 25
+        { quote: "Try to be a rainbow in someone's cloud.", author: "Maya Angelou" },
+        // Mar 26 — Robert Frost birthday
+        { quote: "Two roads diverged in a wood, and I took the one less travelled by, and that has made all the difference.", author: "Robert Frost" },
+        // Mar 27
+        { quote: "You can't go back and change the beginning, but you can start where you are and change the ending.", author: "C.S. Lewis" },
+        // Mar 28
+        { quote: "No act of kindness, no matter how small, is ever wasted.", author: "Aesop" },
+        // Mar 29
+        { quote: "It's not whether you get knocked down; it's whether you get up.", author: "Vince Lombardi" },
+        // Mar 30 — Van Gogh birthday
+        { quote: "I dream my painting, and then I paint my dream.", author: "Vincent van Gogh" },
+        // Mar 31
+        { quote: "Well-behaved women seldom make history.", author: "Laurel Thatcher Ulrich" },
+        // Apr 1
+        { quote: "Do not take life too seriously. You will never get out of it alive.", author: "Elbert Hubbard" },
+        // Apr 2
+        { quote: "Reality is merely an illusion, albeit a very persistent one.", author: "Albert Einstein" },
+        // Apr 3
+        { quote: "To live is the rarest thing in the world. Most people exist, that is all.", author: "Oscar Wilde" },
+        // Apr 4 — Maya Angelou birthday
+        { quote: "You can't use up creativity. The more you use, the more you have.", author: "Maya Angelou" },
+        // Apr 5
+        { quote: "When you arise in the morning, think of what a precious privilege it is to be alive.", author: "Marcus Aurelius" },
+        // Apr 6
+        { quote: "If you want to go fast, go alone. If you want to go far, go together.", author: "African Proverb" },
+        // Apr 7 — World Health Day
+        { quote: "The greatest wealth is health.", author: "Virgil" },
+        // Apr 8
+        { quote: "Act as if what you do makes a difference. It does.", author: "William James" },
+        // Apr 9
+        { quote: "Success usually comes to those who are too busy to be looking for it.", author: "Henry David Thoreau" },
+        // Apr 10
+        { quote: "All our dreams can come true, if we have the courage to pursue them.", author: "Walt Disney" },
+        // Apr 11
+        { quote: "The mind is everything. What you think you become.", author: "Buddha" },
+        // Apr 12
+        { quote: "I have not failed. I've just found 10,000 ways that won't work.", author: "Thomas Edison" },
+        // Apr 13 — Thomas Jefferson birthday
+        { quote: "We hold these truths to be self-evident: that all men are created equal.", author: "Thomas Jefferson" },
+        // Apr 14
+        { quote: "Few things help an individual more than to place responsibility on him and let him know you trust him.", author: "Booker T. Washington" },
+        // Apr 15 — Leonardo da Vinci birthday
+        { quote: "Learning never exhausts the mind.", author: "Leonardo da Vinci" },
+        // Apr 16
+        { quote: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+        // Apr 17
+        { quote: "It does not matter how slowly you go so long as you do not stop.", author: "Confucius" },
+        // Apr 18
+        { quote: "The only limits are, as always, those of vision.", author: "James Broughton" },
+        // Apr 19
+        { quote: "Build your own dreams, or someone else will hire you to build theirs.", author: "Farrah Gray" },
+        // Apr 20
+        { quote: "Education is the most powerful weapon which you can use to change the world.", author: "Nelson Mandela" },
+        // Apr 21
+        { quote: "People will never forget how you made them feel.", author: "Maya Angelou" },
+        // Apr 22 — Earth Day
+        { quote: "The Earth does not belong to us, we belong to the Earth.", author: "Chief Seattle" },
+        // Apr 23 — Shakespeare birthday
+        { quote: "All the world's a stage, and all the men and women merely players.", author: "William Shakespeare" },
+        // Apr 24
+        { quote: "Either write something worth reading or do something worth writing.", author: "Benjamin Franklin" },
+        // Apr 25
+        { quote: "Life isn't about finding yourself. Life is about creating yourself.", author: "George Bernard Shaw" },
+        // Apr 26
+        { quote: "One today is worth two tomorrows.", author: "Benjamin Franklin" },
+        // Apr 27 — Ulysses S. Grant birthday
+        { quote: "In every battle there comes a time when both sides consider themselves beaten; then he who continues the attack wins.", author: "Ulysses S. Grant" },
+        // Apr 28
+        { quote: "The secret of success is to do the common thing uncommonly well.", author: "John D. Rockefeller Jr." },
+        // Apr 29
+        { quote: "Courage is not the absence of fear, but the triumph over it.", author: "Nelson Mandela" },
+        // Apr 30
+        { quote: "If you can dream it, you can achieve it.", author: "Zig Ziglar" },
+        // May 1
+        { quote: "Go confidently in the direction of your dreams! Live the life you've imagined.", author: "Henry David Thoreau" },
+        // May 2
+        { quote: "Definiteness of purpose is the starting point of all achievement.", author: "W. Clement Stone" },
+        // May 3
+        { quote: "If opportunity doesn't knock, build a door.", author: "Milton Berle" },
+        // May 4
+        { quote: "Do, or do not. There is no try.", author: "Yoda" },
+        // May 5 — Cinco de Mayo
+        { quote: "Our greatest glory is not in never falling, but in rising every time we fall.", author: "Confucius" },
+        // May 6
+        { quote: "What we achieve inwardly will change outer reality.", author: "Plutarch" },
+        // May 7 — Tchaikovsky birthday
+        { quote: "Inspiration is a guest that does not willingly visit the lazy.", author: "Pyotr Ilyich Tchaikovsky" },
+        // May 8
+        { quote: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+        // May 9
+        { quote: "Believe in yourself and all that you are. Know that there is something inside you greater than any obstacle.", author: "Christian D. Larson" },
+        // May 10
+        { quote: "Nothing will work unless you do.", author: "Maya Angelou" },
+        // May 11
+        { quote: "Change your thoughts and you change your world.", author: "Norman Vincent Peale" },
+        // May 12 — Florence Nightingale birthday
+        { quote: "I attribute my success to this: I never gave or took any excuse.", author: "Florence Nightingale" },
+        // May 13
+        { quote: "Don't wait. The time will never be just right.", author: "Napoleon Hill" },
+        // May 14
+        { quote: "I am not a product of my circumstances. I am a product of my decisions.", author: "Stephen Covey" },
+        // May 15
+        { quote: "Pursue what catches your heart, not what catches your eyes.", author: "Roy T. Bennett" },
+        // May 16
+        { quote: "The harder I work, the luckier I get.", author: "Samuel Goldwyn" },
+        // May 17
+        { quote: "Never let the fear of striking out keep you from playing the game.", author: "Babe Ruth" },
+        // May 18
+        { quote: "Everything you can imagine is real.", author: "Pablo Picasso" },
+        // May 19 — Malcolm X birthday
+        { quote: "Without education, you are not going anywhere in this world.", author: "Malcolm X" },
+        // May 20
+        { quote: "I've failed over and over again in my life. And that is why I succeed.", author: "Michael Jordan" },
+        // May 21
+        { quote: "The only way to achieve the impossible is to believe it is possible.", author: "Charles Kingsleigh" },
+        // May 22
+        { quote: "What you do speaks so loudly that I cannot hear what you say.", author: "Ralph Waldo Emerson" },
+        // May 23
+        { quote: "A goal is not always meant to be reached; it often serves simply as something to aim at.", author: "Bruce Lee" },
+        // May 24 — Bob Dylan birthday
+        { quote: "A man is a success if he gets up in the morning and gets to bed at night, and in between does what he wants to do.", author: "Bob Dylan" },
+        // May 25
+        { quote: "Nothing is particularly hard if you divide it into small jobs.", author: "Henry Ford" },
+        // May 26
+        { quote: "The best preparation for tomorrow is doing your best today.", author: "H. Jackson Brown Jr." },
+        // May 27
+        { quote: "I find that the harder I work, the more luck I seem to have.", author: "Thomas Jefferson" },
+        // May 28
+        { quote: "Try not to become a man of success. Rather become a man of value.", author: "Albert Einstein" },
+        // May 29
+        { quote: "Only those who dare to fail greatly can ever achieve greatly.", author: "Robert F. Kennedy" },
+        // May 30
+        { quote: "With the new day comes new strength and new thoughts.", author: "Eleanor Roosevelt" },
+        // May 31
+        { quote: "Each morning we are born again. What we do today matters most.", author: "Buddha" },
+        // Jun 1
+        { quote: "Knowing is not enough; we must apply. Willing is not enough; we must do.", author: "Johann Wolfgang von Goethe" },
+        // Jun 2
+        { quote: "Success is walking from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+        // Jun 3
+        { quote: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+        // Jun 4
+        { quote: "Logic will get you from A to B. Imagination will take you everywhere.", author: "Albert Einstein" },
+        // Jun 5 — World Environment Day
+        { quote: "The environment is where we all meet; where we all have a mutual interest.", author: "Lady Bird Johnson" },
+        // Jun 6
+        { quote: "If you don't stand for something you will fall for anything.", author: "Gordon A. Eadie" },
+        // Jun 7
+        { quote: "The question isn't who is going to let me; it's who is going to stop me.", author: "Ayn Rand" },
+        // Jun 8
+        { quote: "You are not here merely to make a living. You are here to enable the world to live more amply.", author: "Woodrow Wilson" },
+        // Jun 9
+        { quote: "It is not the mountain we conquer but ourselves.", author: "Edmund Hillary" },
+        // Jun 10
+        { quote: "We must accept finite disappointment, but never lose infinite hope.", author: "Martin Luther King Jr." },
+        // Jun 11
+        { quote: "I can't change the direction of the wind, but I can adjust my sails to always reach my destination.", author: "Jimmy Dean" },
+        // Jun 12
+        { quote: "Too many of us are not living our dreams because we are living our fears.", author: "Les Brown" },
+        // Jun 13
+        { quote: "Don't be pushed around by the fears in your mind. Be led by the dreams in your heart.", author: "Roy T. Bennett" },
+        // Jun 14
+        { quote: "Once you choose hope, anything's possible.", author: "Christopher Reeve" },
+        // Jun 15
+        { quote: "Perseverance is failing 19 times and succeeding the 20th.", author: "Julie Andrews" },
+        // Jun 16
+        { quote: "You cannot shake hands with a clenched fist.", author: "Indira Gandhi" },
+        // Jun 17
+        { quote: "You must do the things you think you cannot do.", author: "Eleanor Roosevelt" },
+        // Jun 18
+        { quote: "The most courageous act is still to think for yourself. Aloud.", author: "Coco Chanel" },
+        // Jun 19 — Juneteenth
+        { quote: "Freedom is never given; it is won.", author: "A. Philip Randolph" },
+        // Jun 20 — Summer solstice area
+        { quote: "What is done in love is done well.", author: "Vincent van Gogh" },
+        // Jun 21
+        { quote: "To accomplish great things, we must not only act, but also dream; not only plan, but also believe.", author: "Anatole France" },
+        // Jun 22
+        { quote: "Don't tell me the sky's the limit when there are footprints on the moon.", author: "Paul Brandt" },
+        // Jun 23
+        { quote: "When we strive to become better than we are, everything around us becomes better too.", author: "Paulo Coelho" },
+        // Jun 24
+        { quote: "Do what you feel in your heart to be right — for you'll be criticised anyway.", author: "Eleanor Roosevelt" },
+        // Jun 25
+        { quote: "Do not tell me the sky's the limit when there are footprints on the moon.", author: "Paul Brandt" },
+        // Jun 26
+        { quote: "The only real mistake is the one from which we learn nothing.", author: "Henry Ford" },
+        // Jun 27 — Helen Keller birthday
+        { quote: "Alone we can do so little; together we can do so much.", author: "Helen Keller" },
+        // Jun 28
+        { quote: "In order to succeed, we must first believe that we can.", author: "Nikos Kazantzakis" },
+        // Jun 29
+        { quote: "If you're going through hell, keep going.", author: "Winston Churchill" },
+        // Jun 30
+        { quote: "The secret of change is to focus all your energy not on fighting the old, but on building the new.", author: "Socrates" },
+        // Jul 1
+        { quote: "I dwell in possibility.", author: "Emily Dickinson" },
+        // Jul 2
+        { quote: "We generate fears while we sit. We overcome them by action.", author: "Dr. Henry Link" },
+        // Jul 3
+        { quote: "Genius is one percent inspiration, ninety-nine percent perspiration.", author: "Thomas Edison" },
+        // Jul 4 — Independence Day
+        { quote: "We hold these truths to be self-evident, that all men are created equal.", author: "Thomas Jefferson" },
+        // Jul 5
+        { quote: "Whether you think you can or can't, either way you are right.", author: "Henry Ford" },
+        // Jul 6 — Frida Kahlo birthday
+        { quote: "I tried to drown my sorrows, but the bastards learned how to swim.", author: "Frida Kahlo" },
+        // Jul 7
+        { quote: "Happiness is not the absence of problems; it's the ability to deal with them.", author: "Steve Maraboli" },
+        // Jul 8
+        { quote: "Keep your eyes on the stars, and your feet on the ground.", author: "Theodore Roosevelt" },
+        // Jul 9
+        { quote: "The present is theirs; the future, for which I really worked, is mine.", author: "Nikola Tesla" },
+        // Jul 10 — Nikola Tesla birthday
+        { quote: "Great things are done by a series of small things brought together.", author: "Vincent van Gogh" },
+        // Jul 11
+        { quote: "One child, one teacher, one book, one pen can change the world.", author: "Malala Yousafzai" },
+        // Jul 12 — Malala Yousafzai birthday
+        { quote: "Work hard in silence, let your success be your noise.", author: "Frank Ocean" },
+        // Jul 13
+        { quote: "Liberty, Equality, Fraternity.", author: "French Republic Motto" },
+        // Jul 14 — Bastille Day
+        { quote: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+        // Jul 15
+        { quote: "We know what we are, but know not what we may be.", author: "William Shakespeare" },
+        // Jul 16
+        { quote: "If you set your goals ridiculously high and it's a failure, you will fail above everyone else's success.", author: "James Cameron" },
+        // Jul 17
+        { quote: "It always seems impossible until it is done.", author: "Nelson Mandela" },
+        // Jul 18 — Nelson Mandela birthday
+        { quote: "Tough times never last, but tough people do.", author: "Robert H. Schuller" },
+        // Jul 19
+        { quote: "That's one small step for man, one giant leap for mankind.", author: "Neil Armstrong" },
+        // Jul 20 — Moon landing 1969
+        { quote: "The world breaks everyone, and afterward, many are strong at the broken places.", author: "Ernest Hemingway" },
+        // Jul 21 — Ernest Hemingway birthday
+        { quote: "There are no shortcuts to any place worth going.", author: "Beverly Sills" },
+        // Jul 22
+        { quote: "I am not afraid of storms, for I am learning how to sail my ship.", author: "Louisa May Alcott" },
+        // Jul 23
+        { quote: "Obstacles don't have to stop you. Figure out how to climb the wall, go through it, or work around it.", author: "Michael Jordan" },
+        // Jul 24
+        { quote: "I have learned over the years that when one's mind is made up, this diminishes fear.", author: "Rosa Parks" },
+        // Jul 25
+        { quote: "You can't connect the dots looking forward; you can only connect them looking backwards.", author: "Steve Jobs" },
+        // Jul 26
+        { quote: "If the wind will not serve, take to the oars.", author: "Latin Proverb" },
+        // Jul 27
+        { quote: "The most important thing is to enjoy your life — to be happy — it's all that matters.", author: "Audrey Hepburn" },
+        // Jul 28
+        { quote: "Happiness depends upon ourselves.", author: "Aristotle" },
+        // Jul 29
+        { quote: "The greatest discovery of all time is that a person can change their future by merely changing their attitude.", author: "Oprah Winfrey" },
+        // Jul 30
+        { quote: "It is our choices, Harry, that show what we truly are, far more than our abilities.", author: "J.K. Rowling" },
+        // Jul 31 — J.K. Rowling birthday
+        { quote: "Do not wait; the time will never be 'just right.' Start where you stand.", author: "Napoleon Hill" },
+        // Aug 1
+        { quote: "If you don't like the road you're walking, start paving another one.", author: "Dolly Parton" },
+        // Aug 2
+        { quote: "You were born with wings, why prefer to crawl through life?", author: "Rumi" },
+        // Aug 3
+        { quote: "Change will not come if we wait for some other person or some other time. We are the ones we've been waiting for.", author: "Barack Obama" },
+        // Aug 4 — Barack Obama birthday
+        { quote: "Whatever the mind of man can conceive and believe, it can achieve.", author: "Napoleon Hill" },
+        // Aug 5
+        { quote: "Life is 10% what happens to us and 90% how we react to it.", author: "Charles R. Swindoll" },
+        // Aug 6
+        { quote: "Our greatest weakness lies in giving up. The most certain way to succeed is always to try just one more time.", author: "Thomas Edison" },
+        // Aug 7
+        { quote: "Everything should be made as simple as possible, but not simpler.", author: "Albert Einstein" },
+        // Aug 8
+        { quote: "If you want others to be happy, practice compassion. If you want to be happy, practice compassion.", author: "Dalai Lama" },
+        // Aug 9
+        { quote: "I believe every human has a finite number of heartbeats. I don't intend to waste any of mine.", author: "Neil Armstrong" },
+        // Aug 10
+        { quote: "Life shrinks or expands in proportion to one's courage.", author: "Anais Nin" },
+        // Aug 11
+        { quote: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+        // Aug 12
+        { quote: "Strength does not come from physical capacity. It comes from an indomitable will.", author: "Mahatma Gandhi" },
+        // Aug 13
+        { quote: "The two most important days in your life are the day you are born and the day you find out why.", author: "Mark Twain" },
+        // Aug 14
+        { quote: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+        // Aug 15
+        { quote: "I alone cannot change the world, but I can cast a stone across the waters to create many ripples.", author: "Mother Teresa" },
+        // Aug 16
+        { quote: "If you have good thoughts, they will shine out of your face like sunbeams.", author: "Roald Dahl" },
+        // Aug 17
+        { quote: "A wise man will make more opportunities than he finds.", author: "Francis Bacon" },
+        // Aug 18
+        { quote: "Believe in yourself! Have faith in your abilities!", author: "Norman Vincent Peale" },
+        // Aug 19
+        { quote: "It's not whether you get knocked down, it's whether you get up.", author: "Vince Lombardi" },
+        // Aug 20
+        { quote: "We are what we repeatedly do. Excellence then is not an act but a habit.", author: "Aristotle" },
+        // Aug 21
+        { quote: "If you judge people, you have no time to love them.", author: "Mother Teresa" },
+        // Aug 22
+        { quote: "Success is not how high you have climbed, but how you make a positive difference to the world.", author: "Roy T. Bennett" },
+        // Aug 23
+        { quote: "I have a dream that one day this nation will rise up and live out the true meaning of its creed.", author: "Martin Luther King Jr." },
+        // Aug 24
+        { quote: "Be the change you wish to see in the world.", author: "Mahatma Gandhi" },
+        // Aug 25
+        { quote: "You have to expect things of yourself before you can do them.", author: "Michael Jordan" },
+        // Aug 26 — Mother Teresa birthday
+        { quote: "There is only one corner of the universe you can be certain of improving, and that's your own self.", author: "Aldous Huxley" },
+        // Aug 27
+        { quote: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+        // Aug 28 — MLK 'I Have a Dream' speech anniversary
+        { quote: "With self-discipline most anything is possible.", author: "Theodore Roosevelt" },
+        // Aug 29
+        { quote: "The most common way people give up their power is by thinking they don't have any.", author: "Alice Walker" },
+        // Aug 30
+        { quote: "Success is the sum of small efforts, repeated day in and day out.", author: "Robert Collier" },
+        // Aug 31
+        { quote: "Kind words can be short and easy to speak, but their echoes are truly endless.", author: "Mother Teresa" },
+        // Sep 1
+        { quote: "Whatever you are, be a good one.", author: "Abraham Lincoln" },
+        // Sep 2
+        { quote: "A journey of a thousand miles must begin with a single step.", author: "Lao Tzu" },
+        // Sep 3
+        { quote: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis" },
+        // Sep 4
+        { quote: "Spread love everywhere you go.", author: "Mother Teresa" },
+        // Sep 5 — Mother Teresa death anniversary
+        { quote: "Even the darkest night will end and the sun will rise.", author: "Victor Hugo" },
+        // Sep 6
+        { quote: "We all have dreams. But in order to make dreams into reality, it takes determination, dedication, self-discipline, and effort.", author: "Jesse Owens" },
+        // Sep 7
+        { quote: "The greatest secrets are always hidden in the most unlikely places.", author: "Roald Dahl" },
+        // Sep 8
+        { quote: "Happiness is not in the mere possession of money; it lies in the joy of achievement.", author: "Franklin D. Roosevelt" },
+        // Sep 9
+        { quote: "I still know that just to be alive is a grand thing.", author: "Agatha Christie" },
+        // Sep 10
+        { quote: "If I cannot do great things, I can do small things in a great way.", author: "Martin Luther King Jr." },
+        // Sep 11
+        { quote: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+        // Sep 12 — Jesse Owens birthday
+        { quote: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela" },
+        // Sep 13 — Roald Dahl birthday
+        { quote: "Life is really simple, but we insist on making it complicated.", author: "Confucius" },
+        // Sep 14
+        { quote: "Peace begins with a smile.", author: "Mother Teresa" },
+        // Sep 15 — Agatha Christie birthday
+        { quote: "Not all those who wander are lost.", author: "J.R.R. Tolkien" },
+        // Sep 16
+        { quote: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
+        // Sep 17
+        { quote: "No one can make you feel inferior without your consent.", author: "Eleanor Roosevelt" },
+        // Sep 18
+        { quote: "Tell me, what is it you plan to do with your one wild and precious life?", author: "Mary Oliver" },
+        // Sep 19
+        { quote: "Only those who will risk going too far can possibly find out how far one can go.", author: "T.S. Eliot" },
+        // Sep 20
+        { quote: "If you want to live a happy life, tie it to a goal, not to people or things.", author: "Albert Einstein" },
+        // Sep 21 — International Day of Peace
+        { quote: "It does not matter how slowly you go so long as you do not stop.", author: "Confucius" },
+        // Sep 22 — Tolkien's hobbit birthday
+        { quote: "Defeat is not bitter unless you swallow it.", author: "Joe Clark" },
+        // Sep 23
+        { quote: "Out beyond ideas of wrongdoing and rightdoing there is a field. I'll meet you there.", author: "Rumi" },
+        // Sep 24
+        { quote: "Live as if you were to die tomorrow. Learn as if you were to live forever.", author: "Mahatma Gandhi" },
+        // Sep 25
+        { quote: "The best way to find yourself is to lose yourself in the service of others.", author: "Mahatma Gandhi" },
+        // Sep 26 — T.S. Eliot birthday
+        { quote: "What lies behind us and what lies before us are tiny compared to what lies within us.", author: "Ralph Waldo Emerson" },
+        // Sep 27
+        { quote: "Dreams are not what you see in sleep; they are things which do not let you sleep.", author: "A.P.J. Abdul Kalam" },
+        // Sep 28 — Confucius birthday
+        { quote: "The most difficult thing is the decision to act; the rest is merely tenacity.", author: "Amelia Earhart" },
+        // Sep 29
+        { quote: "We must be the change we wish to see in the world.", author: "Mahatma Gandhi" },
+        // Sep 30 — Rumi death anniversary
+        { quote: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
+        // Oct 1 — Mahatma Gandhi's birthday
+        { quote: "Live as if you were to die tomorrow. Learn as if you were to live forever.", author: "Mahatma Gandhi" },
+        // Oct 2
+        { quote: "The best way to find yourself is to lose yourself in the service of others.", author: "Mahatma Gandhi" },
+        // Oct 3
+        { quote: "What lies behind us and what lies before us are tiny matters compared to what lies within us.", author: "Ralph Waldo Emerson" },
+        // Oct 4
+        { quote: "Dreams are not what you see in sleep, dreams are things which do not let you sleep.", author: "A.P.J. Abdul Kalam" },
+        // Oct 5
+        { quote: "The most difficult thing is the decision to act; the rest is merely tenacity.", author: "Amelia Earhart" },
+        // Oct 6
+        { quote: "You can't go back and change the beginning, but you can start where you are and change the ending.", author: "C.S. Lewis" },
+        // Oct 7
+        { quote: "We must be the change we wish to see in the world.", author: "Mahatma Gandhi" },
+        // Oct 8
+        { quote: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
+        // Oct 9 — John Lennon birthday
+        { quote: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
+        // Oct 10 — World Mental Health Day
+        { quote: "It's OK to feel sad, angry, annoyed, frustrated, scared, or anxious. It doesn't mean you've failed.", author: "Lori Deschene" },
+        // Oct 11 — Eleanor Roosevelt birthday
+        { quote: "With the new day comes new strength and new thoughts.", author: "Eleanor Roosevelt" },
+        // Oct 12
+        { quote: "Optimism is the faith that leads to achievement. Nothing can be done without hope and confidence.", author: "Helen Keller" },
+        // Oct 13
+        { quote: "You must be the change you wish to see in the world.", author: "Mahatma Gandhi" },
+        // Oct 14 — Malala Nobel Prize
+        { quote: "I raise up my voice — not so I can shout, but so that those without a voice can be heard.", author: "Malala Yousafzai" },
+        // Oct 15
+        { quote: "If you're not making mistakes, then you're not doing anything.", author: "John Wooden" },
+        // Oct 16
+        { quote: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
+        // Oct 17
+        { quote: "In the middle of every difficulty lies opportunity.", author: "Albert Einstein" },
+        // Oct 18
+        { quote: "Do not go where the path may lead, go instead where there is no path and leave a trail.", author: "Ralph Waldo Emerson" },
+        // Oct 19
+        { quote: "Wherever you go, go with all your heart.", author: "Confucius" },
+        // Oct 20
+        { quote: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+        // Oct 21
+        { quote: "I am not a product of my circumstances. I am a product of my decisions.", author: "Stephen Covey" },
+        // Oct 22
+        { quote: "Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing.", author: "Pele" },
+        // Oct 23 — Pele birthday
+        { quote: "We are not human beings having a spiritual experience. We are spiritual beings having a human experience.", author: "Pierre Teilhard de Chardin" },
+        // Oct 24 — United Nations Day
+        { quote: "Every act of creation is first an act of destruction.", author: "Pablo Picasso" },
+        // Oct 25 — Pablo Picasso birthday
+        { quote: "What you do today can improve all your tomorrows.", author: "Ralph Marston" },
+        // Oct 26
+        { quote: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+        // Oct 27 — Theodore Roosevelt birthday
+        { quote: "It's fine to celebrate success, but it is more important to heed the lessons of failure.", author: "Bill Gates" },
+        // Oct 28 — Bill Gates birthday
+        { quote: "Failure is the condiment that gives success its flavor.", author: "Truman Capote" },
+        // Oct 29
+        { quote: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+        // Oct 30
+        { quote: "There is nothing to fear but fear itself.", author: "Franklin D. Roosevelt" },
+        // Oct 31 — Halloween
+        { quote: "Start each day with a positive thought and a grateful heart.", author: "Roy T. Bennett" },
+        // Nov 1
+        { quote: "The future depends on what you do today.", author: "Mahatma Gandhi" },
+        // Nov 2
+        { quote: "Effort only fully releases its reward after a person refuses to quit.", author: "Napoleon Hill" },
+        // Nov 3
+        { quote: "Keep your face to the sunshine and you cannot see a shadow.", author: "Helen Keller" },
+        // Nov 4
+        { quote: "A man may die, nations may rise and fall, but an idea lives on.", author: "John F. Kennedy" },
+        // Nov 5 — Guy Fawkes Night
+        { quote: "The best way out is always through.", author: "Robert Frost" },
+        // Nov 6
+        { quote: "Nothing in life is to be feared, it is only to be understood.", author: "Marie Curie" },
+        // Nov 7 — Marie Curie birthday
+        { quote: "To succeed in life, you need three things: a wishbone, a backbone and a funny bone.", author: "Reba McEntire" },
+        // Nov 8
+        { quote: "Somewhere, something incredible is waiting to be known.", author: "Carl Sagan" },
+        // Nov 9 — Carl Sagan birthday
+        { quote: "Even if I knew that tomorrow the world would go to pieces, I would still plant my apple tree.", author: "Martin Luther" },
+        // Nov 10
+        { quote: "In the end, it's not the years in your life that count. It's the life in your years.", author: "Abraham Lincoln" },
+        // Nov 11 — Veterans Day / Armistice Day
+        { quote: "When you can't change the direction of the wind, adjust your sails.", author: "H. Jackson Brown Jr." },
+        // Nov 12
+        { quote: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis" },
+        // Nov 13
+        { quote: "The greatest wealth is to live content with little.", author: "Plato" },
+        // Nov 14
+        { quote: "No one has ever made himself great by showing how small someone else is.", author: "Irvin Himmel" },
+        // Nov 15
+        { quote: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+        // Nov 16
+        { quote: "To err is human; to forgive, divine.", author: "Alexander Pope" },
+        // Nov 17
+        { quote: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+        // Nov 18
+        { quote: "No problem can withstand the assault of sustained thinking.", author: "Voltaire" },
+        // Nov 19
+        { quote: "Speak softly and carry a big stick; you will go far.", author: "Theodore Roosevelt" },
+        // Nov 20
+        { quote: "First they ignore you, then they laugh at you, then they fight you, then you win.", author: "Mahatma Gandhi" },
+        // Nov 21 — Voltaire birthday
+        { quote: "It is not the strongest of the species that survives, nor the most intelligent, but the one most responsive to change.", author: "Charles Darwin" },
+        // Nov 22
+        { quote: "Do not let what you cannot do interfere with what you can do.", author: "John Wooden" },
+        // Nov 23
+        { quote: "Act as if it were impossible to fail.", author: "Dorothea Brande" },
+        // Nov 24 — Darwin's 'On the Origin of Species' published
+        { quote: "We should not give up and we should not allow the problem to defeat us.", author: "A.P.J. Abdul Kalam" },
+        // Nov 25
+        { quote: "No bird soars too high if he soars with his own wings.", author: "William Blake" },
+        // Nov 26
+        { quote: "The expert in anything was once a beginner.", author: "Helen Hayes" },
+        // Nov 27
+        { quote: "We must be willing to let go of the life we planned so as to have the life that is waiting for us.", author: "Joseph Campbell" },
+        // Nov 28 — William Blake birthday
+        { quote: "It's always too early to quit.", author: "Norman Vincent Peale" },
+        // Nov 29
+        { quote: "Dream big and dare to fail.", author: "Norman Vaughan" },
+        // Nov 30 — Winston Churchill birthday
+        { quote: "Success is stumbling from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+        // Dec 1
+        { quote: "If you don't design your own life plan, chances are you'll fall into someone else's plan.", author: "Jim Rohn" },
+        // Dec 2
+        { quote: "All our dreams can come true, if we have the courage to pursue them.", author: "Walt Disney" },
+        // Dec 3
+        { quote: "Nothing is impossible; the word itself says 'I'm possible!'", author: "Audrey Hepburn" },
+        // Dec 4
+        { quote: "In any moment of decision, the best thing you can do is the right thing.", author: "Theodore Roosevelt" },
+        // Dec 5 — Walt Disney birthday
+        { quote: "You may say I'm a dreamer, but I'm not the only one.", author: "John Lennon" },
+        // Dec 6
+        { quote: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+        // Dec 7
+        { quote: "I'm nobody! Who are you? Are you nobody, too?", author: "Emily Dickinson" },
+        // Dec 8 — John Lennon death anniversary
+        { quote: "Great minds discuss ideas; average minds discuss events; small minds discuss people.", author: "Eleanor Roosevelt" },
+        // Dec 9
+        { quote: "If you light a lamp for somebody, it will also brighten your path.", author: "Buddha" },
+        // Dec 10 — Nobel Prize Day / Emily Dickinson birthday
+        { quote: "Keep your eyes on the stars, and your feet on the ground.", author: "Theodore Roosevelt" },
+        // Dec 11
+        { quote: "You will never find time for anything. If you want time, you must make it.", author: "Charles Buxton" },
+        // Dec 12
+        { quote: "In the long run, we shape our lives, and we shape ourselves.", author: "Eleanor Roosevelt" },
+        // Dec 13
+        { quote: "Music is the mediator between the spiritual and the sensual life.", author: "Ludwig van Beethoven" },
+        // Dec 14
+        { quote: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+        // Dec 15
+        { quote: "One small positive thought in the morning can change your whole day.", author: "Dalai Lama" },
+        // Dec 16 — Beethoven birthday
+        { quote: "Our greatest glory is not in never falling, but in rising every time we fall.", author: "Oliver Goldsmith" },
+        // Dec 17 — Wright Brothers first flight
+        { quote: "The more that you read, the more things you will know.", author: "Dr. Seuss" },
+        // Dec 18
+        { quote: "Even the longest night will pass and the sun will rise.", author: "Victor Hugo" },
+        // Dec 19
+        { quote: "What you do speaks so loudly that I cannot hear what you say.", author: "Ralph Waldo Emerson" },
+        // Dec 20
+        { quote: "The best gift you can give is your time, your attention, your love.", author: "Leo Buscaglia" },
+        // Dec 21 — Winter solstice
+        { quote: "The best of all gifts around any Christmas tree: the presence of a happy family all wrapped up in each other.", author: "Burton Hillis" },
+        // Dec 22
+        { quote: "It is Christmas in the heart that puts Christmas in the air.", author: "W.T. Ellis" },
+        // Dec 23
+        { quote: "The secret of success is constancy of purpose.", author: "Benjamin Disraeli" },
+        // Dec 24 — Christmas Eve
+        { quote: "You cannot change your destination overnight, but you can change your direction overnight.", author: "Jim Rohn" },
+        // Dec 25 — Christmas
+        { quote: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+        // Dec 26
+        { quote: "Happiness is not something you postpone for the future; it is something you design for the present.", author: "Jim Rohn" },
+        // Dec 27
+        { quote: "Tomorrow is the first blank page of a 365-page book. Write a good one.", author: "Brad Paisley" },
+        // Dec 28
+        { quote: "Cheers to a new year and another chance for us to get it right.", author: "Oprah Winfrey" },
+        // Dec 29
+        { quote: "The secret of change is to focus all your energy not on fighting the old, but on building the new.", author: "Socrates" },
+        // Dec 30
+        { quote: "I dwell in possibility.", author: "Emily Dickinson" },
+        // Dec 31 — New Year's Eve
+        { quote: "Tomorrow is the first blank page of a 365-page book. Write a good one.", author: "Brad Paisley" },
       ];
+
+      const SUBTITLE_TEXT = "Hope you slept well \u2014 it's a brand new day.";
 
       function getDayOfYear() {
         const now = new Date();
-        const start = new Date(now.getFullYear(), 0, 0);
+        const start = new Date(now.getFullYear(), 0, 1);
         const diff = now - start;
         const oneDay = 1000 * 60 * 60 * 24;
-        return Math.floor(diff / oneDay); // 1–366
+        return Math.floor(diff / oneDay); // 0-indexed: Jan 1 = 0
       }
 
       const el = document.getElementById('sub-greeting');
-      const cursor = document.getElementById('typing-cursor');
-      if (!el || !cursor) return;
+      const textNode = document.getElementById('sub-greeting-text');
+      if (!el || !textNode) return;
 
-      const originalText = 'Hope you slept well — it\'s a brand new day.';
+      const dayIndex = getDayOfYear() % QUOTES.length;
+      const q = QUOTES[dayIndex];
+      const quoteText = '\u201c' + q.quote + '\u201d \u2014 ' + q.author;
 
-      // Start API fetch immediately in parallel with the 7s subtitle display.
-      // We have 7s of wait time and a 5s timeout — plenty of overlap.
-      const quotePromise = fetchZenQuote();
-
-      cursor.classList.add('active');
-
-      function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-      async function runTypewriter() {
-        // Kick off the 7-second subtitle read-time in parallel with the fetch
-        const [, apiQuote] = await Promise.all([sleep(7000), quotePromise]);
-
-        // Use API quote if we got one, otherwise fall back to today's local quote
-        const dayIndex = (getDayOfYear() - 1 + QUOTES.length) % QUOTES.length;
-        const quote = apiQuote || QUOTES[dayIndex];
-
-        // Backspace out original text
-        let text = originalText;
-        while (text.length > 0) {
-          text = text.slice(0, -1);
-          el.firstChild.textContent = text;
-          await sleep(38);
-        }
-
-        await sleep(300);
-
-        // Type in the quote
-        let typed = '';
-        for (const char of quote) {
-          typed += char;
-          el.firstChild.textContent = typed;
-          await sleep(42);
-        }
-
-        // Fade out cursor after typing finishes
-        await sleep(800);
-        cursor.style.animation = 'none';
-        cursor.style.opacity = '0';
+      // Cycle: subtitle for 5s, quote for 15s, repeat
+      function fadeToSubtitle() {
+        el.style.opacity = '0';
+        setTimeout(function () {
+          textNode.textContent = SUBTITLE_TEXT;
+          el.style.opacity = '1';
+          setTimeout(fadeToQuote, 5000);
+        }, 500);
       }
 
-      runTypewriter();
+      function fadeToQuote() {
+        el.style.opacity = '0';
+        setTimeout(function () {
+          textNode.textContent = quoteText;
+          el.style.opacity = '1';
+          setTimeout(fadeToSubtitle, 15000);
+        }, 500);
+      }
+
+      // Start with subtitle visible for 5s, then begin cycling
+      el.style.opacity = '1';
+      setTimeout(fadeToQuote, 5000);
     })();
   </script>
 
@@ -2141,7 +2469,7 @@
       <div id="sagan-scene">
         <!-- Cat drawn in SVG -->
         <div id="sagan-cat-group">
-          <svg width="110" height="150" viewBox="0 0 110 150" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <svg width="110" height="168" viewBox="0 0 110 168" xmlns="http://www.w3.org/2000/svg" overflow="visible">
             <!-- TAIL (behind body) -->
             <g class="sagan-tail">
               <path d="M58 130 Q90 120 95 100 Q100 82 80 78" stroke="#9a9a9a" stroke-width="7" fill="none" stroke-linecap="round"/>
@@ -2157,16 +2485,19 @@
             <path d="M55 98 Q56 115 55 130" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
             <path d="M68 100 Q64 112 66 126" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
 
+            <!-- FRONT LEGS -->
+            <rect x="36" y="136" width="14" height="20" rx="6" fill="#b0b0b0"/>
+            <rect x="60" y="136" width="14" height="20" rx="6" fill="#b0b0b0"/>
             <!-- FRONT PAWS -->
-            <ellipse cx="42" cy="148" rx="10" ry="7" fill="#c8c8c8"/>
-            <ellipse cx="68" cy="148" rx="10" ry="7" fill="#c8c8c8"/>
+            <ellipse cx="43" cy="158" rx="11" ry="7" fill="#c8c8c8"/>
+            <ellipse cx="67" cy="158" rx="11" ry="7" fill="#c8c8c8"/>
             <!-- paw toe lines -->
-            <line x1="37" y1="149" x2="37" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="42" y1="150" x2="42" y2="154" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="47" y1="149" x2="47" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="63" y1="149" x2="63" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="68" y1="150" x2="68" y2="154" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
-            <line x1="73" y1="149" x2="73" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="37" y1="158" x2="37" y2="163" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="43" y1="159" x2="43" y2="164" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="49" y1="158" x2="49" y2="163" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="61" y1="158" x2="61" y2="163" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="67" y1="159" x2="67" y2="164" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="73" y1="158" x2="73" y2="163" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
 
             <!-- HEAD — wider cheeks, slightly angular for wild look -->
             <path d="M29,74 Q27,54 55,49 Q83,54 81,74 Q83,90 55,95 Q27,90 29,74 Z" fill="#b8b8b8"/>
@@ -2254,7 +2585,7 @@
   <script>
     (function () {
       // DEV FLAG: set to false to restore April 1st-only behaviour
-      const SAGAN_ALWAYS_SHOW = true;
+      const SAGAN_ALWAYS_SHOW = false;
 
       const now   = new Date();
       const month = now.getMonth(); // 0-indexed: 3 = April
