@@ -366,15 +366,47 @@
     };
     const cache = {};
 
+    // Deterministic daily extras — same values all day, vary by date + sign
+    function dailyExtras(signKey) {
+      const today = new Date();
+      const seed  = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+      const sv    = signKey === 'capricorn' ? 1 : 2;
+      const h     = function(n) { return ((seed ^ (n * 2654435761)) >>> 0); };
+      const moods  = ['Reflective','Energised','Ambitious','Serene','Curious','Passionate','Grounded','Optimistic','Focused','Creative','Romantic','Adventurous'];
+      const colors = ['Midnight Blue','Forest Green','Deep Violet','Warm Amber','Dusty Rose','Silver','Teal','Burnt Orange','Sage Green','Crimson','Lavender','Gold'];
+      const signs  = ['Taurus','Cancer','Scorpio','Pisces','Libra','Leo','Aquarius','Aries','Gemini','Sagittarius'];
+      const times  = ['7:00 AM','8:30 AM','10:15 AM','12:00 PM','2:45 PM','4:00 PM','6:30 PM','9:00 PM'];
+      return {
+        mood:          moods [h(sv + 11) % moods.length],
+        color:         colors[h(sv + 22) % colors.length],
+        lucky_number:  String((h(sv + 33) % 99) + 1),
+        lucky_time:    times [h(sv + 44) % times.length],
+        compatibility: signs [h(sv + 55) % signs.length]
+      };
+    }
+
     async function fetchHoroscope(sign) {
-      if (cache[sign]) return cache[sign];
-      const url = 'https://horoscope-app-api.netlify.app/api/v1/get-horoscope/daily?sign=' + sign + '&day=TODAY';
+      const key = sign.toLowerCase();
+      if (cache[key]) return cache[key];
+      // ohmanda free horoscope API (no key required, CORS-open)
+      const url = 'https://ohmanda.com/api/horoscope/' + key + '/';
       const res = await fetch(url);
       if (!res.ok) throw new Error('API ' + res.status);
       const json = await res.json();
-      if (!json.success) throw new Error('API returned failure');
-      cache[sign] = json.data;
-      return json.data;
+      if (!json.horoscope) throw new Error('Empty response');
+      // Merge in deterministic daily extras (mood, colour, lucky #, etc.)
+      const extras = dailyExtras(key);
+      const data = {
+        date:           json.date       || '',
+        horoscope_data: json.horoscope  || '',
+        mood:           extras.mood,
+        color:          extras.color,
+        lucky_number:   extras.lucky_number,
+        lucky_time:     extras.lucky_time,
+        compatibility:  extras.compatibility
+      };
+      cache[key] = data;
+      return data;
     }
 
     function renderSignCard(containerId, signKey, data) {
@@ -450,8 +482,8 @@
     async function loadHoroscopes() {
       try {
         const [capData, virData] = await Promise.all([
-          fetchHoroscope('Capricorn'),
-          fetchHoroscope('Virgo')
+          fetchHoroscope('capricorn'),
+          fetchHoroscope('virgo')
         ]);
         renderSignCard('astro-card-capricorn', 'capricorn', capData);
         renderSignCard('astro-card-virgo',     'virgo',     virData);
