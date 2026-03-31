@@ -1459,6 +1459,30 @@
 
     // ── Daily motivational quote typewriter ────────────────────────────────────
     (function () {
+      // ── Fetch from ZenQuotes with 5s timeout, fall back to local if needed ──
+      async function fetchZenQuote() {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 5000);
+        try {
+          const res = await fetch('https://zenquotes.io/api/random', { signal: controller.signal });
+          clearTimeout(timer);
+          const data = await res.json();
+          if (data && data[0] && data[0].q) {
+            const q = data[0].q.trim();
+            const a = data[0].a ? data[0].a.trim() : '';
+            // Skip generic placeholder authors ZenQuotes sometimes returns
+            if (a && a !== 'zenquotes.io') {
+              return `"${q}" — ${a}`;
+            }
+            return `"${q}"`;
+          }
+        } catch (e) {
+          clearTimeout(timer);
+          // Network error or timeout — fall through to local quotes
+        }
+        return null;
+      }
+
       const QUOTES = [
         "Every day is a fresh start — make it yours. 🌸",
         "You've got this. One step at a time. 👣",
@@ -1841,15 +1865,22 @@
       if (!el || !cursor) return;
 
       const originalText = 'Hope you slept well — it\'s a brand new day.';
-      const dayIndex = (getDayOfYear() - 1 + QUOTES.length) % QUOTES.length;
-      const quote = QUOTES[dayIndex];
+
+      // Start API fetch immediately in parallel with the 7s subtitle display.
+      // We have 7s of wait time and a 5s timeout — plenty of overlap.
+      const quotePromise = fetchZenQuote();
 
       cursor.classList.add('active');
 
       function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
       async function runTypewriter() {
-        await sleep(7000); // pause so user reads the subtitle first
+        // Kick off the 7-second subtitle read-time in parallel with the fetch
+        const [, apiQuote] = await Promise.all([sleep(7000), quotePromise]);
+
+        // Use API quote if we got one, otherwise fall back to today's local quote
+        const dayIndex = (getDayOfYear() - 1 + QUOTES.length) % QUOTES.length;
+        const quote = apiQuote || QUOTES[dayIndex];
 
         // Backspace out original text
         let text = originalText;
