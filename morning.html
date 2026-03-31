@@ -16,6 +16,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      background: #4e9a32; /* fallback: matches grass bottom — no white flash on scroll */
     }
 
     @media (max-width: 600px) {
@@ -365,9 +366,9 @@
       position: fixed;
       bottom: 0;
       left: 0; right: 0;
-      height: 90px;
+      height: 200px;
       background: linear-gradient(180deg, #6abf4b 0%, #4e9a32 100%);
-      border-radius: 60% 60% 0 0 / 30% 30% 0 0;
+      border-radius: 60% 60% 0 0 / 15% 15% 0 0;
       z-index: 1;
       transition: background 1.5s ease;
     }
@@ -383,9 +384,9 @@
       position: fixed;
       bottom: 0;
       left: 0; right: 0;
-      height: 80px;
+      height: 200px;
       background: linear-gradient(180deg, #e8eef4 0%, #f0f4f8 100%);
-      border-radius: 60% 60% 0 0 / 30% 30% 0 0;
+      border-radius: 60% 60% 0 0 / 15% 15% 0 0;
       z-index: 2;
       opacity: 0;
       transition: opacity 1s ease;
@@ -445,7 +446,7 @@
     /* Puddle shimmer at bottom */
     .puddle {
       position: fixed;
-      bottom: 60px;
+      bottom: 140px;
       left: 10%;
       right: 10%;
       height: 8px;
