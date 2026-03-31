@@ -1325,9 +1325,12 @@
       }
 
       // ── Find hourly index closest to target hour ──────────────────────────────
-      function findHourIndex(times, targetHour) {
-        const _d = new Date();
-        const todayPrefix = `${_d.getFullYear()}-${String(_d.getMonth()+1).padStart(2,'0')}-${String(_d.getDate()).padStart(2,'0')}`;
+      // timezone: IANA timezone string from the API response (e.g. "America/Los_Angeles")
+      // Uses the location's local date so Poway/Schaumburg buttons work correctly
+      // regardless of what timezone the user's device is in.
+      function findHourIndex(times, targetHour, timezone) {
+        // en-CA locale naturally produces YYYY-MM-DD — use location's timezone
+        const todayPrefix = new Date().toLocaleDateString('en-CA', { timeZone: timezone });
         const target = `${todayPrefix}T${String(targetHour).padStart(2,'0')}:00`;
         const idx = times.indexOf(target);
         if (idx !== -1) return idx;
@@ -1370,6 +1373,10 @@
         const res  = await fetch(url);
         const data = await res.json();
         const { time, temperature_2m, apparent_temperature, weather_code, wind_speed_10m } = data.hourly;
+        // Use the location's own timezone (returned by the API) so that date/hour
+        // lookups are correct for Poway, Schaumburg, or any GPS location — not just
+        // the user's device timezone.
+        const locationTimezone = data.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         const slots = [
           { id: 'morning',   hour: 9  },
@@ -1380,7 +1387,7 @@
         let afternoonCode = 0, afternoonWind = 0;
 
         slots.forEach(({ id, hour }) => {
-          const idx = findHourIndex(time, hour);
+          const idx = findHourIndex(time, hour, locationTimezone);
           if (idx === -1) return;
 
           const temp   = Math.round(temperature_2m[idx]);
