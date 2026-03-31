@@ -1187,78 +1187,78 @@
       function getSuggestion(wmoCode) {
         if (wmoCode === 0) {
           return {
-            icon: '🌞🚶‍♀️',
-            text: "It's a glorious clear day out there — the perfect excuse to get outside! Why not take a lunchtime walk and soak up that sunshine? You'll feel amazing. 🌿",
+            icon: '🌞🚶‍♀️🌿',
+            text: "It's a glorious clear day out there — the perfect excuse to get outside! Why not take a lunchtime walk and soak up that sunshine? You'll feel amazing.",
             style: 's-green'
           };
         }
         if (wmoCode === 1 || wmoCode === 2) {
           return {
-            icon: '🌤',
-            text: "It's a nice morning — mostly clear with a few clouds to keep things interesting. A walk sounds like a lovely idea! Enjoy the fresh air. 🌿",
+            icon: '🌤🌿',
+            text: "It's a nice morning — mostly clear with a few clouds to keep things interesting. A walk sounds like a lovely idea! Enjoy the fresh air.",
             style: 's-green'
           };
         }
         if (wmoCode === 3) {
           return {
             icon: '☁️🍵',
-            text: "It's fully overcast today — a bit grey and dull outside. Might be a perfect cosy indoor lunch day. Warm drink and something delicious? ☁️",
+            text: "It's fully overcast today — a bit grey and dull outside. Might be a perfect cosy indoor lunch day. Warm drink and something delicious?",
             style: 's-grey'
           };
         }
         if (wmoCode === 45 || wmoCode === 48) {
           return {
-            icon: '🌫',
-            text: "Foggy conditions this morning — visibility isn't great out there. Best to stay safe and stick close to home or indoors. Drive carefully if you're heading out! 🌫",
+            icon: '🌫🚗',
+            text: "Foggy conditions this morning — visibility isn't great out there. Best to stay safe and stick close to home or indoors. Drive carefully if you're heading out!",
             style: 's-grey'
           };
         }
         if (wmoCode >= 51 && wmoCode <= 55) {
           return {
-            icon: '🌦',
-            text: "Just a light drizzle this morning — if you fancy a quick walk, pop on a jacket and you should be fine! Nothing a bit of light mist can't handle. 🌦",
+            icon: '🌦🧥',
+            text: "Just a light drizzle this morning — if you fancy a quick walk, pop on a jacket and you should be fine! Nothing a bit of light mist can't handle.",
             style: 's-blue'
           };
         }
         if (wmoCode >= 61 && wmoCode <= 65) {
           return {
-            icon: '☔',
-            text: "It's raining this morning — best to stay dry and enjoy a cosy breakfast indoors. Save the walk for a sunnier day! ☔🍵",
+            icon: '☔🍵',
+            text: "It's raining this morning — best to stay dry and enjoy a cosy breakfast indoors. Save the walk for a sunnier day!",
             style: 's-blue'
           };
         }
         if ((wmoCode >= 71 && wmoCode <= 77) || wmoCode === 85 || wmoCode === 86) {
           return {
-            icon: '❄️',
-            text: "Snow today! Whether you want to wrap up warm and go explore, or stay cosy inside with something hot — either sounds perfect. Stay safe out there! ❄️🧣",
+            icon: '❄️🧣',
+            text: "Snow today! Whether you want to wrap up warm and go explore, or stay cosy inside with something hot — either sounds perfect. Stay safe out there!",
             style: 's-white'
           };
         }
         if (wmoCode === 80) {
           return {
-            icon: '🌦',
-            text: "Light showers expected this morning — if you fancy a quick outing, pop on a light jacket and you should be just fine! 🌦",
+            icon: '🌦🧥',
+            text: "Light showers expected this morning — if you fancy a quick outing, pop on a light jacket and you should be just fine!",
             style: 's-blue'
           };
         }
         if (wmoCode === 81 || wmoCode === 82) {
           return {
-            icon: '🌧',
-            text: "Heavy showers forecast this morning — best to stay dry and cosy indoors. Save the walk for a nicer day! 🌧☕",
+            icon: '🌧☕',
+            text: "Heavy showers forecast this morning — best to stay dry and cosy indoors. Save the walk for a nicer day!",
             style: 's-blue'
           };
         }
         if (wmoCode >= 95) {
           return {
-            icon: '⛈',
-            text: "Thunderstorms this morning — definitely stay inside! Curl up somewhere safe and let the storm do its thing outside. ⛈ Stay cosy in there! ☕",
+            icon: '⛈☕',
+            text: "Thunderstorms this morning — definitely stay inside! Curl up somewhere safe and let the storm do its thing outside. Stay cosy in there!",
             style: 's-dark'
           };
         }
         // fallback
         return {
-          icon: '🌤',
-          text: "Have a wonderful morning, whatever the weather brings! 🌿",
+          icon: '🌤🌿',
+          text: "Have a wonderful morning, whatever the weather brings!",
           style: 's-green'
         };
       }
