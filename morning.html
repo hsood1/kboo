@@ -913,42 +913,57 @@
     body:not(.birthday-mode) .sparkle { display: none; }
 
     /* ═══════════════════════════════════════════════
-       ASTROLOGY LINK BUTTON
+       PAGE TOGGLE PILL
     ═══════════════════════════════════════════════ */
-    .astro-link {
+    .page-toggle {
       position: fixed;
-      top: max(16px, env(safe-area-inset-top, 16px));
-      right: 16px;
+      top: max(14px, env(safe-area-inset-top, 14px));
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 200;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 9px 18px;
-      background: rgba(255,255,255,0.18);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(255,255,255,0.15);
       border: 1.5px solid rgba(255,255,255,0.35);
-      border-radius: 50px;
-      color: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      padding: 3px;
+      gap: 2px;
+    }
+    .page-toggle a {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      border-radius: 999px;
       font-family: 'Georgia', serif;
       font-size: 0.88rem;
       font-weight: 600;
       letter-spacing: 0.02em;
       text-decoration: none;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-      transition: background 0.25s, border-color 0.25s, color 0.25s;
+      transition: background 0.22s, color 0.22s;
+      color: rgba(255,255,255,0.72);
+      white-space: nowrap;
     }
-    .astro-link:hover {
-      background: rgba(255,255,255,0.28);
-      border-color: rgba(255,255,255,0.55);
+    .page-toggle a.active {
+      background: rgba(255,255,255,0.82);
+      color: #3a2a6e;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+    }
+    .page-toggle a:not(.active):hover {
+      background: rgba(255,255,255,0.22);
       color: #fff;
     }
   </style>
 </head>
 <body>
 
-  <!-- ── Astrology page link ── -->
-  <a class="astro-link" href="astrology.html">✨ Astrology</a>
+  <!-- ── Page toggle pill ── -->
+  <div class="page-toggle">
+    <a class="active" href="morning.html">☀️ Morning</a>
+    <a href="astrology.html">✨ Astrology</a>
+  </div>
 
   <!-- ── Sky & atmosphere ── -->
   <div class="sky"></div>
