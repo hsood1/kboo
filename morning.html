@@ -1466,36 +1466,43 @@
 
     // ── Daily motivational quote typewriter ────────────────────────────────────
     (function () {
-      // ── Fetch a motivational quote — tries ZenQuotes first, then dummyjson ──
-      // Note: when opened as file://, browsers send Origin: null which isn't
-      // covered by Access-Control-Allow-Origin: * — so we try two APIs.
+      // ── Fetch a motivational quote — tries dummyjson first, then ZenQuotes ──
+      // dummyjson is the primary source: it sends Access-Control-Allow-Origin: *
+      // which browsers allow for non-credentialed requests even from file:// pages.
+      // ZenQuotes has no CORS headers (browser-blocked from file://) and rate-limits
+      // to ~1 req/IP returning a 429 with a fake quote body — so it is the fallback.
       async function fetchZenQuote() {
-        // ── Attempt 1: ZenQuotes ─────────────────────────────────────────────
+        // ── Attempt 1: dummyjson (reliable CORS, no rate limit) ──────────────
         try {
           const ctrl1 = new AbortController();
           const t1 = setTimeout(() => ctrl1.abort(), 5000);
-          const res1 = await fetch('https://zenquotes.io/api/random', { signal: ctrl1.signal });
+          const res1 = await fetch('https://dummyjson.com/quotes/random', { signal: ctrl1.signal });
           clearTimeout(t1);
+          if (!res1.ok) throw new Error(`HTTP ${res1.status}`);
           const d1 = await res1.json();
-          if (d1 && d1[0] && d1[0].q) {
-            const q = d1[0].q.trim();
-            const a = d1[0].a ? d1[0].a.trim() : '';
-            if (a && a !== 'zenquotes.io') return `"${q}" — ${a}`;
-            return `"${q}"`;
+          if (d1 && d1.quote) {
+            const q = d1.quote.trim();
+            const a = d1.author ? d1.author.trim() : '';
+            return a ? `"${q}" — ${a}` : `"${q}"`;
           }
-        } catch (e) { /* CORS or timeout — try backup */ }
+        } catch (e) { /* network or parse error — try backup */ }
 
-        // ── Attempt 2: dummyjson (CORS-permissive, handles null origin) ──────
+        // ── Attempt 2: ZenQuotes (no CORS headers, may be blocked from file://) ──
+        // Only useful when served over http/https. Guards against the 429 rate-limit
+        // response which returns valid JSON with author "zenquotes.io".
         try {
           const ctrl2 = new AbortController();
           const t2 = setTimeout(() => ctrl2.abort(), 3000);
-          const res2 = await fetch('https://dummyjson.com/quotes/random', { signal: ctrl2.signal });
+          const res2 = await fetch('https://zenquotes.io/api/random', { signal: ctrl2.signal });
           clearTimeout(t2);
+          if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
           const d2 = await res2.json();
-          if (d2 && d2.quote) {
-            const q = d2.quote.trim();
-            const a = d2.author ? d2.author.trim() : '';
-            return a ? `"${q}" — ${a}` : `"${q}"`;
+          if (d2 && d2[0] && d2[0].q) {
+            const q = d2[0].q.trim();
+            const a = d2[0].a ? d2[0].a.trim() : '';
+            if (a && a !== 'zenquotes.io') return `"${q}" — ${a}`;
+            // If author is 'zenquotes.io' it's a rate-limit error message — skip it
+            throw new Error('rate-limited');
           }
         } catch (e) { /* fall through to local quotes */ }
 
