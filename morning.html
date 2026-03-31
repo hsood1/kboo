@@ -2150,9 +2150,11 @@
 
             <!-- BODY -->
             <ellipse cx="55" cy="118" rx="28" ry="32" fill="#b0b0b0"/>
+            <!-- white underbelly -->
+            <ellipse cx="55" cy="123" rx="17" ry="22" fill="#dcdcdc"/>
             <!-- body stripe markings -->
             <path d="M40 100 Q46 110 42 125" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
-            <path d="M55 98 Q56 115 55 130" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+            <path d="M55 98 Q56 115 55 130" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.6"/>
             <path d="M68 100 Q64 112 66 126" stroke="#888" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.7"/>
 
             <!-- FRONT PAWS -->
@@ -2166,28 +2168,33 @@
             <line x1="68" y1="150" x2="68" y2="154" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
             <line x1="73" y1="149" x2="73" y2="153" stroke="#aaa" stroke-width="1.2" stroke-linecap="round"/>
 
-            <!-- HEAD -->
-            <ellipse cx="55" cy="72" rx="26" ry="24" fill="#b8b8b8"/>
+            <!-- HEAD — wider cheeks, slightly angular for wild look -->
+            <path d="M29,74 Q27,54 55,49 Q83,54 81,74 Q83,90 55,95 Q27,90 29,74 Z" fill="#b8b8b8"/>
+            <!-- cheekbone highlights -->
+            <ellipse cx="32" cy="76" rx="6" ry="5" fill="#c4c4c4" opacity="0.6"/>
+            <ellipse cx="78" cy="76" rx="6" ry="5" fill="#c4c4c4" opacity="0.6"/>
+            <!-- white chin/muzzle patch -->
+            <ellipse cx="55" cy="83" rx="11" ry="9" fill="#d8d8d8"/>
             <!-- head stripe markings -->
             <path d="M44 60 Q48 68 44 76" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.65"/>
             <path d="M55 57 Q56 65 55 74" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.65"/>
             <path d="M66 60 Q62 68 66 76" stroke="#888" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.65"/>
 
-            <!-- EARS -->
+            <!-- EARS — tall, sharp, wild-cat pointed -->
             <g class="sagan-ear-l">
-              <polygon points="32,58 26,40 44,52" fill="#b8b8b8"/>
-              <polygon points="33,56 29,44 42,53" fill="#e8a8b8" opacity="0.7"/>
+              <polygon points="31,56 20,28 45,49" fill="#b8b8b8"/>
+              <polygon points="32,54 25,36 43,50" fill="#e8a8b8" opacity="0.7"/>
             </g>
             <!-- Right ear (mirror) -->
-            <polygon points="78,58 84,40 66,52" fill="#b8b8b8"/>
-            <polygon points="77,56 81,44 68,53" fill="#e8a8b8" opacity="0.7"/>
+            <polygon points="79,56 90,28 65,49" fill="#b8b8b8"/>
+            <polygon points="78,54 85,36 67,50" fill="#e8a8b8" opacity="0.7"/>
 
             <!-- EYES (blinking group) -->
             <g class="sagan-eyes-group">
               <ellipse cx="44" cy="72" rx="6" ry="6.5" fill="#fff"/>
               <ellipse cx="66" cy="72" rx="6" ry="6.5" fill="#fff"/>
-              <ellipse cx="44" cy="73" rx="4" ry="4.5" fill="#5a8a3a"/>
-              <ellipse cx="66" cy="73" rx="4" ry="4.5" fill="#5a8a3a"/>
+              <ellipse cx="44" cy="73" rx="4" ry="4.5" fill="#9ecb0f"/>
+              <ellipse cx="66" cy="73" rx="4" ry="4.5" fill="#9ecb0f"/>
               <ellipse cx="44" cy="73" rx="2.5" ry="3" fill="#111"/>
               <ellipse cx="66" cy="73" rx="2.5" ry="3" fill="#111"/>
               <!-- eye shine -->
