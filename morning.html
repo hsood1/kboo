@@ -597,6 +597,7 @@
       vertical-align: text-bottom;
       opacity: 0;
       animation: cursorBlink 0.75s step-end infinite;
+      transition: opacity 0.6s ease;
     }
     .typing-cursor.active {
       opacity: 1;
@@ -1848,7 +1849,7 @@
       function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
       async function runTypewriter() {
-        await sleep(2000); // pause so user reads the subtitle first
+        await sleep(7000); // pause so user reads the subtitle first
 
         // Backspace out original text
         let text = originalText;
@@ -1868,10 +1869,10 @@
           await sleep(42);
         }
 
-        // Remove cursor blink after typing finishes
-        await sleep(2500);
+        // Fade out cursor after typing finishes
+        await sleep(800);
         cursor.style.animation = 'none';
-        cursor.style.opacity = '1';
+        cursor.style.opacity = '0';
       }
 
       runTypewriter();
