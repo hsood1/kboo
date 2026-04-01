@@ -2326,31 +2326,25 @@
         })();
       }
 
-      // Type text, hold for holdMs, backspace it out, then call nextFn
-      function runAndSwitch(text, totalMs, nextFn) {
-        var typingMs  = text.length * CHAR_SPEED;
-        var erasingMs = text.length * ERASE_SPEED;
-        var holdMs    = Math.max(500, totalMs - typingMs - erasingMs);
-        el.style.opacity = '1';
-        typeText(text, function () {
+      // 1. Show greeting immediately (no typing animation)
+      el.style.opacity = '1';
+      textNode.textContent = SUBTITLE_TEXT;
+
+      // 2. After 7 s, erase greeting then type the quote
+      setTimeout(function () {
+        eraseText(function () {
           setTimeout(function () {
-            eraseText(function () {
-              setTimeout(nextFn, 300); // brief pause before next phrase
+            // 3. Type the quote
+            typeText(quoteText, function () {
+              // 4. Done — hide the cursor permanently
+              if (cursor) {
+                cursor.classList.remove('active');
+                cursor.style.display = 'none';
+              }
             });
-          }, holdMs);
+          }, 300); // brief pause before typing starts
         });
-      }
-
-      function showGreeting() {
-        runAndSwitch(SUBTITLE_TEXT, 7000, showQuote);
-      }
-
-      function showQuote() {
-        runAndSwitch(quoteText, 23000, showGreeting);
-      }
-
-      // Kick off — start typing greeting immediately on load
-      runAndSwitch(SUBTITLE_TEXT, 7000, showQuote);
+      }, 7000);
     })();
   </script>
 
