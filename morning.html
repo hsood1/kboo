@@ -2290,7 +2290,19 @@
       const cursor = document.getElementById('typing-cursor');
       if (!el || !textNode) return;
 
-      const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+      // Select the quote for today based on the user's local calendar date.
+      // QUOTES has 366 entries: index 0 = Jan 1 … index 59 = Feb 29 (leap day) … index 365 = Dec 31.
+      // In non-leap years we skip index 59 so every date from Mar 1 onward still maps correctly.
+      const _tz        = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const _localDate = new Date().toLocaleDateString('en-CA', { timeZone: _tz }); // "YYYY-MM-DD"
+      const [_y, _m, _d] = _localDate.split('-').map(Number);
+      const _isLeap    = (_y % 4 === 0 && _y % 100 !== 0) || _y % 400 === 0;
+      const _mDays     = [31, _isLeap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      let   _doy       = _d - 1; // 0-indexed day of year
+      for (let _i = 0; _i < _m - 1; _i++) _doy += _mDays[_i];
+      // In non-leap years, dates from Mar 1 onward (doy ≥ 59) need +1 to skip the Feb-29 slot.
+      const _qIdx = (!_isLeap && _doy >= 59) ? _doy + 1 : _doy;
+      const q = QUOTES[_qIdx];
       const quoteText = '\u201c' + q.quote + '\u201d \u2014 ' + q.author;
 
       var CHAR_SPEED  = 30; // ms per character typed
