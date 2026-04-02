@@ -2293,9 +2293,35 @@
       // Select the quote for today based on the user's local calendar date.
       // QUOTES has 366 entries: index 0 = Jan 1 … index 59 = Feb 29 (leap day) … index 365 = Dec 31.
       // In non-leap years we skip index 59 so every date from Mar 1 onward still maps correctly.
-      const _tz        = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const _localDate = new Date().toLocaleDateString('en-CA', { timeZone: _tz }); // "YYYY-MM-DD"
-      const [_y, _m, _d] = _localDate.split('-').map(Number);
+      //
+      // Timezone strategy: resolve the user's IANA timezone first, then use
+      // Intl.DateTimeFormat#formatToParts (spec-defined, returns named parts rather
+      // than relying on a locale's string format) to get the local Y/M/D.
+      // A try/catch at every layer falls back to UTC so the quote never breaks.
+      const _tz = (() => {
+        try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; }
+        catch (e) { return 'UTC'; }
+      })();
+      let _y, _m, _d;
+      try {
+        // formatToParts is far more reliable than coercing a locale string like
+        // en-CA into YYYY-MM-DD — the spec guarantees the part names, not locale output.
+        const _parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: _tz,
+          year: 'numeric', month: '2-digit', day: '2-digit'
+        }).formatToParts(new Date());
+        const _pm = {};
+        _parts.forEach(function(p) { _pm[p.type] = p.value; });
+        _y = parseInt(_pm.year,  10);
+        _m = parseInt(_pm.month, 10);  // 1-based
+        _d = parseInt(_pm.day,   10);
+      } catch (e) {
+        // Last-resort fallback: use the UTC date so at least something renders.
+        const _now = new Date();
+        _y = _now.getUTCFullYear();
+        _m = _now.getUTCMonth() + 1;   // 1-based
+        _d = _now.getUTCDate();
+      }
       const _isLeap    = (_y % 4 === 0 && _y % 100 !== 0) || _y % 400 === 0;
       const _mDays     = [31, _isLeap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
       let   _doy       = _d - 1; // 0-indexed day of year
