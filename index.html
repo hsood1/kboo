@@ -1,2 +1,103 @@
 <!DOCTYPE html>
-<html><head><meta http-equiv="refresh" content="0; url=morning.html"></head></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kboo ☀️</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { background: #11152e; }
+    body {
+      font-family: 'Georgia', serif;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: max(32px, env(safe-area-inset-top)) 22px max(32px, env(safe-area-inset-bottom));
+      background: linear-gradient(165deg, #1a1f4e 0%, #2a2060 45%, #3a2a6e 100%);
+      color: #f0e8ff;
+    }
+
+    .hub-title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .hub-sub {
+      font-size: 0.95rem;
+      color: rgba(220, 205, 255, 0.7);
+      margin-bottom: 34px;
+      text-align: center;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 520px;
+    }
+    @media (max-width: 460px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 22px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: inherit;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1.5px solid rgba(160, 120, 255, 0.28);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 6px 26px rgba(20, 0, 60, 0.32);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+    .card:hover, .card:focus-visible {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.13);
+      border-color: rgba(190, 150, 255, 0.55);
+      outline: none;
+    }
+    .card-emoji { font-size: 1.9rem; line-height: 1; }
+    .card-name { font-size: 1.15rem; font-weight: 700; }
+    .card-desc { font-size: 0.84rem; color: rgba(220, 205, 255, 0.68); }
+  </style>
+</head>
+<body>
+
+  <h1 class="hub-title">Hello, Kboo ☀️</h1>
+  <p class="hub-sub">Pick a thing.</p>
+
+  <div class="cards">
+    <a class="card" href="morning/morning.html">
+      <span class="card-emoji">☀️</span>
+      <span class="card-name">Morning</span>
+      <span class="card-desc">Weather, a quote, and a good-morning.</span>
+    </a>
+    <a class="card" href="astrology/astrology.html">
+      <span class="card-emoji">✨</span>
+      <span class="card-name">Astrology</span>
+      <span class="card-desc">Daily horoscope &amp; compatibility.</span>
+    </a>
+    <a class="card" href="nyc-food/nyc-food.html">
+      <span class="card-emoji">🍜</span>
+      <span class="card-name">NYC Food</span>
+      <span class="card-desc">Where to eat in the city.</span>
+    </a>
+    <a class="card" href="car-search/car-search.html">
+      <span class="card-emoji">🚗</span>
+      <span class="card-name">Car Search</span>
+      <span class="card-desc">Hunting for the right car.</span>
+    </a>
+  </div>
+
+</body>
+</html>
