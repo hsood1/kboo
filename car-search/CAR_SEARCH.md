@@ -2,7 +2,7 @@
 
 ## What this is
 
-A single-file car shopping guide (`car-search.html`) for Harry's girlfriend (Khusbu), who is moving to San Diego and buying/leasing her first car (~September 2026). Hosted on GitHub Pages so she can open it on her phone. Reached from the hub (`../index.html`) via a fixed `🏠` home button (top-right).
+A single-file car shopping guide (`car-search.html`) for the buyer — moving to San Diego and buying/leasing a first car (~September 2026). Hosted on GitHub Pages so it opens easily on a phone. Reached from the hub (`../index.html`) via a fixed `🏠` home button (top-right).
 
 ## Architecture — now JavaScript-driven
 
@@ -14,7 +14,7 @@ All car data lives in one `CARS` array in the `<script>` at the bottom of `<body
 ### Pages (6 tabs) — built for a non-technical phone user
 `🏁 Start here` **(default)** · `🚗 The cars` · `📊 Compare all` · `🛡️ Insurance` · `📋 Leasing 101` · `💡 Tips`. `showPage(id, btn)` toggles `.page.active`; `showPageById(id)` navigates by name (used by Start-page buttons). The hero header sits above the sticky nav on every tab.
 
-- **Start here** — the friendly landing. `renderTopPicks()` renders the top 3 cars by score as tappable mini-cards (`goToCar(id)` jumps to the Cars tab and flashes that card); plus plain-English lease-vs-buy cards, an in-budget callout, and 3 next-step cards. Set as default so she never lands on a spreadsheet.
+- **Start here** — the friendly landing. `renderTopPicks()` renders the top 3 cars by score as tappable mini-cards (`goToCar(id)` jumps to the Cars tab and flashes that card); plus plain-English lease-vs-buy cards, an in-budget callout, and 3 next-step cards. Set as default so the buyer never lands on a spreadsheet.
 - **The cars** — the primary browse view; `renderCards()`.
 - **Compare all** — one sortable table (the old "Master" and "Compare" tables were merged — two spreadsheets confused the audience). `renderMaster()` + `sortTable()`. **Score (★) is the first column** and the default sort (desc). The 5-Year Snapshot lives at its bottom.
 - Insurance / Leasing 101 / Tips are static HTML.
@@ -63,7 +63,7 @@ Each card's "Features & Notes" button calls `toggleCard()` (plain JS, toggles `.
 
 ## Buyer context (do not invent beyond this)
 
-- **Wants:** hybrid/EV, heated AND cooled seats ideally, simple non-overwhelming interface, SUV or sedan (sedan now fine — Harry drives an Accord; Khusbu is comfortable sedan-sized).
+- **Wants:** hybrid/EV, heated AND cooled seats ideally, simple non-overwhelming interface, SUV or sedan (sedan now fine — Harry drives an Accord, so a sedan-sized car feels familiar).
 - **Excludes:** Kia (personal preference).
 - **Budget:** ~$30K to buy, or lease. First solo insurance policy (~$200–280/mo to start).
 - **Location/timing:** buy & register in California (any SoCal — El Cajon, Temecula, etc.). ~September 2026; end-of-quarter is best for negotiating.
