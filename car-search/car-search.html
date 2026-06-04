@@ -6,307 +6,232 @@
 <title>Car Guide — San Diego 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
-/* ─── RESET & BASE ─────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
-body{
-  background:#faf7f2;color:#1a1a1a;
-  font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;
-  min-height:100dvh;padding-bottom:60px;
-}
-
-/* ─── CSS VARIABLES ────────────────────────────── */
+body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100dvh;padding-bottom:60px}
 :root{
   --cream:#faf7f2;--charcoal:#1a1a1a;--mid:#444;--soft:#777;
   --accent:#c17d3c;--accent-light:#e8c99a;--accent-pale:#fdf4e7;
   --green:#3d7a5c;--green-light:#d4ede2;
   --blue:#2d5fa6;--blue-light:#dce8f7;
   --red:#c04040;--red-light:#fce8e8;
+  --amber:#b8860b;--amber-light:#fef3cd;
   --border:#e0d8cc;
 }
 
-/* ─── TOP HEADER ────────────────────────────────── */
-.top-header{
-  background:var(--charcoal);padding:64px 20px 20px;
-  position:relative;overflow:hidden;
-}
-.top-header::after{
-  content:'';position:absolute;top:-40px;right:-40px;
-  width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(193,125,60,.28) 0%,transparent 70%);
-  pointer-events:none;
-}
-.top-eyebrow{
-  font-size:10px;font-weight:600;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--accent-light);margin-bottom:8px;
-}
-.top-header h1{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(22px,6vw,34px);font-weight:900;
-  color:white;line-height:1.15;margin-bottom:10px;
-}
+/* ── HEADER ── */
+.top-header{background:var(--charcoal);padding:28px 20px 20px;position:relative;overflow:hidden}
+.top-header::after{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(193,125,60,.28) 0%,transparent 70%);pointer-events:none}
+.top-eyebrow{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-light);margin-bottom:8px}
+.top-header h1{font-family:'Playfair Display',serif;font-size:clamp(22px,6vw,34px);font-weight:900;color:white;line-height:1.15;margin-bottom:10px}
 .top-header h1 span{color:var(--accent-light)}
 .top-header p{font-size:13px;color:rgba(255,255,255,.55);line-height:1.6}
 .hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.hero-pill{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
-  border-radius:100px;padding:5px 12px;font-size:11.5px;color:rgba(255,255,255,.75);
-}
+.hero-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:100px;padding:5px 12px;font-size:11.5px;color:rgba(255,255,255,.75)}
 
-/* ─── VENT TOGGLE (checkbox hack) ───────────────── */
-#vent-chk{display:none}
-.toggle-banner{
-  background:white;border-bottom:1px solid var(--border);
-  padding:12px 20px;display:flex;align-items:center;
-  justify-content:space-between;gap:12px;
-  position:sticky;top:0;z-index:50;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
-}
-.toggle-label{font-size:13px;font-weight:500;color:var(--mid);line-height:1.3}
-.toggle-label small{display:block;font-size:11px;color:var(--soft);font-weight:400}
-.toggle-wrap{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.toggle-onoff{
-  font-size:12px;font-weight:600;color:var(--green);
-  transition:color .2s;user-select:none;
-}
-/* the visual switch */
-.toggle-track{
-  position:relative;width:46px;height:26px;
-  background:#3d7a5c;border-radius:100px;
-  cursor:pointer;transition:background .25s;flex-shrink:0;
-  display:block;
-}
-.toggle-track::after{
-  content:'';position:absolute;top:3px;left:3px;
-  width:20px;height:20px;border-radius:50%;
-  background:white;transition:transform .25s;
-  box-shadow:0 1px 4px rgba(0,0,0,.2);
-  transform:translateX(20px);
-}
-/* when checkbox is UNCHECKED = "no vent" mode */
-#vent-chk:not(:checked) ~ * .toggle-track{background:#ddd}
-#vent-chk:not(:checked) ~ * .toggle-track::after{transform:none}
-#vent-chk:not(:checked) ~ * .toggle-onoff{color:#777}
-#vent-chk:not(:checked) ~ * .toggle-onoff::before{content:'OFF'}
-#vent-chk:checked        ~ * .toggle-onoff::before{content:'ON'}
-#vent-chk:not(:checked) ~ * .toggle-sublabel::before{content:'Budget options — heated seats only'}
-#vent-chk:checked        ~ * .toggle-sublabel::before{content:'Showing cars with ventilated seats'}
-/* show/hide vent vs no-vent content */
-#vent-chk:checked        ~ * .vent-only{display:block}
-#vent-chk:checked        ~ * .no-vent{display:none}
-#vent-chk:not(:checked)  ~ * .vent-only{display:none}
-#vent-chk:not(:checked)  ~ * .no-vent{display:block}
-/* notice banner swap */
-#vent-chk:checked        ~ * #vent-notice{display:block}
-#vent-chk:checked        ~ * #novent-notice{display:none}
-#vent-chk:not(:checked)  ~ * #vent-notice{display:none}
-#vent-chk:not(:checked)  ~ * #novent-notice{display:block}
+/* ── STICKY NAV WRAPPER ── */
+.sticky-nav{position:sticky;top:0;z-index:100;background:white;border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)}
 
-/* ─── PILL NAV (radio hack) ─────────────────────── */
-.tab-radios{display:none} /* hide all radio inputs */
-.pill-nav{
-  background:white;border-bottom:1px solid var(--border);
-  padding:10px 16px;overflow-x:auto;
-  -webkit-overflow-scrolling:touch;scrollbar-width:none;
-  display:flex;gap:8px;
-  position:sticky;top:53px;z-index:40;
-}
+/* ── PILL NAV ── */
+.pill-nav{padding:10px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;display:flex;gap:8px}
 .pill-nav::-webkit-scrollbar{display:none}
-.pill-nav label{
-  flex-shrink:0;padding:8px 18px;border-radius:100px;
-  border:1.5px solid var(--border);background:transparent;
-  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
-  color:var(--soft);cursor:pointer;transition:all .2s;white-space:nowrap;
-  display:block;user-select:none;
-}
-/* active pill states — one per tab radio */
-#tab-cars:checked     ~ .pill-nav label[for="tab-cars"],
-#tab-compare:checked  ~ .pill-nav label[for="tab-compare"],
-#tab-ins:checked      ~ .pill-nav label[for="tab-ins"],
-#tab-lease:checked    ~ .pill-nav label[for="tab-lease"],
-#tab-tips:checked     ~ .pill-nav label[for="tab-tips"] {
-  background:var(--charcoal);border-color:var(--charcoal);color:white;
-}
+.pill-btn{flex-shrink:0;padding:8px 18px;border-radius:100px;border:1.5px solid var(--border);background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--soft);cursor:pointer;transition:all .2s;white-space:nowrap}
+.pill-btn.active{background:var(--charcoal);border-color:var(--charcoal);color:white}
 
-/* ─── PAGES (radio hack) ────────────────────────── */
+/* ── FILTER BAR ── */
+.filter-bar{border-top:1px solid var(--border);padding:8px 16px;display:flex;flex-direction:column;gap:6px}
+.filter-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.filter-row::-webkit-scrollbar{display:none}
+.filter-row-label{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);flex-shrink:0;align-self:center;min-width:52px}
+.filter-btn{flex-shrink:0;padding:5px 13px;border-radius:100px;border:1.5px solid var(--border);background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--soft);cursor:pointer;transition:all .15s;white-space:nowrap}
+.filter-btn.active{background:var(--accent);border-color:var(--accent);color:white}
+.filter-btn.active.f-style{background:var(--blue);border-color:var(--blue)}
+.filter-btn.active.f-power{background:var(--green);border-color:var(--green)}
+.filter-btn.active.f-budget{background:#7a5a2a;border-color:#7a5a2a}
+
+/* ── PAGES ── */
 .page{display:none}
-#tab-cars:checked     ~ #page-cars,
-#tab-compare:checked  ~ #page-compare,
-#tab-ins:checked      ~ #page-ins,
-#tab-lease:checked    ~ #page-lease,
-#tab-tips:checked     ~ #page-tips { display:block }
+.page.active{display:block}
+.pg{padding:16px 16px 20px}
 
-/* ─── NOTICE BANNERS ────────────────────────────── */
-.notice{
-  background:var(--accent-pale);border-left:3px solid var(--accent);
-  padding:12px 16px;
-}
-.notice p{font-size:12.5px;color:var(--mid);line-height:1.5}
-.notice strong{color:var(--accent)}
+/* ── SECTION HEADERS ── */
+.section-eyebrow{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.section-h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--charcoal);margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--soft);margin-bottom:16px;line-height:1.5}
+.divider{height:1px;background:var(--border);margin:16px 0}
 
-/* ─── PAGE PADDING ──────────────────────────────── */
-.pg{padding:20px 16px 20px}
+/* ── NO RESULTS ── */
+.no-results{text-align:center;padding:40px 20px;color:var(--soft);font-size:14px;display:none}
+.no-results.show{display:block}
 
-/* ─── SECTION HEADERS ───────────────────────────── */
-.section-eyebrow{
-  font-size:10px;font-weight:600;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--accent);margin-bottom:6px;
-}
-.section-h2{
-  font-family:'Playfair Display',serif;
-  font-size:22px;font-weight:700;color:var(--charcoal);margin-bottom:4px;
-}
-.section-sub{font-size:13px;color:var(--soft);margin-bottom:20px;line-height:1.5}
-
-/* ─── CAR CARDS ─────────────────────────────────── */
+/* ── CAR CARD ── */
 .car-card{
   background:white;border:1px solid var(--border);
-  border-radius:16px;overflow:hidden;margin-bottom:16px;
+  border-left:4px solid var(--border); /* budget color stripe */
+  border-radius:16px;overflow:hidden;margin-bottom:14px;
   box-shadow:0 2px 12px rgba(0,0,0,.05);
+  transition:box-shadow .2s;
 }
-.card-head{
-  padding:16px 18px 14px;border-bottom:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
-}
-.card-badge{
-  display:inline-block;font-size:9.5px;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;
-  padding:3px 10px;border-radius:100px;margin-bottom:6px;
-}
+.car-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.09)}
+.car-card.budget-green{border-left-color:var(--green)}
+.car-card.budget-amber{border-left-color:var(--amber)}
+.car-card.budget-red{border-left-color:var(--red)}
+
+.card-head{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.card-head-left{flex:1;min-width:0}
+.card-top-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.card-badges-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+
+/* type badge */
+.card-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:100px}
 .badge-top   {background:#fdf0e0;color:#b86000}
 .badge-green {background:var(--green-light);color:var(--green)}
 .badge-blue  {background:var(--blue-light);color:var(--blue)}
 .badge-purple{background:#ede8f5;color:#5a3a9a}
-.card-name{
-  font-family:'Playfair Display',serif;
-  font-size:18px;font-weight:700;color:var(--charcoal);line-height:1.2;
-}
-.card-sub{font-size:12px;color:var(--soft);margin-top:3px}
+.badge-gold  {background:#fdf0e0;color:#7a5000}
+
+/* powertrain badge */
+.pt-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;border:1px solid}
+.pt-hybrid{background:#edf7f0;color:#2d6b47;border-color:#b0ddc4}
+.pt-phev  {background:#e8f0fd;color:#1a4fa0;border-color:#a8c4f0}
+.pt-ev    {background:#f0e8fd;color:#5a2a9a;border-color:#c4a8f0}
+
+/* style badge */
+.style-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;border:1px solid}
+.style-suv   {background:#fdf4e7;color:#7a4a00;border-color:#e8c99a}
+.style-sedan {background:#f0f4fd;color:#1a3a7a;border-color:#a8bce8}
+
+/* rank badge */
+.rank-badge{flex-shrink:0;background:var(--charcoal);color:var(--accent-light);font-size:10px;font-weight:700;padding:4px 10px;border-radius:100px;white-space:nowrap}
+
+/* seat feature badges */
+.seat-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.seat-badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:100px;border:1.5px solid}
+.seat-yes    {background:#edf7f0;color:#2d6b47;border-color:#b0ddc4}
+.seat-trim   {background:#fdf4e7;color:#7a4a00;border-color:#e8c99a}
+.seat-no     {background:#f5f5f5;color:#aaa;border-color:#ddd;text-decoration:line-through}
+
+.card-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--charcoal);line-height:1.2}
+.card-sub{font-size:11.5px;color:var(--soft);margin-top:2px}
 .card-mpg{text-align:right;flex-shrink:0}
-.mpg-num{
-  font-family:'Playfair Display',serif;
-  font-size:28px;font-weight:900;color:var(--green);line-height:1;
-}
+.mpg-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--green);line-height:1}
 .mpg-lbl{font-size:10px;color:var(--soft)}
 
-/* Price row */
+/* ── PRICE ROW ── */
 .price-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border)}
-.price-cell{padding:12px 14px;border-right:1px solid var(--border)}
+.price-cell{padding:11px 13px;border-right:1px solid var(--border);transition:background .2s,opacity .2s}
 .price-cell:last-child{border-right:none}
-.price-lbl{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:4px}
-.price-val{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--charcoal);line-height:1}
-.price-note{font-size:11px;color:var(--soft);margin-top:3px;line-height:1.4}
+.price-lbl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:3px}
+.price-val{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--charcoal);line-height:1}
+.price-note{font-size:10.5px;color:var(--soft);margin-top:3px;line-height:1.4}
 .price-cell.hi{background:var(--accent-pale)}
 .price-cell.hi .price-val{color:var(--accent)}
+.price-cell.dimmed{opacity:.4}
 
-/* Expand/collapse — checkbox per card */
-.card-expand-chk{display:none}
-.card-toggle-lbl{
-  display:flex;justify-content:space-between;align-items:center;
-  width:100%;padding:11px 18px;border-bottom:1px solid var(--border);
-  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
-  color:var(--blue);cursor:pointer;user-select:none;
-  background:none;
-}
-.card-toggle-lbl:hover{background:#f5f8ff}
-.chevron{font-size:11px;transition:transform .25s}
-.card-details{display:none;padding:16px 18px;grid-template-columns:1fr 1fr;gap:16px}
-.card-expand-chk:checked ~ .card-details{display:grid}
-.card-expand-chk:checked ~ .card-toggle-lbl .chevron{transform:rotate(180deg)}
+/* ── CAVEAT BAR ── */
+.caveat-bar{background:#fff8ed;border-top:1px solid #f0e0c0;padding:9px 15px;font-size:11.5px;color:#7a4a00;line-height:1.5}
 
-/* Feature + note lists */
-.details-panel-lbl{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:10px}
+/* ── CARD EXPAND ── */
+.card-toggle-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 16px;border:none;background:none;border-bottom:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;color:var(--blue);cursor:pointer;transition:background .15s}
+.card-toggle-btn:hover{background:#f5f8ff}
+.chevron{font-size:10px;transition:transform .2s;display:inline-block}
+.card-toggle-btn.open .chevron{transform:rotate(180deg)}
+.card-details{display:none;padding:14px 16px;grid-template-columns:1fr 1fr;gap:14px}
+.card-details.open{display:grid}
+.details-panel-lbl{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:8px}
 .feat-list{list-style:none}
-.feat-item{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--mid);margin-bottom:8px;line-height:1.4}
-.feat-dot{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:1px}
+.feat-item{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--mid);margin-bottom:7px;line-height:1.4}
+.feat-dot{width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;margin-top:1px}
 .fd-yes{background:var(--green-light);color:var(--green)}
 .fd-no {background:var(--red-light);color:var(--red)}
 .fd-par{background:#fef3cd;color:#856404}
 .notes-list{list-style:none}
-.note-item{font-size:12px;color:var(--mid);padding-left:14px;position:relative;margin-bottom:8px;line-height:1.5}
-.note-item::before{content:'—';position:absolute;left:0;color:var(--accent);font-size:10px;top:1px}
+.note-item{font-size:11.5px;color:var(--mid);padding-left:13px;position:relative;margin-bottom:7px;line-height:1.5}
+.note-item::before{content:'—';position:absolute;left:0;color:var(--accent);font-size:9px;top:1px}
 
-/* Caveat bar */
-.caveat-bar{background:#fff8ed;border-top:1px solid #f0e0c0;padding:10px 16px;font-size:12px;color:#7a4a00;line-height:1.5}
-
-/* Legend */
-.legend{display:flex;gap:12px;flex-wrap:wrap;background:white;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:16px}
-.leg-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mid)}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dg{background:var(--green)}.dy{background:#d4a017}.dr{background:var(--red)}
-
-/* Divider */
-.divider{height:1px;background:var(--border);margin:20px 0}
-
-/* ─── COMPARE TABLE ─────────────────────────────── */
-.tbl-wrap{overflow-x:auto;margin-bottom:16px}
-.sum-table{
-  width:100%;border-collapse:collapse;
-  background:white;border:1px solid var(--border);
-  border-radius:14px;overflow:hidden;font-size:12.5px;
-  box-shadow:0 2px 12px rgba(0,0,0,.05);
-}
-.sum-table thead{background:var(--charcoal);color:white}
-.sum-table th{padding:10px 12px;text-align:left;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
-.sum-table td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--mid);vertical-align:middle}
-.sum-table tr:last-child td{border-bottom:none}
-.sum-table tr:hover td{background:#faf8f5}
-.tcar{font-weight:600;color:var(--charcoal)}
-.tbest{color:var(--green);font-weight:600}
-.tag{display:inline-block;padding:2px 9px;border-radius:100px;font-size:10px;font-weight:600;white-space:nowrap}
+/* ── MASTER TABLE ── */
+.master-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:14px;background:white;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.master-table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+.master-table thead{background:var(--charcoal);color:white;position:sticky;top:0}
+.master-table th{padding:10px 12px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;cursor:pointer;user-select:none}
+.master-table th:hover{background:#333}
+.master-table th .sort-arrow{margin-left:4px;opacity:.5;font-size:9px}
+.master-table th.sorted .sort-arrow{opacity:1}
+.master-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--mid);vertical-align:middle}
+.master-table tr:last-child td{border-bottom:none}
+.master-table tr:hover td{background:#faf8f5}
+.master-table td:first-child{font-weight:600;color:var(--charcoal);white-space:nowrap;border-left:4px solid var(--border)}
+.master-table tr.budget-green td:first-child{border-left-color:var(--green)}
+.master-table tr.budget-amber td:first-child{border-left-color:var(--amber)}
+.master-table tr.budget-red   td:first-child{border-left-color:var(--red)}
+.master-table .rank-cell{font-weight:700;color:var(--accent)}
+.chk-yes{color:var(--green);font-weight:700}
+.chk-no {color:#bbb}
+.chk-trim{color:var(--amber);font-weight:600;font-size:10px}
+.tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:9.5px;font-weight:600;white-space:nowrap}
 .tag-best  {background:var(--green-light);color:var(--green)}
 .tag-lease {background:var(--blue-light);color:var(--blue)}
 .tag-budget{background:#ede8f5;color:#5a3a9a}
 .tag-warn  {background:#fef3cd;color:#856404}
-.chk-yes{color:var(--green);font-weight:700}
-.chk-no {color:var(--red)}
 
-/* ─── INSURANCE PAGE ────────────────────────────── */
-.ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.ins-card{background:white;border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+/* ── COMPARE TABLE ── */
+.tbl-wrap{overflow-x:auto;margin-bottom:14px;border-radius:14px;border:1px solid var(--border);background:white;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.sum-table{width:100%;border-collapse:collapse;font-size:12px}
+.sum-table thead{background:var(--charcoal);color:white}
+.sum-table th{padding:10px 12px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.sum-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--mid);vertical-align:middle}
+.sum-table tr:last-child td{border-bottom:none}
+.sum-table tr:hover td{background:#faf8f5}
+.tcar{font-weight:600;color:var(--charcoal)}
+.tbest{color:var(--green);font-weight:600}
+
+/* ── INSURANCE ── */
+.ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.ins-card{background:white;border:1px solid var(--border);border-radius:12px;padding:13px 15px}
 .ins-card-lbl{font-size:11px;color:var(--soft);margin-bottom:4px}
-.ins-card-price{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--charcoal)}
+.ins-card-price{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--charcoal)}
 .ins-card-price.hi{color:var(--accent)}.ins-card-price.red{color:var(--red)}.ins-card-price.grn{color:var(--green)}
-.ins-card-note{font-size:11px;color:var(--soft);margin-top:3px;line-height:1.4}
-.ins-tip-card{background:white;border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
-.ins-tip-icon{font-size:20px;flex-shrink:0;margin-top:2px}
-.ins-tip-title{font-size:13px;font-weight:600;color:var(--charcoal);margin-bottom:3px}
+.ins-card-note{font-size:10.5px;color:var(--soft);margin-top:3px;line-height:1.4}
+.ins-tip-card{background:white;border:1px solid var(--border);border-radius:12px;padding:13px 15px;margin-bottom:10px;display:flex;gap:11px;align-items:flex-start}
+.ins-tip-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.ins-tip-title{font-size:13px;font-weight:600;color:var(--charcoal);margin-bottom:2px}
 .ins-tip-body{font-size:12px;color:var(--soft);line-height:1.5}
 
-/* ─── LEASING PAGE ──────────────────────────────── */
-.dark-section{background:var(--charcoal);border-radius:16px;overflow:hidden;margin-bottom:14px}
-.dark-head{padding:14px 18px}
-.dark-head-lbl{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:3px}
-.dark-head-title{font-size:16px;font-weight:600;color:white}
-.lease-item{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;padding:0 18px}
-.lease-item:first-of-type{margin-top:14px}
-.lease-item:last-of-type{margin-bottom:0;padding-bottom:18px}
-.lease-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;margin-top:1px}
-.lease-item-title{font-size:13px;font-weight:600;color:white;margin-bottom:2px}
-.lease-item-body{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5}
-.wear-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px 18px}
-.wear-col-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
-.wear-item{font-size:12px;color:rgba(255,255,255,.6);padding-left:12px;position:relative;margin-bottom:6px;line-height:1.4}
+/* ── LEASING / DARK SECTIONS ── */
+.dark-section{background:var(--charcoal);border-radius:14px;overflow:hidden;margin-bottom:12px}
+.dark-head{padding:13px 16px}
+.dark-head-lbl{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:3px}
+.dark-head-title{font-size:15px;font-weight:600;color:white}
+.lease-item{display:flex;gap:11px;margin-bottom:12px;align-items:flex-start;padding:0 16px}
+.lease-item:first-of-type{margin-top:12px}
+.lease-item:last-of-type{margin-bottom:0;padding-bottom:16px}
+.lease-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px}
+.lease-item-title{font-size:12.5px;font-weight:600;color:white;margin-bottom:2px}
+.lease-item-body{font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.5}
+.wear-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px}
+.wear-col-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.wear-item{font-size:11.5px;color:rgba(255,255,255,.6);padding-left:11px;position:relative;margin-bottom:5px;line-height:1.4}
 .wear-item::before{content:'·';position:absolute;left:3px;color:var(--accent-light)}
-.wear-protip{margin:0 18px 18px;background:rgba(255,255,255,.07);border-radius:10px;padding:12px 14px;font-size:12px;color:rgba(255,255,255,.65);line-height:1.6}
-.lv-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px 18px}
-.lv-col-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
-.lv-item{font-size:12px;color:rgba(255,255,255,.6);padding-left:12px;position:relative;margin-bottom:6px;line-height:1.4}
+.wear-protip{margin:0 16px 16px;background:rgba(255,255,255,.07);border-radius:10px;padding:11px 13px;font-size:11.5px;color:rgba(255,255,255,.65);line-height:1.6}
+.lv-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px 16px}
+.lv-col-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+.lv-item{font-size:11.5px;color:rgba(255,255,255,.6);padding-left:11px;position:relative;margin-bottom:5px;line-height:1.4}
 .lv-item::before{content:'·';position:absolute;left:3px;font-weight:700}
 
-/* ─── TIPS PAGE ─────────────────────────────────── */
-.tip-card{background:white;border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:12px}
-.tip-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--accent-light);line-height:1;margin-bottom:6px}
-.tip-title{font-size:14px;font-weight:600;color:var(--charcoal);margin-bottom:4px}
-.tip-body{font-size:13px;color:var(--soft);line-height:1.6}
+/* ── TIPS ── */
+.tip-card{background:white;border:1px solid var(--border);border-radius:13px;padding:14px 16px;margin-bottom:11px}
+.tip-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--accent-light);line-height:1;margin-bottom:5px}
+.tip-title{font-size:13.5px;font-weight:600;color:var(--charcoal);margin-bottom:3px}
+.tip-body{font-size:12.5px;color:var(--soft);line-height:1.6}
 
-/* ─── FOOTER ────────────────────────────────────── */
-.footer{background:var(--charcoal);color:rgba(255,255,255,.35);text-align:center;padding:16px;font-size:11px}
+/* ── FOOTER ── */
+.footer{background:var(--charcoal);color:rgba(255,255,255,.35);text-align:center;padding:14px;font-size:11px}
 
-/* ─── RESPONSIVE ────────────────────────────────── */
-@media(max-width:400px){
-  .price-row{grid-template-columns:1fr}
-  .price-cell{border-right:none;border-bottom:1px solid var(--border)}
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .price-row{grid-template-columns:1fr 1fr}
+  .price-cell:nth-child(2){border-right:none}
+  .price-cell:nth-child(3){grid-column:1/-1;border-top:1px solid var(--border);border-right:none}
   .card-details{grid-template-columns:1fr}
   .ins-grid{grid-template-columns:1fr}
   .wear-grid{grid-template-columns:1fr}
@@ -316,523 +241,845 @@ body{
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════
-     HIDDEN INPUTS — must be BEFORE everything
-     that CSS siblings need to react to them
-     ══════════════════════════════════════════ -->
-<!-- Vent toggle checkbox (checked = show vent options) -->
-<input type="checkbox" id="vent-chk" checked>
-
-<!-- Tab radios -->
-<input type="radio" name="tab" id="tab-cars"    class="tab-radios" checked>
-<input type="radio" name="tab" id="tab-compare" class="tab-radios">
-<input type="radio" name="tab" id="tab-ins"     class="tab-radios">
-<input type="radio" name="tab" id="tab-lease"   class="tab-radios">
-<input type="radio" name="tab" id="tab-tips"    class="tab-radios">
-
-<!-- Card expand checkboxes -->
-<input type="checkbox" id="exp-rav4-lim"  class="card-expand-chk">
-<input type="checkbox" id="exp-tucson-lim" class="card-expand-chk">
-<input type="checkbox" id="exp-tesla"     class="card-expand-chk">
-<input type="checkbox" id="exp-rav4-xle"  class="card-expand-chk">
-<input type="checkbox" id="exp-tucson-sel" class="card-expand-chk">
-<input type="checkbox" id="exp-rav4-base" class="card-expand-chk">
-
-<!-- HOME BUTTON (identical across all pages) -->
-<a href="../index.html" aria-label="Home" title="Home" style="position:fixed;top:14px;left:14px;z-index:30;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:19px;line-height:1;text-decoration:none;background:rgba(255,255,255,0.92);border:1px solid rgba(0,0,0,0.10);box-shadow:0 3px 12px rgba(0,0,0,0.22);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);">🏠</a>
+<a href="../index.html" aria-label="Home" title="Home" style="position:fixed;top:14px;right:14px;z-index:200;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:19px;line-height:1;text-decoration:none;background:rgba(255,255,255,0.92);border:1px solid rgba(0,0,0,0.10);box-shadow:0 3px 12px rgba(0,0,0,0.22);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);">🏠</a>
 
 <!-- TOP HEADER -->
 <div class="top-header">
   <div class="top-eyebrow">Car Guide · San Diego, CA · 2026</div>
-  <h1>Finding Her <span>Perfect</span> Hybrid</h1>
-  <p>Real prices for buying new, used &amp; leasing — plus insurance and leasing explainer.</p>
+  <h1>Finding Her <span>Perfect</span> Car</h1>
+  <p>Real prices for leasing, buying new &amp; used — with filters, rankings, and everything in one place.</p>
   <div class="hero-pills">
     <span class="hero-pill">🌡️ Heated &amp; Cooled Seats</span>
-    <span class="hero-pill">🚗 SUV Preferred</span>
-    <span class="hero-pill">💰 ~$30K Budget</span>
-    <span class="hero-pill">📍 SoCal Dealers</span>
+    <span class="hero-pill">🚗 SUV or Sedan</span>
+    <span class="hero-pill">💰 ~$30K Buy Budget</span>
+    <span class="hero-pill">📍 San Diego / SoCal</span>
   </div>
 </div>
 
-<!-- VENT TOGGLE BANNER -->
-<div class="toggle-banner">
-  <div class="toggle-label">
-    Ventilated (cooled) seats
-    <small class="toggle-sublabel"></small>
+<!-- STICKY NAV + FILTERS -->
+<div class="sticky-nav">
+  <!-- Tab pills -->
+  <div class="pill-nav" id="pill-nav">
+    <button class="pill-btn active" data-page="master" onclick="showPage('master',this)">⚡ Master</button>
+    <button class="pill-btn" data-page="cars"    onclick="showPage('cars',this)">🚗 Cars</button>
+    <button class="pill-btn" data-page="compare" onclick="showPage('compare',this)">📊 Compare</button>
+    <button class="pill-btn" data-page="ins"     onclick="showPage('ins',this)">🛡️ Insurance</button>
+    <button class="pill-btn" data-page="lease"   onclick="showPage('lease',this)">📋 Leasing 101</button>
+    <button class="pill-btn" data-page="tips"    onclick="showPage('tips',this)">💡 Tips</button>
   </div>
-  <div class="toggle-wrap">
-    <span class="toggle-onoff"></span>
-    <label class="toggle-track" for="vent-chk"></label>
+  <!-- Filter rows — only shown on Master + Cars pages -->
+  <div class="filter-bar" id="filter-bar">
+    <div class="filter-row">
+      <span class="filter-row-label">Mode</span>
+      <button class="filter-btn active" data-filter="mode" data-val="all"   onclick="setFilter('mode','all',this)">All</button>
+      <button class="filter-btn"        data-filter="mode" data-val="lease" onclick="setFilter('mode','lease',this)">💳 Lease</button>
+      <button class="filter-btn"        data-filter="mode" data-val="new"   onclick="setFilter('mode','new',this)">🆕 Buy New</button>
+      <button class="filter-btn"        data-filter="mode" data-val="used"  onclick="setFilter('mode','used',this)">🔁 Buy Used</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-row-label">Style</span>
+      <button class="filter-btn f-style active" data-filter="style" data-val="all"   onclick="setFilter('style','all',this)">All</button>
+      <button class="filter-btn f-style"        data-filter="style" data-val="suv"   onclick="setFilter('style','suv',this)">🚙 SUV</button>
+      <button class="filter-btn f-style"        data-filter="style" data-val="sedan" onclick="setFilter('style','sedan',this)">🚗 Sedan</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-row-label">Power</span>
+      <button class="filter-btn f-power active" data-filter="power" data-val="all"    onclick="setFilter('power','all',this)">All</button>
+      <button class="filter-btn f-power"        data-filter="power" data-val="hybrid" onclick="setFilter('power','hybrid',this)">⚙️ Hybrid</button>
+      <button class="filter-btn f-power"        data-filter="power" data-val="phev"   onclick="setFilter('power','phev',this)">🔌 Plug-in</button>
+      <button class="filter-btn f-power"        data-filter="power" data-val="ev"     onclick="setFilter('power','ev',this)">⚡ EV</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-row-label">Budget</span>
+      <button class="filter-btn f-budget active" data-filter="budget" data-val="all"  onclick="setFilter('budget','all',this)">All</button>
+      <button class="filter-btn f-budget"        data-filter="budget" data-val="near" onclick="setFilter('budget','near',this)">🟢 Near Budget</button>
+      <button class="filter-btn f-budget"        data-filter="budget" data-val="over" onclick="setFilter('budget','over',this)">🔴 Over Budget</button>
+    </div>
   </div>
 </div>
 
-<!-- PILL NAV -->
-<nav class="pill-nav">
-  <label for="tab-cars">🚗 Cars</label>
-  <label for="tab-compare">📊 Compare</label>
-  <label for="tab-ins">🛡️ Insurance</label>
-  <label for="tab-lease">📋 Leasing 101</label>
-  <label for="tab-tips">💡 Tips</label>
-</nav>
+<!-- ══════════════════════════════════════
+     CAR DATA — single source of truth
+     Defined in JS below, rendered into
+     both the Cards page and Master table
+     ══════════════════════════════════════ -->
 
-<!-- NOTICES -->
-<div id="vent-notice" class="notice"><p><strong>Ventilated seats = top trim only.</strong> New prices ~$42–47K all-in. Best path to budget: CPO/used top trim, or lease new. Prices include CA tax (~8%) + ~$2K fees. Lease = 36 mo / 10K mi/yr est.</p></div>
-<div id="novent-notice" class="notice"><p><strong>Budget mode — heated seats only.</strong> Saves $8–12K vs top trims. Everything else — hybrid, SUV, simple interface — still checks out.</p></div>
+<!-- ════════════ PAGE: MASTER ════════════ -->
+<div class="page active" id="page-master">
+<div class="pg">
+  <div class="section-eyebrow">All Options</div>
+  <div class="section-h2">Master View</div>
+  <div class="section-sub">Every car × every data point. Tap any column header to sort. Filters above apply here too.</div>
+  <div class="master-wrap">
+    <table class="master-table" id="master-table">
+      <thead>
+        <tr>
+          <th onclick="sortTable('name')"       data-col="name">Car <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('style')"      data-col="style">Style <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('power')"      data-col="power">Power <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('usedLow')"    data-col="usedLow">Used/CPO <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('newLow')"     data-col="newLow">Buy New <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('leaseLow')"   data-col="leaseLow">Lease/mo <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('insLow')"     data-col="insLow">Insur/mo <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('totalLease')" data-col="totalLease">Total/mo <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('heated')"     data-col="heated">🔥 Heat <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('cooled')"     data-col="cooled">❄️ Cool <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('budget')"     data-col="budget">Budget <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('rank')"       data-col="rank" class="sorted">★ Rank <span class="sort-arrow">↓</span></th>
+        </tr>
+      </thead>
+      <tbody id="master-tbody"></tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:var(--soft);margin-top:8px;padding:0 2px">Total/mo = lease + insurance (low estimates). Budget: 🟢 near $30K buy or &lt;$450/mo lease · 🟡 somewhat over · 🔴 significantly over. ★ Rank = Claude editorial score 1–10.</p>
+  <div class="no-results" id="master-no-results">No cars match the current filters. Try adjusting above.</div>
+</div>
+</div>
 
-<!-- ════════════════════════════════
-     PAGE: CARS
-     ════════════════════════════════ -->
+<!-- ════════════ PAGE: CARS ════════════ -->
 <div class="page" id="page-cars">
 <div class="pg">
-
-  <!-- ── WITH VENT ── -->
-  <div class="vent-only">
-    <div class="section-eyebrow">Top Recommendations</div>
-    <div class="section-h2">Heated + Cooled Seats</div>
-    <div class="section-sub">All three check the heated &amp; ventilated box. SUV options first.</div>
-    <div class="legend">
-      <div class="leg-item"><div class="dot dg"></div> Included</div>
-      <div class="leg-item"><div class="dot dy"></div> Partial / trim-dep.</div>
-      <div class="leg-item"><div class="dot dr"></div> Not available</div>
-    </div>
-
-    <!-- RAV4 HYBRID LIMITED -->
-    <div class="car-card">
-      <div class="card-head">
-        <div>
-          <div class="card-badge badge-top">⭐ Best Overall</div>
-          <div class="card-name">2026 RAV4 Hybrid<br><span style="font-size:14px;color:#888">Limited · AWD</span></div>
-          <div class="card-sub">Compact SUV · 236 hp · All-new hybrid-only gen</div>
-        </div>
-        <div class="card-mpg"><div class="mpg-num">43</div><div class="mpg-lbl">city MPG</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-cell"><div class="price-lbl">Buy New</div><div class="price-val">~$48–51K</div><div class="price-note">Limited MSRP $44,750 + CA tax/fees. Rarely discounted.</div></div>
-        <div class="price-cell"><div class="price-lbl">Buy Used / CPO</div><div class="price-val">$30–38K</div><div class="price-note">2022–23 Limited CPO. Toyota of El Cajon has ~$32K examples.</div></div>
-        <div class="price-cell hi"><div class="price-lbl">Lease / mo</div><div class="price-val">~$500–540</div><div class="price-note">Limited leases rare. Base LE = $399/mo. ~$3K at signing.</div></div>
-      </div>
-      <label class="card-toggle-lbl" for="exp-rav4-lim">Features &amp; Notes <span class="chevron">▼</span></label>
-      <div class="card-details">
-        <div>
-          <div class="details-panel-lbl">Key Features</div>
-          <ul class="feat-list">
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Heated front seats</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Ventilated/cooled seats (Limited only)</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> AWD standard on all trims</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Physical climate controls</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Best resale value in class</li>
-            <li class="feat-item"><div class="feat-dot fd-par">~</div> 12.3" touchscreen-focused infotainment</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> 10yr/150K hybrid battery warranty</li>
-          </ul>
-        </div>
-        <div>
-          <div class="details-panel-lbl">Things to Know</div>
-          <ul class="notes-list">
-            <li class="note-item">2026 = first year ALL RAV4s are hybrid-only. New generation, more power.</li>
-            <li class="note-item">Cooled seats are Limited-trim only — confirm on the specific car.</li>
-            <li class="note-item">Best nearby: Toyota of El Cajon, Mossy Toyota, Toyota Temecula. Inland dealers negotiate more.</li>
-            <li class="note-item">CPO 2022–23 Limited hits the $30K budget and comes with Toyota's 7yr/100K warranty.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- TUCSON HYBRID LIMITED -->
-    <div class="car-card">
-      <div class="card-head">
-        <div>
-          <div class="card-badge badge-green">Best Interface</div>
-          <div class="card-name">2026 Tucson Hybrid<br><span style="font-size:14px;color:#888">Limited · AWD</span></div>
-          <div class="card-sub">Compact SUV · 231 hp · Physical climate dials</div>
-        </div>
-        <div class="card-mpg"><div class="mpg-num">38</div><div class="mpg-lbl">city MPG</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-cell"><div class="price-lbl">Buy New</div><div class="price-val">~$47–50K</div><div class="price-note">Limited MSRP ~$42–45K. Hyundai discounts $1.5–3K more readily.</div></div>
-        <div class="price-cell"><div class="price-lbl">Buy Used / CPO</div><div class="price-val">$33–39K</div><div class="price-note">2023–24 Limited. Hyundai CPO = 10yr/100K from original sale.</div></div>
-        <div class="price-cell hi"><div class="price-lbl">Lease / mo</div><div class="price-val">~$442–500</div><div class="price-note">Edmunds est. ~$442/mo, ~$2,942 at signing. Best SUV lease value.</div></div>
-      </div>
-      <label class="card-toggle-lbl" for="exp-tucson-lim">Features &amp; Notes <span class="chevron">▼</span></label>
-      <div class="card-details">
-        <div>
-          <div class="details-panel-lbl">Key Features</div>
-          <ul class="feat-list">
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Heated front seats</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Ventilated/cooled seats (Limited)</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Physical climate dials — separate from screen</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Heated rear seats (Limited)</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Largest cargo in class: 38.7 cu ft</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Hands-free smart liftgate</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> 10yr/100K powertrain warranty (CPO)</li>
-          </ul>
-        </div>
-        <div>
-          <div class="details-panel-lbl">Things to Know</div>
-          <ul class="notes-list">
-            <li class="note-item">2025 refresh added physical climate strip with real dials — best for avoiding menu overwhelm.</li>
-            <li class="note-item">Lower resale vs Toyota — better as lease or 3–5 yr ownership.</li>
-            <li class="note-item">Best dealers: Hyundai of El Cajon, Temecula Hyundai, National City Hyundai.</li>
-            <li class="note-item">Hyundai's 10yr warranty is best in class for CPO peace of mind.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- TESLA MODEL 3 -->
-    <div class="car-card">
-      <div class="card-head">
-        <div>
-          <div class="card-badge badge-blue">⚡ Sedan · Lease Wild Card</div>
-          <div class="card-name">Tesla Model 3<br><span style="font-size:14px;color:#888">Long Range RWD</span></div>
-          <div class="card-sub">Sedan · 363 mi range · EV only · HOV lane eligible CA</div>
-        </div>
-        <div class="card-mpg"><div class="mpg-num" style="color:var(--blue)">363</div><div class="mpg-lbl">mi range</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-cell"><div class="price-lbl">Buy New</div><div class="price-val">~$44–47K</div><div class="price-note">Base ~$42,490 + CA tax/fees. No EV credit after Sept 2025.</div></div>
-        <div class="price-cell"><div class="price-lbl">Buy Used</div><div class="price-val">~$28–36K</div><div class="price-note">2022–24 widely available. 2024 ~14K miles listed ~$34K in SD.</div></div>
-        <div class="price-cell hi"><div class="price-lbl">Lease / mo ⭐</div><div class="price-val">~$400–470</div><div class="price-note">Cheapest lease here. $299 advertised; CA all-in ~$400–470/mo.</div></div>
-      </div>
-      <div class="caveat-bar">⚠️ <strong>Must test drive first.</strong> Zero physical buttons — climate, mirrors, wipers all in the touchscreen.</div>
-      <label class="card-toggle-lbl" for="exp-tesla">Features &amp; Notes <span class="chevron">▼</span></label>
-      <div class="card-details">
-        <div>
-          <div class="details-panel-lbl">Key Features</div>
-          <ul class="feat-list">
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Heated front seats (standard)</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Ventilated/cooled front seats (standard)</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Panoramic glass roof</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Autopilot standard (adaptive cruise + lane)</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> CA HOV sticker eligible</li>
-            <li class="feat-item"><div class="feat-dot fd-no">✗</div> No physical climate controls at all</li>
-            <li class="feat-item"><div class="feat-dot fd-no">✗</div> Cannot purchase at lease end</li>
-          </ul>
-        </div>
-        <div>
-          <div class="details-panel-lbl">Things to Know</div>
-          <ul class="notes-list">
-            <li class="note-item">Sedan — lower clearance, less cargo space than RAV4/Tucson.</li>
-            <li class="note-item">Home charging in SD = ~$30/mo running cost vs $70–100 in gas.</li>
-            <li class="note-item">Insurance runs $50–100/mo more than hybrids due to high repair costs.</li>
-            <li class="note-item">Cannot buy at lease end — Tesla policy. Pure 3-yr rental.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div><!-- /vent-only -->
-
-  <!-- ── WITHOUT VENT ── -->
-  <div class="no-vent">
-    <div class="section-eyebrow">Budget-Friendly Options</div>
-    <div class="section-h2">Heated Seats Only · No Cooled</div>
-    <div class="section-sub">Drop cooled seats and save $8–12K. Hybrid, SUV, simple interface all still check out.</div>
-
-    <!-- RAV4 XLE PREMIUM -->
-    <div class="car-card">
-      <div class="card-head">
-        <div>
-          <div class="card-badge badge-top">Best Budget SUV</div>
-          <div class="card-name">2026 RAV4 Hybrid<br><span style="font-size:14px;color:#888">XLE Premium · AWD</span></div>
-          <div class="card-sub">Compact SUV · 236 hp · Moonroof · Heated seats · Leather</div>
-        </div>
-        <div class="card-mpg"><div class="mpg-num">43</div><div class="mpg-lbl">city MPG</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-cell"><div class="price-lbl">Buy New</div><div class="price-val">~$39–43K</div><div class="price-note">MSRP ~$37,550 AWD + CA tax/fees. Saves ~$8K vs Limited.</div></div>
-        <div class="price-cell"><div class="price-lbl">Buy Used / CPO</div><div class="price-val">$26–33K</div><div class="price-note">2022–23 XLE Premium CPO. Hits the $30K budget cleanly.</div></div>
-        <div class="price-cell hi"><div class="price-lbl">Lease / mo</div><div class="price-val">~$400–440</div><div class="price-note">~$80–100/mo cheaper than Limited. ~$3K at signing.</div></div>
-      </div>
-      <label class="card-toggle-lbl" for="exp-rav4-xle">Features &amp; Notes <span class="chevron">▼</span></label>
-      <div class="card-details">
-        <div>
-          <div class="details-panel-lbl">Key Features</div>
-          <ul class="feat-list">
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Heated front seats</li>
-            <li class="feat-item"><div class="feat-dot fd-no">✗</div> No ventilated/cooled seats</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> AWD standard</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Power moonroof</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> SofTex synthetic leather seats</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Blind spot monitoring</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> 8-way power driver seat</li>
-          </ul>
-        </div>
-        <div>
-          <div class="details-panel-lbl">Things to Know</div>
-          <ul class="notes-list">
-            <li class="note-item">Hits the $30K CPO budget cleanly — best value buy without cooled seats.</li>
-            <li class="note-item">In SD heat, you may miss cooled seats in summer — worth honest consideration.</li>
-            <li class="note-item">Same powertrain and warranty as Limited, just without the luxury extras.</li>
-            <li class="note-item">A seat cooling cushion (~$40–80) can partially substitute if needed.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- TUCSON SEL CONVENIENCE -->
-    <div class="car-card">
-      <div class="card-head">
-        <div>
-          <div class="card-badge badge-green">Best Budget Lease</div>
-          <div class="card-name">2026 Tucson Hybrid<br><span style="font-size:14px;color:#888">SEL Convenience · AWD</span></div>
-          <div class="card-sub">Compact SUV · 231 hp · Bose audio · Heated seats · Sunroof</div>
-        </div>
-        <div class="card-mpg"><div class="mpg-num">38</div><div class="mpg-lbl">city MPG</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-cell"><div class="price-lbl">Buy New</div><div class="price-val">~$38–42K</div><div class="price-note">MSRP ~$36–38K + CA tax/fees. Aggressive dealer discounts.</div></div>
-        <div class="price-cell"><div class="price-lbl">Buy Used / CPO</div><div class="price-val">$27–33K</div><div class="price-note">2023–24 SEL Convenience. Clean CPO near $28–30K available.</div></div>
-        <div class="price-cell hi"><div class="price-lbl">Lease / mo</div><div class="price-val">~$390–430</div><div class="price-note">Cheapest SUV lease on this list. Hyundai runs strong incentives.</div></div>
-      </div>
-      <label class="card-toggle-lbl" for="exp-tucson-sel">Features &amp; Notes <span class="chevron">▼</span></label>
-      <div class="card-details">
-        <div>
-          <div class="details-panel-lbl">Key Features</div>
-          <ul class="feat-list">
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Heated front seats</li>
-            <li class="feat-item"><div class="feat-dot fd-no">✗</div> No ventilated/cooled seats</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> AWD standard</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Physical climate controls (2025 refresh)</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Panoramic sunroof</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Bose premium audio</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Wireless CarPlay / Android Auto</li>
-          </ul>
-        </div>
-        <div>
-          <div class="details-panel-lbl">Things to Know</div>
-          <ul class="notes-list">
-            <li class="note-item">Best lease deal on the whole list when cooled seats aren't required.</li>
-            <li class="note-item">Physical climate dials still present at this trim — great for interface preference.</li>
-            <li class="note-item">Hyundai's 10yr/100K warranty CPO is exceptional peace of mind.</li>
-            <li class="note-item">More aggressive dealer discounts vs Toyota — ~$1–2K off MSRP negotiable.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- RAV4 XLE BASE -->
-    <div class="car-card">
-      <div class="card-head">
-        <div>
-          <div class="card-badge badge-purple">Most Affordable</div>
-          <div class="card-name">2026 RAV4 Hybrid<br><span style="font-size:14px;color:#888">XLE / LE · AWD</span></div>
-          <div class="card-sub">Compact SUV · 236 hp · Cleanest entry price</div>
-        </div>
-        <div class="card-mpg"><div class="mpg-num">43</div><div class="mpg-lbl">city MPG</div></div>
-      </div>
-      <div class="price-row">
-        <div class="price-cell"><div class="price-lbl">Buy New</div><div class="price-val">~$36–39K</div><div class="price-note">MSRP ~$34,750 (LE) / ~$36K (XLE) AWD + CA tax/fees.</div></div>
-        <div class="price-cell"><div class="price-lbl">Buy Used / CPO</div><div class="price-val">$23–30K</div><div class="price-note">2022–23 XLE/SE. Hits $30K budget with room to spare.</div></div>
-        <div class="price-cell hi"><div class="price-lbl">Lease / mo</div><div class="price-val">~$350–400</div><div class="price-note">LE Hybrid leases for $399/mo with $0 down nationally right now.</div></div>
-      </div>
-      <label class="card-toggle-lbl" for="exp-rav4-base">Features &amp; Notes <span class="chevron">▼</span></label>
-      <div class="card-details">
-        <div>
-          <div class="details-panel-lbl">Key Features</div>
-          <ul class="feat-list">
-            <li class="feat-item"><div class="feat-dot fd-par">~</div> Heated seats (XLE — may need package)</li>
-            <li class="feat-item"><div class="feat-dot fd-no">✗</div> No ventilated/cooled seats</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> AWD standard</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Blind spot monitoring (XLE+)</li>
-            <li class="feat-item"><div class="feat-dot fd-yes">✓</div> Wireless CarPlay / Android Auto</li>
-          </ul>
-        </div>
-        <div>
-          <div class="details-panel-lbl">Things to Know</div>
-          <ul class="notes-list">
-            <li class="note-item">The LE Hybrid $399/mo $0-down lease is one of the best compact SUV deals on the market right now.</li>
-            <li class="note-item">Confirm heated seats are on the specific trim — LE may not include them standard.</li>
-            <li class="note-item">Best if budget is #1 priority and cooled seats are a nice-to-have, not a must.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div><!-- /no-vent -->
-
+  <div class="section-eyebrow">Car Cards</div>
+  <div class="section-h2">All Options</div>
+  <div class="section-sub">Tap a card to expand features &amp; notes. Filters above apply. Left border = budget fit: 🟢 near · 🟡 over · 🔴 significantly over.</div>
+  <div id="cards-container"></div>
+  <div class="no-results" id="cards-no-results">No cars match the current filters. Try adjusting above.</div>
 </div>
-</div><!-- /page-cars -->
+</div>
 
-<!-- ════════════════════════════════
-     PAGE: COMPARE
-     ════════════════════════════════ -->
+<!-- ════════════ PAGE: COMPARE ════════════ -->
 <div class="page" id="page-compare">
 <div class="pg">
-  <div class="section-eyebrow">At a Glance</div>
+  <div class="section-eyebrow">Side by Side</div>
   <div class="section-h2">Full Comparison</div>
-  <div class="section-sub">CA all-in estimates. Lease = 36 mo / 10K mi/yr. Insurance = est. monthly for new solo policyholder.</div>
-
-  <div class="vent-only">
-    <div class="tbl-wrap">
-      <table class="sum-table">
-        <thead><tr><th>Car</th><th>Buy New</th><th>Used/CPO</th><th>Lease/mo</th><th>Insur/mo</th><th>Cooled</th><th>SUV</th><th>Pick</th></tr></thead>
-        <tbody>
-          <tr><td class="tcar">RAV4 Hybrid Limited '26</td><td>~$48–51K</td><td class="tbest">~$30–38K ✓</td><td>~$500–540</td><td>~$200–260</td><td class="chk-yes">✓</td><td class="chk-yes">✓</td><td><span class="tag tag-best">Best Buy</span></td></tr>
-          <tr><td class="tcar">Tucson Hybrid Limited '26</td><td>~$47–50K</td><td>~$33–39K</td><td class="tbest">~$442–500 ✓</td><td>~$200–260</td><td class="chk-yes">✓</td><td class="chk-yes">✓</td><td><span class="tag tag-lease">Best Lease</span></td></tr>
-          <tr><td class="tcar">Tesla Model 3 LR</td><td>~$44–47K</td><td>~$28–36K</td><td class="tbest">~$400–470 ✓</td><td>~$267–367</td><td class="chk-yes">✓</td><td class="chk-no">✗ Sedan</td><td><span class="tag tag-warn">Test Drive 1st</span></td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="section-sub">CA all-in estimates. Lease = 36 mo / 10K mi/yr. Filters above apply.</div>
+  <div class="tbl-wrap">
+    <table class="sum-table" id="compare-table">
+      <thead><tr>
+        <th>Car</th><th>Style</th><th>Power</th>
+        <th>Buy New</th><th>Used/CPO</th><th>Lease/mo</th>
+        <th>Insur/mo</th><th>🔥</th><th>❄️</th><th>Pick</th>
+      </tr></thead>
+      <tbody id="compare-tbody"></tbody>
+    </table>
   </div>
-
-  <div class="no-vent">
-    <div class="tbl-wrap">
-      <table class="sum-table">
-        <thead><tr><th>Car</th><th>Buy New</th><th>Used/CPO</th><th>Lease/mo</th><th>Insur/mo</th><th>Heated</th><th>Cooled</th><th>Pick</th></tr></thead>
-        <tbody>
-          <tr><td class="tcar">RAV4 Hybrid XLE Prem '26</td><td>~$39–43K</td><td class="tbest">~$26–33K ✓</td><td>~$400–440</td><td>~$200–250</td><td class="chk-yes">✓</td><td class="chk-no">✗</td><td><span class="tag tag-best">Best Buy</span></td></tr>
-          <tr><td class="tcar">Tucson Hybrid SEL Conv '26</td><td>~$38–42K</td><td>~$27–33K</td><td class="tbest">~$390–430 ✓</td><td>~$200–250</td><td class="chk-yes">✓</td><td class="chk-no">✗</td><td><span class="tag tag-lease">Best Lease</span></td></tr>
-          <tr><td class="tcar">RAV4 Hybrid XLE/LE '26</td><td>~$36–39K</td><td class="tbest">~$23–30K ✓</td><td class="tbest">~$350–400 ✓</td><td>~$190–240</td><td>~</td><td class="chk-no">✗</td><td><span class="tag tag-budget">Most Affordable</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div class="no-results" id="compare-no-results">No cars match the current filters.</div>
 
   <div class="divider"></div>
   <div class="section-eyebrow">5-Year Snapshot</div>
   <div class="section-h2" style="font-size:18px">Ownership vs. Lease Math</div>
-  <div class="section-sub">Rough total cost over 5 years including insurance, fuel, maintenance. Lease = payments only, no equity.</div>
-
-  <div class="vent-only">
-    <div class="car-card" style="margin-bottom:0">
-      <div class="price-row" style="grid-template-columns:1fr 1fr">
-        <div class="price-cell"><div class="price-lbl">Buy CPO RAV4 Limited + own 5 yrs</div><div class="price-val">~$55–65K</div><div class="price-note">~$34K car + $15K insurance + $6K fuel + $5K maint. Resale ~$18–22K.</div></div>
-        <div class="price-cell hi"><div class="price-lbl">Lease Tucson Limited 3 yrs → lease again</div><div class="price-val">~$30–32K</div><div class="price-note">~$500 × 36 = $18K + $3K signing × 1.5 cycles. Always under warranty.</div></div>
-      </div>
+  <div class="section-sub">Rough totals including insurance, fuel, maintenance. Lease = payments only.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:14px">
+      <div style="font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:6px">Buy CPO RAV4 Hybrid Lim · Own 5 yrs</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--charcoal)">~$55–65K</div>
+      <div style="font-size:11px;color:var(--soft);margin-top:4px;line-height:1.5">~$34K car + $15K insurance + $6K fuel + $5K maint. Resale ~$18–22K.</div>
     </div>
-  </div>
-  <div class="no-vent">
-    <div class="car-card" style="margin-bottom:0">
-      <div class="price-row" style="grid-template-columns:1fr 1fr">
-        <div class="price-cell"><div class="price-lbl">Buy CPO RAV4 XLE Prem + own 5 yrs</div><div class="price-val">~$48–58K</div><div class="price-note">~$28K car + $14K insurance + $6K fuel + $5K maint. Resale ~$14–18K.</div></div>
-        <div class="price-cell hi"><div class="price-lbl">Lease Tucson SEL Conv 3 yrs → lease again</div><div class="price-val">~$26–28K</div><div class="price-note">~$420 × 36 = $15K + $3K signing × 1.5 cycles. Always in a new car.</div></div>
-      </div>
+    <div style="background:var(--accent-pale);border:1px solid #e8c99a;border-radius:12px;padding:14px">
+      <div style="font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">Lease Tesla M3 36 mo → Lease again</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--accent)">~$28–32K</div>
+      <div style="font-size:11px;color:var(--mid);margin-top:4px;line-height:1.5">~$440 × 36 = $16K + $3K signing × 1.5 cycles. Always under warranty.</div>
     </div>
   </div>
 </div>
-</div><!-- /page-compare -->
+</div>
 
-<!-- ════════════════════════════════
-     PAGE: INSURANCE
-     ════════════════════════════════ -->
+<!-- ════════════ PAGE: INSURANCE ════════════ -->
 <div class="page" id="page-ins">
 <div class="pg">
   <div class="section-eyebrow">First-Time Solo Policy</div>
   <div class="section-h2">Insurance Estimates</div>
   <div class="section-sub">San Diego CA · Full coverage required for leased/financed cars. CA does not allow gender-based pricing.</div>
   <div class="ins-grid">
-    <div class="ins-card"><div class="ins-card-lbl">RAV4 / Tucson Hybrid</div><div class="ins-card-price hi">$200–267<span style="font-size:13px;color:#888">/mo</span></div><div class="ins-card-note">$2,400–3,200/yr · SUVs cheapest to insure in SD</div></div>
-    <div class="ins-card"><div class="ins-card-lbl">Tesla Model 3</div><div class="ins-card-price red">$267–367<span style="font-size:13px;color:#888">/mo</span></div><div class="ins-card-note">$3,200–4,400/yr · High repair costs = high premiums</div></div>
-    <div class="ins-card"><div class="ins-card-lbl">SD City Average</div><div class="ins-card-price">$233<span style="font-size:13px;color:#888">/mo</span></div><div class="ins-card-note">$2,800/yr · Below CA avg — less congestion than LA</div></div>
-    <div class="ins-card"><div class="ins-card-lbl">After 1 Year</div><div class="ins-card-price grn">$183–233<span style="font-size:13px;color:#888">/mo</span></div><div class="ins-card-note">Drops once she builds her own policy history</div></div>
+    <div class="ins-card"><div class="ins-card-lbl">RAV4 / Tucson / Accord Hybrid</div><div class="ins-card-price hi">$200–267<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">$2,400–3,200/yr · SUVs and sedans cheapest in SD</div></div>
+    <div class="ins-card"><div class="ins-card-lbl">Tesla Model 3</div><div class="ins-card-price red">$267–367<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">$3,200–4,400/yr · High repair costs = high premiums</div></div>
+    <div class="ins-card"><div class="ins-card-lbl">SD City Average</div><div class="ins-card-price">$233<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">$2,800/yr · Below CA avg — less congestion than LA</div></div>
+    <div class="ins-card"><div class="ins-card-lbl">After 1 Year w/ Record</div><div class="ins-card-price grn">$183–233<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">Drops once she builds her own policy history</div></div>
   </div>
-  <div class="section-eyebrow" style="margin-top:8px">Where to Shop</div>
+  <div class="section-eyebrow" style="margin-top:6px">Where to Shop</div>
   <div class="section-h2" style="font-size:18px">Best Insurers in San Diego</div>
-  <p style="font-size:13px;color:var(--soft);margin-bottom:14px">Get quotes from at least 3 before buying. These are consistently cheapest in SD.</p>
-  <div class="ins-tip-card"><div class="ins-tip-icon">🏆</div><div><div class="ins-tip-title">Geico — Cheapest in SD</div><div class="ins-tip-body">Median ~$1,203/yr for established drivers. Best starting point for new solo policyholders in San Diego.</div></div></div>
-  <div class="ins-tip-card"><div class="ins-tip-icon">🥈</div><div><div class="ins-tip-title">Mercury &amp; Progressive</div><div class="ins-tip-body">Mercury ~$1,300/yr, Progressive ~$1,509/yr median. Both competitive for younger drivers.</div></div></div>
+  <p style="font-size:12.5px;color:var(--soft);margin-bottom:13px">Get quotes from at least 3. These are consistently cheapest in SD.</p>
+  <div class="ins-tip-card"><div class="ins-tip-icon">🏆</div><div><div class="ins-tip-title">Geico — Cheapest in SD</div><div class="ins-tip-body">Median ~$1,203/yr for established drivers. Best starting point for new solo policyholders.</div></div></div>
+  <div class="ins-tip-card"><div class="ins-tip-icon">🥈</div><div><div class="ins-tip-title">Mercury &amp; Progressive</div><div class="ins-tip-body">Mercury ~$1,300/yr, Progressive ~$1,509/yr. Both competitive for younger drivers.</div></div></div>
   <div class="ins-tip-card"><div class="ins-tip-icon">⭐</div><div><div class="ins-tip-title">USAA — If Eligible</div><div class="ins-tip-body">~$1,312/yr median. Only if she or immediate family has military service history.</div></div></div>
   <div class="ins-tip-card"><div class="ins-tip-icon">💡</div><div><div class="ins-tip-title">Bundle Renters + Auto</div><div class="ins-tip-body">Saves ~$100–200/yr with most carriers. She'll need renters for a new apartment anyway.</div></div></div>
-  <div class="ins-tip-card"><div class="ins-tip-icon">⏰</div><div><div class="ins-tip-title">Get Quotes Before You Sign</div><div class="ins-tip-body">Insurance must be active on delivery day for leased/financed cars. Run quotes before the dealer appointment.</div></div></div>
+  <div class="ins-tip-card"><div class="ins-tip-icon">⏰</div><div><div class="ins-tip-title">Get Quotes Before You Sign</div><div class="ins-tip-body">Insurance must be active on delivery day for leased/financed cars. Run quotes before the dealer appointment — not after.</div></div></div>
 </div>
-</div><!-- /page-ins -->
+</div>
 
-<!-- ════════════════════════════════
-     PAGE: LEASING 101
-     ════════════════════════════════ -->
+<!-- ════════════ PAGE: LEASING 101 ════════════ -->
 <div class="page" id="page-lease">
 <div class="pg">
   <div class="section-eyebrow">Leasing 101</div>
   <div class="section-h2">Who Pays for What?</div>
   <div class="section-sub">Leasing = paying to use something you don't own. Here's exactly how it works.</div>
-
   <div class="dark-section">
     <div class="dark-head" style="background:#c04040"><div class="dark-head-lbl">Your Responsibility</div><div class="dark-head-title">💸 You pay for this</div></div>
     <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">💳</div><div><div class="lease-item-title">Monthly Payments</div><div class="lease-item-body">Every month, on time. Missing payments damages credit and can trigger repossession — same stakes as an apartment.</div></div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🛡️</div><div><div class="lease-item-title">Full Coverage Insurance (Required)</div><div class="lease-item-body">The leasing company mandates comprehensive + collision — minimum liability is not allowed. Must be active before you drive off the lot.</div></div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🔧</div><div><div class="lease-item-title">Routine Maintenance</div><div class="lease-item-body">Oil changes, tire rotations, wiper blades — yours. Toyota and Hyundai cover first 2 years / 25K miles free on new cars; after that it's on you.</div></div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">⛽</div><div><div class="lease-item-title">Gas or Charging</div><div class="lease-item-body">Always yours. Hybrids save ~$40–60/mo vs gas-only in San Diego. Tesla EVs save even more if she has home charging (~$30/mo).</div></div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🛣️</div><div><div class="lease-item-title">Mileage Overages — Watch This</div><div class="lease-item-body">Standard = 10,000–12,000 mi/yr. Every mile over = $0.15–0.25 at lease end. At 15K mi/yr on a 10K lease = ~$1,500 extra/yr. Estimate real driving before signing.</div></div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🗑️</div><div><div class="lease-item-title">Disposition Fee ($350–400) at Return</div><div class="lease-item-body">Charged when you hand the car back. Avoidable if you immediately lease or buy again from the same brand.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🛡️</div><div><div class="lease-item-title">Full Coverage Insurance (Required)</div><div class="lease-item-body">Leasing company mandates comprehensive + collision — minimum liability not allowed. Must be active before you drive off the lot.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🔧</div><div><div class="lease-item-title">Routine Maintenance</div><div class="lease-item-body">Oil changes, tire rotations, wiper blades — yours. Toyota and Hyundai cover first 2 yrs / 25K miles free on new cars.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">⛽</div><div><div class="lease-item-title">Gas or Charging</div><div class="lease-item-body">Always yours. Hybrids save ~$40–60/mo vs gas-only. Tesla EVs ~$20–30/mo with home/work charging.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🛣️</div><div><div class="lease-item-title">Mileage Overages — Watch This</div><div class="lease-item-body">Standard = 10,000–12,000 mi/yr. Every mile over = $0.15–0.25 at lease end. Estimate real commuting before signing.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🗑️</div><div><div class="lease-item-title">Disposition Fee ($350–400) at Return</div><div class="lease-item-body">Charged when you hand the car back. Avoidable if you lease or buy again from the same brand immediately.</div></div></div>
   </div>
-
   <div class="dark-section">
     <div class="dark-head" style="background:#3d7a5c"><div class="dark-head-lbl">Covered For You</div><div class="dark-head-title">✅ Manufacturer &amp; dealer pays</div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(61,122,92,.25);color:#7ecba7">🔩</div><div><div class="lease-item-title">Mechanical Breakdowns (Warranty)</div><div class="lease-item-body">Engine, transmission, hybrid battery failures = warranty-covered. Toyota: 3yr/36K basic + 10yr/150K hybrid. Hyundai: 5yr/60K + 10yr/100K powertrain.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(61,122,92,.25);color:#7ecba7">🔩</div><div><div class="lease-item-title">Mechanical Breakdowns (Warranty)</div><div class="lease-item-body">Engine, transmission, hybrid battery failures = warranty-covered. Toyota: 3yr/36K basic + 10yr/150K hybrid. Hyundai: 5yr/60K + 10yr/100K powertrain. Honda: 3yr/36K basic + 5yr/60K powertrain.</div></div></div>
     <div class="lease-item"><div class="lease-ico" style="background:rgba(61,122,92,.25);color:#7ecba7">🔁</div><div><div class="lease-item-title">Recall Repairs</div><div class="lease-item-body">Safety recalls are 100% free — bring it in, they fix it, no cost, no hassle.</div></div></div>
     <div class="lease-item"><div class="lease-ico" style="background:rgba(61,122,92,.25);color:#7ecba7">📱</div><div><div class="lease-item-title">Software &amp; Tech Glitches</div><div class="lease-item-body">Infotainment bugs, sensor malfunctions — all warranty-covered. Just schedule a service appointment.</div></div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(61,122,92,.25);color:#7ecba7">🏠</div><div><div class="lease-item-title">No Depreciation Stress</div><div class="lease-item-body">At lease end, just return the keys. No selling it, no trade-in negotiation, no being stuck with an aging car.</div></div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(61,122,92,.25);color:#7ecba7">🚨</div><div><div class="lease-item-title">Roadside Assistance (Included)</div><div class="lease-item-body">Toyota and Hyundai include manufacturer roadside — flat tires, lockouts, towing. Separate from your insurance.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(61,122,92,.25);color:#7ecba7">🏠</div><div><div class="lease-item-title">No Depreciation Stress</div><div class="lease-item-body">At lease end, just return the keys. No selling it, no trade-in hassle, no being stuck with an aging car.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(61,122,92,.25);color:#7ecba7">🚨</div><div><div class="lease-item-title">Roadside Assistance (Included)</div><div class="lease-item-body">Toyota, Hyundai, and Honda include manufacturer roadside — flat tires, lockouts, towing. Separate from your insurance.</div></div></div>
   </div>
-
   <div class="dark-section">
     <div class="dark-head" style="background:#7a6a3c"><div class="dark-head-lbl">The Gray Zone</div><div class="dark-head-title">⚖️ Wear &amp; Tear — Most Confusing Part</div></div>
     <div class="wear-grid">
-      <div>
-        <div class="wear-col-lbl" style="color:#7ecba7">✓ Normal — No Charge</div>
-        <div class="wear-item">Minor dings &amp; scratches under ~2"</div>
-        <div class="wear-item">Light interior wear from regular use</div>
-        <div class="wear-item">Normal tire tread wear</div>
-        <div class="wear-item">Windshield chips under quarter-size</div>
-        <div class="wear-item">Normal brake pad wear</div>
-      </div>
-      <div>
-        <div class="wear-col-lbl" style="color:#f08080">✗ Excessive — You Pay</div>
-        <div class="wear-item">Dents, deep scratches, paint damage</div>
-        <div class="wear-item">Cracked or large chipped windshield</div>
-        <div class="wear-item">Interior stains, burns, torn fabric</div>
-        <div class="wear-item">Damaged or unevenly worn tires</div>
-        <div class="wear-item">Missing parts (mats, cables, etc.)</div>
-      </div>
+      <div><div class="wear-col-lbl" style="color:#7ecba7">✓ Normal — No Charge</div><div class="wear-item">Minor dings &amp; scratches under ~2"</div><div class="wear-item">Light interior wear from regular use</div><div class="wear-item">Normal tire tread wear</div><div class="wear-item">Windshield chips under quarter-size</div><div class="wear-item">Normal brake pad wear</div></div>
+      <div><div class="wear-col-lbl" style="color:#f08080">✗ Excessive — You Pay</div><div class="wear-item">Dents, deep scratches, paint damage</div><div class="wear-item">Cracked or large chipped windshield</div><div class="wear-item">Interior stains, burns, torn fabric</div><div class="wear-item">Damaged or unevenly worn tires</div><div class="wear-item">Missing parts (mats, cables, etc.)</div></div>
     </div>
-    <div class="wear-protip">💡 <strong style="color:white">Pro tip:</strong> Get an independent pre-inspection 1–2 months before lease-end. Fix small things yourself — almost always cheaper than dealer charges.</div>
+    <div class="wear-protip">💡 <strong style="color:white">Pro tip:</strong> Get an independent pre-inspection 1–2 months before lease-end. Fix small things yourself — almost always cheaper than what the dealer charges.</div>
   </div>
-
   <div class="dark-section">
     <div class="dark-head"><div class="dark-head-lbl">Quick Take</div><div class="dark-head-title">🤔 Lease vs. Buy in Plain English</div></div>
     <div class="lv-grid">
-      <div>
-        <div class="lv-col-lbl" style="color:#e8c99a">Lease if she...</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Drives under 12,000 mi/yr</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Likes a new car every 3 years</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Doesn't want resale hassle</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Wants lower monthly payments</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">New to SD, unsure long-term</div>
-      </div>
-      <div>
-        <div class="lv-col-lbl" style="color:#7ecba7">Buy if she...</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Drives 12,000–15,000+ mi/yr</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Wants to build equity</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Wants to customize the car</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Plans to keep it 5+ years</div>
-        <div class="lv-item" style="color:rgba(255,255,255,.65)">Wants no mileage limits</div>
-      </div>
+      <div><div class="lv-col-lbl" style="color:#e8c99a">Lease if she...</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Drives under 12,000 mi/yr</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Likes a new car every 3 years</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Doesn't want resale hassle</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Wants lower monthly payments</div><div class="lv-item" style="color:rgba(255,255,255,.65)">New to SD, unsure long-term</div></div>
+      <div><div class="lv-col-lbl" style="color:#7ecba7">Buy if she...</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Drives 12,000–15,000+ mi/yr</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Wants to build equity</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Wants to customize the car</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Plans to keep it 5+ years</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Wants no mileage limits</div></div>
     </div>
-    <div style="height:18px"></div>
+    <div style="height:14px"></div>
   </div>
 </div>
-</div><!-- /page-lease -->
+</div>
 
-<!-- ════════════════════════════════
-     PAGE: TIPS
-     ════════════════════════════════ -->
+<!-- ════════════ PAGE: TIPS ════════════ -->
 <div class="page" id="page-tips">
 <div class="pg">
   <div class="section-eyebrow">Shopping Strategy</div>
   <div class="section-h2">Tips for September</div>
   <div class="section-sub">How to get the best deal when she's ready to shop in ~3 months.</div>
-  <div class="tip-card"><div class="tip-num">01</div><div class="tip-title">Time it right — end of quarter is king</div><div class="tip-body">September 30 = end of Q3. Salespeople have monthly and quarterly quotas. The last few days of September, dealers are more willing to deal than almost any other time of year. Go then.</div></div>
-  <div class="tip-card"><div class="tip-num">02</div><div class="tip-title">Go inland for better prices</div><div class="tip-body">Toyota Temecula, Toyota of El Cajon, Hyundai Temecula, National City Hyundai. A 30-min drive can save $1,500–3,000 on the same car vs coastal SD stores.</div></div>
-  <div class="tip-card"><div class="tip-num">03</div><div class="tip-title">Verify cooled seats on the specific car</div><div class="tip-body">Always confirm ventilated seats are present on the actual unit — not just the trim level in general. Check the window sticker and feel for perforation holes in the seat fabric.</div></div>
-  <div class="tip-card"><div class="tip-num">04</div><div class="tip-title">Get insurance quotes before signing</div><div class="tip-body">Run Geico, Mercury, and Progressive quotes before the dealer appointment. Insurance must be active on delivery day for leased/financed cars.</div></div>
-  <div class="tip-card"><div class="tip-num">05</div><div class="tip-title">RAV4: Use Costco Auto or TrueCar</div><div class="tip-body">Toyota doesn't discount off MSRP easily, but Costco Auto Program and TrueCar pre-negotiate pricing. Often saves $500–1,500 with zero haggling.</div></div>
-  <div class="tip-card"><div class="tip-num">06</div><div class="tip-title">Leasing: negotiate the cap cost, not the payment</div><div class="tip-body">Every dollar off the capitalized cost lowers your monthly payment. Don't let dealers make the monthly number the only focus. Negotiate the car price first, then apply lease terms.</div></div>
-  <div class="tip-card"><div class="tip-num">07</div><div class="tip-title">Think honestly about mileage</div><div class="tip-body">San Diego is a driving city. 20 mi each way × 250 work days = 10,000 miles just commuting, before any weekend driving. Consider upgrading to a 12K mi/yr lease if that sounds tight.</div></div>
-  <div class="tip-card"><div class="tip-num">08</div><div class="tip-title">Buy in CA — anywhere SoCal is fine</div><div class="tip-body">She must register in California. Temecula, El Cajon, Chula Vista, National City, Mission Valley, Kearny Mesa — all fair game. Buying in-state handles DMV registration automatically.</div></div>
+  <div class="tip-card"><div class="tip-num">01</div><div class="tip-title">Time it right — end of quarter is king</div><div class="tip-body">September 30 = end of Q3. Salespeople have monthly and quarterly quotas. The last few days of September dealers are more willing to deal than almost any other time of year. Go then.</div></div>
+  <div class="tip-card"><div class="tip-num">02</div><div class="tip-title">Honda Poway — trusted dealer</div><div class="tip-body">Harry has had multiple positive personal experiences at Honda Poway. For the Accord Hybrid this is the recommended starting point — familiarity with a dealer removes a lot of stress from the process.</div></div>
+  <div class="tip-card"><div class="tip-num">03</div><div class="tip-title">Go inland for Toyota / Hyundai</div><div class="tip-body">Toyota of El Cajon, Mossy Toyota (Kearny Mesa), and Temecula Toyota discount more aggressively than coastal stores. A 30-min drive can save $1,500–3,000 on the same car.</div></div>
+  <div class="tip-card"><div class="tip-num">04</div><div class="tip-title">Verify cooled seats on the specific car</div><div class="tip-body">Always confirm ventilated seats are on the actual unit — not just the trim level generally. Check the window sticker and feel for perforation holes in the seat fabric before signing anything.</div></div>
+  <div class="tip-card"><div class="tip-num">05</div><div class="tip-title">Get insurance quotes before signing</div><div class="tip-body">Run Geico, Mercury, and Progressive quotes before the dealer appointment. Insurance must be active on delivery day for leased/financed cars. Know the cost before committing.</div></div>
+  <div class="tip-card"><div class="tip-num">06</div><div class="tip-title">RAV4 / Accord: Use Costco Auto or TrueCar</div><div class="tip-body">Toyota and Honda don't discount off MSRP easily, but Costco Auto Program and TrueCar pre-negotiate pricing at participating dealers. Often saves $500–1,500 with zero haggling.</div></div>
+  <div class="tip-card"><div class="tip-num">07</div><div class="tip-title">Leasing: negotiate the cap cost, not the payment</div><div class="tip-body">Every dollar off the vehicle's capitalized cost lowers your monthly payment. Don't let dealers make the monthly number the only focus. Negotiate the car price first, then apply lease terms.</div></div>
+  <div class="tip-card"><div class="tip-num">08</div><div class="tip-title">Think honestly about mileage</div><div class="tip-body">San Diego is a driving city. 20 mi each way × 250 work days = 10,000 miles just commuting. Consider upgrading to 12K mi/yr on any lease if that sounds tight.</div></div>
+  <div class="tip-card"><div class="tip-num">09</div><div class="tip-title">Must test drive the Tesla first</div><div class="tip-body">The Model 3 has zero physical buttons — climate, mirrors, wipers all live in the touchscreen. Charging situation is solved (work + home), but only a test drive will tell if the interface works for her daily.</div></div>
+  <div class="tip-card"><div class="tip-num">10</div><div class="tip-title">Buy in CA — anywhere SoCal is fine</div><div class="tip-body">She must register in California. Temecula, El Cajon, Chula Vista, National City, Mission Valley, Kearny Mesa — all fair game. Buying in-state handles DMV registration automatically.</div></div>
 </div>
-</div><!-- /page-tips -->
+</div>
 
 <div class="footer">
-  Prices estimated June 2026. CA all-in includes ~7.75–8.25% tax + ~$2K fees. Verify with dealers before purchasing. · Made with ❤️ for a new San Diego resident 🌊
+  Prices estimated June 2026. CA all-in includes ~7.75–8.25% sales tax + ~$2K fees. Verify with dealers before purchasing. · Made with ❤️ for a new San Diego resident 🌊
 </div>
 
+<script>
+// ══════════════════════════════════════════════
+// CAR DATA — single source of truth
+// ══════════════════════════════════════════════
+const CARS = [
+  {
+    id:'tesla-m3',
+    name:'Tesla Model 3 LR',
+    trim:'Long Range RWD',
+    style:'sedan',
+    power:'ev',
+    mpg:'363mi range',
+    mpgNum:363,
+    rank:8,
+    rankNote:'Best lease value; charging solved at work + likely home; cooled seats standard; HOV eligible. Must test drive interface first — no physical controls.',
+    tag:'tag-lease',tagLabel:'Best Lease',
+    budgetFit:'near', // lease is under $470/mo
+    newLow:44000, newHigh:47000, newLabel:'~$44–47K',
+    usedLow:28000, usedHigh:36000, usedLabel:'~$28–36K',
+    leaseLow:400, leaseHigh:470, leaseLabel:'~$400–470',
+    insLow:267, insHigh:367, insLabel:'~$267–367',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'yes', cooledNote:'Standard on all trims',
+    heatedLabel:'✓ Standard',cooledLabel:'✓ Standard',
+    dealer:'Tesla direct — single SD service center. No traditional dealership.',
+    caveat:'⚠️ Must test drive first. Zero physical buttons — climate, mirrors, wipers all in touchscreen. Cannot purchase at lease end (Tesla policy).',
+    features:[
+      {icon:'yes',text:'Heated front seats (standard)'},
+      {icon:'yes',text:'Ventilated/cooled front seats (standard)'},
+      {icon:'yes',text:'Panoramic glass roof'},
+      {icon:'yes',text:'Autopilot standard (adaptive cruise + lane keeping)'},
+      {icon:'yes',text:'CA HOV sticker eligible'},
+      {icon:'no', text:'No physical climate controls at all'},
+      {icon:'no', text:'Cannot purchase at lease end (Tesla policy)'},
+    ],
+    notes:[
+      'Sedan — lower clearance, less cargo than RAV4/Tucson but comparable to Honda Accord.',
+      'Charging solved: work has free charger; home likely has one. Running cost ~$20–30/mo.',
+      'Insurance runs $50–100/mo more than hybrids due to high repair costs.',
+      'Lease is pure 3-yr rental — but this makes sense given current car prices and rates.',
+    ]
+  },
+  {
+    id:'accord-hybrid',
+    name:'Honda Accord Hybrid',
+    trim:'Sport-L',
+    style:'sedan',
+    power:'hybrid',
+    mpg:'46 city',
+    mpgNum:46,
+    rank:9,
+    rankNote:'Trusted dealer (Honda Poway — Harry has firsthand positive experience), familiar size (Harry drives Accord), great hybrid, ventilated seats on Sport-L.',
+    tag:'tag-best',tagLabel:'Top Pick',
+    budgetFit:'near',
+    newLow:40000, newHigh:42000, newLabel:'~$40–42K',
+    usedLow:28000, usedHigh:33000, usedLabel:'~$28–33K',
+    leaseLow:380, leaseHigh:420, leaseLabel:'~$380–420',
+    insLow:190, insHigh:250, insLabel:'~$190–250',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'yes', cooledNote:'Sport-L trim only',
+    heatedLabel:'✓ Sport-L',cooledLabel:'✓ Sport-L only',
+    dealer:'Honda Poway — Harry has multiple positive firsthand experiences. Recommended starting point.',
+    caveat:null,
+    features:[
+      {icon:'yes',text:'Heated front seats (Sport-L)'},
+      {icon:'yes',text:'Ventilated/cooled seats (Sport-L only)'},
+      {icon:'yes',text:'Wireless CarPlay / Android Auto'},
+      {icon:'yes',text:'Honda Sensing safety suite standard'},
+      {icon:'yes',text:'Intuitive interface — physical climate controls'},
+      {icon:'par',text:'10.2" touchscreen — simpler than most competitors'},
+      {icon:'yes',text:'Honda CPO: 7yr/100K powertrain warranty'},
+    ],
+    notes:[
+      'Harry drives an Accord — Khusbu is comfortable with the size and familiar with the feel.',
+      'Honda Poway is a trusted dealer — removes stress from the buying process.',
+      'Sport-L trim required for cooled seats — confirm on the specific car.',
+      '2022–23 CPO Accord Hybrid Sport-L around $28–33K hits the buy budget well.',
+    ]
+  },
+  {
+    id:'rav4-hybrid-lim',
+    name:'Toyota RAV4 Hybrid',
+    trim:'Limited · AWD',
+    style:'suv',
+    power:'hybrid',
+    mpg:'43 city',
+    mpgNum:43,
+    rank:8,
+    rankNote:'Best CPO buy option, class-leading reliability and resale, ventilated seats on Limited. All-new 2026 hybrid-only generation.',
+    tag:'tag-best',tagLabel:'Best Buy (CPO)',
+    budgetFit:'over',
+    newLow:48000, newHigh:51000, newLabel:'~$48–51K',
+    usedLow:30000, usedHigh:38000, usedLabel:'~$30–38K',
+    leaseLow:500, leaseHigh:540, leaseLabel:'~$500–540',
+    insLow:200, insHigh:260, insLabel:'~$200–260',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
+    heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
+    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — unverified by Harry personally. Inland dealers negotiate more.',
+    caveat:null,
+    features:[
+      {icon:'yes',text:'Heated front seats (standard)'},
+      {icon:'par',text:'Ventilated/cooled seats — Limited trim only'},
+      {icon:'yes',text:'AWD standard on all trims'},
+      {icon:'yes',text:'Physical climate controls'},
+      {icon:'yes',text:'Best resale value in compact SUV class'},
+      {icon:'par',text:'12.3" touchscreen — some menu complexity'},
+      {icon:'yes',text:'10yr/150K hybrid battery warranty'},
+    ],
+    notes:[
+      '2026 = first year ALL RAV4s are hybrid-only. New generation with 236 hp AWD.',
+      'Cooled seats Limited-trim only — confirm perforation holes on specific car before buying.',
+      'CPO 2022–23 Limited hits $30K budget and includes Toyota\'s 7yr/100K warranty.',
+      'Toyota of El Cajon and Temecula negotiate more than coastal SD stores.',
+    ]
+  },
+  {
+    id:'rav4-prime',
+    name:'Toyota RAV4 Prime',
+    trim:'XSE Premium · AWD',
+    style:'suv',
+    power:'phev',
+    mpg:'94 MPGe',
+    mpgNum:94,
+    rank:7,
+    rankNote:'Only PHEV on the list. 42 miles EV-only range. CA HOV sticker eligible. Pricier than regular hybrid but charging solved at work makes this compelling.',
+    tag:'tag-lease',tagLabel:'PHEV Pick',
+    budgetFit:'over',
+    newLow:47000, newHigh:52000, newLabel:'~$47–52K',
+    usedLow:36000, usedHigh:44000, usedLabel:'~$36–44K',
+    leaseLow:480, leaseHigh:540, leaseLabel:'~$480–540',
+    insLow:200, insHigh:260, insLabel:'~$200–260',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
+    heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
+    dealer:'Same Toyota dealers as RAV4 Hybrid. Mossy Toyota, Toyota of El Cajon — unverified by Harry.',
+    caveat:'🔌 Plug-in hybrid — needs charging to get full EV benefit. Work charger and likely home charger make this viable.',
+    features:[
+      {icon:'yes',text:'Heated front seats'},
+      {icon:'par',text:'Ventilated/cooled seats — Limited trim only'},
+      {icon:'yes',text:'AWD standard'},
+      {icon:'yes',text:'42-mile EV-only range'},
+      {icon:'yes',text:'CA HOV sticker eligible (PHEV qualifies)'},
+      {icon:'yes',text:'94 MPGe combined'},
+      {icon:'yes',text:'10yr/150K hybrid/EV battery warranty'},
+    ],
+    notes:[
+      'Best of both worlds — EV range for daily commutes, gas engine for road trips.',
+      'With work charging, most daily driving would be free electricity.',
+      'Pricier than RAV4 Hybrid — CPO may be the only way to hit near budget.',
+      'Same dealer network and reliability reputation as RAV4 Hybrid.',
+    ]
+  },
+  {
+    id:'tucson-hybrid-lim',
+    name:'Hyundai Tucson Hybrid',
+    trim:'Limited · AWD',
+    style:'suv',
+    power:'hybrid',
+    mpg:'38 city',
+    mpgNum:38,
+    rank:7,
+    rankNote:'Best SUV lease value. Physical climate dials make it the most approachable interface. Dealer quality in SD area uncertain — verify before committing.',
+    tag:'tag-lease',tagLabel:'Best SUV Lease',
+    budgetFit:'over',
+    newLow:47000, newHigh:50000, newLabel:'~$47–50K',
+    usedLow:33000, usedHigh:39000, usedLabel:'~$33–39K',
+    leaseLow:442, leaseHigh:500, leaseLabel:'~$442–500',
+    insLow:200, insHigh:260, insLabel:'~$200–260',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
+    heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
+    dealer:'Hyundai SD area — dealer quality uncertain per Harry. Unverified. Temecula Hyundai or National City Hyundai may be options.',
+    caveat:'⚠️ Dealer quality in San Diego area is uncertain. Verify before committing.',
+    features:[
+      {icon:'yes',text:'Heated front seats'},
+      {icon:'par',text:'Ventilated/cooled seats (Limited only)'},
+      {icon:'yes',text:'Physical climate dials — separate from touchscreen'},
+      {icon:'yes',text:'Heated rear seats (Limited)'},
+      {icon:'yes',text:'Largest cargo in class: 38.7 cu ft'},
+      {icon:'yes',text:'Hands-free smart liftgate'},
+      {icon:'yes',text:'10yr/100K powertrain warranty (CPO)'},
+    ],
+    notes:[
+      '2025 refresh added physical climate strip with real dials — best for avoiding menu overwhelm.',
+      'Lower resale than Toyota — better as lease or 3–5 yr ownership.',
+      'Dealer quality in SD area uncertain — factor this into decision.',
+      'Hyundai\'s 10yr CPO warranty is best in class for peace of mind.',
+    ]
+  },
+  {
+    id:'camry-hybrid',
+    name:'Toyota Camry Hybrid',
+    trim:'XLE',
+    style:'sedan',
+    power:'hybrid',
+    mpg:'44 city',
+    mpgNum:44,
+    rank:7,
+    rankNote:'Strong value sedan, excellent resale, full 2025 redesign. Dealer TBD — unverified by Harry. Good if she prefers Toyota reliability in sedan form.',
+    tag:'tag-budget',tagLabel:'Solid Pick',
+    budgetFit:'near',
+    newLow:38000, newHigh:42000, newLabel:'~$38–42K',
+    usedLow:27000, usedHigh:32000, usedLabel:'~$27–32K',
+    leaseLow:370, leaseHigh:420, leaseLabel:'~$370–420',
+    insLow:190, insHigh:250, insLabel:'~$190–250',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'trim', cooledNote:'XLE / XSE only',
+    heatedLabel:'✓ XLE',cooledLabel:'⚠️ XLE / XSE only',
+    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — unverified by Harry personally.',
+    caveat:null,
+    features:[
+      {icon:'yes',text:'Heated front seats (XLE)'},
+      {icon:'par',text:'Ventilated/cooled seats — XLE / XSE only'},
+      {icon:'yes',text:'Full 2025 redesign — more modern interior'},
+      {icon:'yes',text:'Wireless CarPlay / Android Auto'},
+      {icon:'yes',text:'Toyota Safety Sense 3.0 standard'},
+      {icon:'yes',text:'Best resale value in midsize sedan class'},
+      {icon:'yes',text:'Toyota CPO: 7yr/100K powertrain warranty'},
+    ],
+    notes:[
+      'Full 2025 redesign — significantly improved interior and tech vs previous gen.',
+      'XLE trim required for cooled seats — confirm on specific car.',
+      '2022–23 CPO XLE at ~$27–32K hits near or at the buy budget.',
+      'Dealer TBD — Harry has not personally verified Toyota SD dealers.',
+    ]
+  },
+  {
+    id:'rav4-hybrid-xle',
+    name:'Toyota RAV4 Hybrid',
+    trim:'XLE Premium · AWD',
+    style:'suv',
+    power:'hybrid',
+    mpg:'43 city',
+    mpgNum:43,
+    rank:6,
+    rankNote:'Best budget buy if cooled seats are dropped. Saves ~$8K vs Limited. Same powertrain/warranty, just without luxury trim extras.',
+    tag:'tag-budget',tagLabel:'Budget Buy',
+    budgetFit:'near',
+    newLow:39000, newHigh:43000, newLabel:'~$39–43K',
+    usedLow:26000, usedHigh:33000, usedLabel:'~$26–33K',
+    leaseLow:400, leaseHigh:440, leaseLabel:'~$400–440',
+    insLow:200, insHigh:250, insLabel:'~$200–250',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'no', cooledNote:'Not available on this trim',
+    heatedLabel:'✓ Standard',cooledLabel:'✗ Not available',
+    dealer:'Same as RAV4 Hybrid Limited. Mossy Toyota, Toyota of El Cajon.',
+    caveat:null,
+    features:[
+      {icon:'yes',text:'Heated front seats'},
+      {icon:'no', text:'No ventilated/cooled seats'},
+      {icon:'yes',text:'AWD standard'},
+      {icon:'yes',text:'Power moonroof'},
+      {icon:'yes',text:'SofTex synthetic leather seats'},
+      {icon:'yes',text:'Blind spot monitoring'},
+      {icon:'yes',text:'8-way power driver seat'},
+    ],
+    notes:[
+      'Saves ~$8K vs Limited — hits the $30K CPO budget cleanly.',
+      'In SD heat, cooled seats absence is worth honest consideration in summer.',
+      'Same powertrain and Toyota reliability as Limited trim.',
+      'A seat cooling cushion (~$40–80) can partially substitute if needed.',
+    ]
+  },
+  {
+    id:'tucson-hybrid-sel',
+    name:'Hyundai Tucson Hybrid',
+    trim:'SEL Convenience · AWD',
+    style:'suv',
+    power:'hybrid',
+    mpg:'38 city',
+    mpgNum:38,
+    rank:6,
+    rankNote:'Cheapest SUV lease on the list when cooled seats not required. Physical climate controls still present. Dealer quality in SD uncertain.',
+    tag:'tag-lease',tagLabel:'Cheapest SUV Lease',
+    budgetFit:'near',
+    newLow:38000, newHigh:42000, newLabel:'~$38–42K',
+    usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
+    leaseLow:390, leaseHigh:430, leaseLabel:'~$390–430',
+    insLow:200, insHigh:250, insLabel:'~$200–250',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'no', cooledNote:'Not available on this trim',
+    heatedLabel:'✓ Standard',cooledLabel:'✗ Not available',
+    dealer:'Hyundai SD area — dealer quality uncertain per Harry.',
+    caveat:'⚠️ Dealer quality in San Diego area is uncertain. Verify before committing.',
+    features:[
+      {icon:'yes',text:'Heated front seats'},
+      {icon:'no', text:'No ventilated/cooled seats'},
+      {icon:'yes',text:'AWD standard'},
+      {icon:'yes',text:'Physical climate controls (2025 refresh)'},
+      {icon:'yes',text:'Panoramic sunroof'},
+      {icon:'yes',text:'Bose premium audio'},
+      {icon:'yes',text:'Wireless CarPlay / Android Auto'},
+    ],
+    notes:[
+      'Cheapest SUV lease on the entire list when cooled seats aren\'t required.',
+      'Physical climate dials still present — great for interface preference.',
+      'Hyundai\'s 10yr/100K warranty CPO is exceptional peace of mind.',
+      'More aggressive dealer discounts vs Toyota — ~$1–2K off MSRP negotiable.',
+    ]
+  },
+  {
+    id:'sonata-hybrid',
+    name:'Hyundai Sonata Hybrid',
+    trim:'Limited',
+    style:'sedan',
+    power:'hybrid',
+    mpg:'44 city',
+    mpgNum:44,
+    rank:5,
+    rankNote:'Good value sedan with ventilated seats, but Hyundai dealer quality in SD uncertain. Deprioritized until dealer situation clarified.',
+    tag:'tag-warn',tagLabel:'Verify Dealer First',
+    budgetFit:'near',
+    newLow:36000, newHigh:39000, newLabel:'~$36–39K',
+    usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
+    leaseLow:360, leaseHigh:410, leaseLabel:'~$360–410',
+    insLow:190, insHigh:250, insLabel:'~$190–250',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'trim', cooledNote:'SEL Plus / Limited only',
+    heatedLabel:'✓ Limited',cooledLabel:'⚠️ Limited only',
+    dealer:'Hyundai SD area — dealer quality uncertain per Harry. Deprioritized.',
+    caveat:'⚠️ Dealer quality in San Diego area is uncertain per Harry. Verify independently before visiting.',
+    features:[
+      {icon:'yes',text:'Heated front seats (Limited)'},
+      {icon:'par',text:'Ventilated/cooled seats (SEL Plus / Limited)'},
+      {icon:'yes',text:'Wireless CarPlay / Android Auto'},
+      {icon:'yes',text:'Bose premium audio (Limited)'},
+      {icon:'yes',text:'10yr/100K powertrain warranty (CPO)'},
+      {icon:'par',text:'Interface — improved but still screen-heavy'},
+    ],
+    notes:[
+      'Good product, competitive pricing, but dealer quality in SD is uncertain.',
+      'CPO 2022–23 Limited at ~$27–33K can hit near budget.',
+      'Hyundai\'s 10yr/100K CPO warranty is best in class.',
+      'Deprioritized relative to Accord Hybrid and Camry Hybrid until dealer is verified.',
+    ]
+  },
+  {
+    id:'rav4-hybrid-base',
+    name:'Toyota RAV4 Hybrid',
+    trim:'XLE / LE · AWD',
+    style:'suv',
+    power:'hybrid',
+    mpg:'43 city',
+    mpgNum:43,
+    rank:5,
+    rankNote:'Most affordable entry point. LE lease at $399/mo $0 down is exceptional value. Heated seats may require package — confirm on specific car.',
+    tag:'tag-budget',tagLabel:'Most Affordable',
+    budgetFit:'near',
+    newLow:36000, newHigh:39000, newLabel:'~$36–39K',
+    usedLow:23000, usedHigh:30000, usedLabel:'~$23–30K',
+    leaseLow:350, leaseHigh:400, leaseLabel:'~$350–400',
+    insLow:190, insHigh:240, insLabel:'~$190–240',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'trim', cooledStatus:'no', cooledNote:'Not available',
+    heatedLabel:'⚠️ Package req.',cooledLabel:'✗ Not available',
+    dealer:'Same as other RAV4 trims.',
+    caveat:null,
+    features:[
+      {icon:'par',text:'Heated seats — XLE may require package; LE does not include'},
+      {icon:'no', text:'No ventilated/cooled seats on any base trim'},
+      {icon:'yes',text:'AWD standard'},
+      {icon:'yes',text:'Blind spot monitoring (XLE+)'},
+      {icon:'yes',text:'Wireless CarPlay / Android Auto'},
+    ],
+    notes:[
+      'LE Hybrid $399/mo $0 down is one of the best compact SUV lease deals right now.',
+      'Confirm heated seats are on specific trim — LE may not include them standard.',
+      'Best if budget is #1 priority and cooled seats are a nice-to-have.',
+      'CPO 2022–23 XLE at $23–30K hits buy budget with room to spare.',
+    ]
+  },
+];
+
+// ══════════════════════════════════════════════
+// FILTER STATE
+// ══════════════════════════════════════════════
+const filters = { mode:'all', style:'all', power:'all', budget:'all' };
+let sortCol = 'rank';
+let sortDir = 'desc'; // desc = highest rank first
+
+function setFilter(key, val, btn) {
+  filters[key] = val;
+  // update button states
+  document.querySelectorAll('[data-filter="'+key+'"]').forEach(function(b){ b.classList.remove('active') });
+  btn.classList.add('active');
+  renderAll();
+}
+
+function getFiltered() {
+  return CARS.filter(function(c) {
+    if (filters.style !== 'all' && c.style !== filters.style) return false;
+    if (filters.power !== 'all' && c.power !== filters.power) return false;
+    if (filters.budget !== 'all' && c.budgetFit !== filters.budget) return false;
+    return true;
+  });
+}
+
+// ══════════════════════════════════════════════
+// RENDER HELPERS
+// ══════════════════════════════════════════════
+function seatBadge(status, label) {
+  var cls = status === 'yes' ? 'seat-yes' : status === 'trim' ? 'seat-trim' : 'seat-no';
+  return '<span class="seat-badge '+cls+'">'+label+'</span>';
+}
+
+function ptBadge(power) {
+  if (power==='hybrid') return '<span class="pt-badge pt-hybrid">Hybrid</span>';
+  if (power==='phev')   return '<span class="pt-badge pt-phev">Plug-in</span>';
+  if (power==='ev')     return '<span class="pt-badge pt-ev">EV</span>';
+  return '';
+}
+
+function styleBadge(style) {
+  return style==='suv'
+    ? '<span class="style-badge style-suv">SUV</span>'
+    : '<span class="style-badge style-sedan">Sedan</span>';
+}
+
+function budgetClass(c) {
+  return c.budgetFit==='near' ? 'budget-green' : c.budgetFit==='over' ? 'budget-amber' : 'budget-red';
+}
+
+function priceHighlight(mode, cell) {
+  // returns 'hi' if this cell is the active mode, 'dimmed' if not
+  if (mode==='all') return '';
+  var map = {lease:'lease',new:'new',used:'used'};
+  return (map[mode]===cell) ? 'hi' : 'dimmed';
+}
+
+// ══════════════════════════════════════════════
+// RENDER CARDS
+// ══════════════════════════════════════════════
+function renderCards() {
+  var cars = getFiltered();
+  var container = document.getElementById('cards-container');
+  var noResults = document.getElementById('cards-no-results');
+  if (cars.length===0) { container.innerHTML=''; noResults.classList.add('show'); return; }
+  noResults.classList.remove('show');
+  var m = filters.mode;
+  container.innerHTML = cars.map(function(c) {
+    var featHtml = c.features.map(function(f){
+      return '<li class="feat-item"><div class="feat-dot fd-'+f.icon+'">'+
+        (f.icon==='yes'?'✓':f.icon==='no'?'✗':'~')+'</div>'+f.text+'</li>';
+    }).join('');
+    var notesHtml = c.notes.map(function(n){
+      return '<li class="note-item">'+n+'</li>';
+    }).join('');
+    return '<div class="car-card '+budgetClass(c)+'" data-id="'+c.id+'">'+
+      '<div class="card-head">'+
+        '<div class="card-head-left">'+
+          '<div class="card-top-row">'+
+            '<div>'+
+              '<div class="card-badges-row">'+
+                '<span class="card-badge '+c.tag+'">'+c.tagLabel+'</span>'+
+                styleBadge(c.style)+ptBadge(c.power)+
+              '</div>'+
+              '<div class="card-name">'+c.name+'</div>'+
+              '<div class="card-sub">'+c.trim+(c.dealer?' · <span style="font-size:10px;color:#888">'+c.dealer.split('—')[0].trim()+'</span>':'')+'</div>'+
+            '</div>'+
+            '<span class="rank-badge">★ '+c.rank+'/10</span>'+
+          '</div>'+
+          '<div class="seat-badges">'+
+            seatBadge(c.heated==='yes'?'yes':c.heated==='trim'?'trim':'no', '🔥 '+c.heatedLabel)+
+            seatBadge(c.cooledStatus, '❄️ '+c.cooledLabel)+
+          '</div>'+
+        '</div>'+
+        '<div class="card-mpg"><div class="mpg-num" style="'+(c.power==='ev'?'color:var(--blue)':'')+'">'+c.mpgNum+'</div><div class="mpg-lbl">'+c.mpg+'</div></div>'+
+      '</div>'+
+      '<div class="price-row">'+
+        '<div class="price-cell '+priceHighlight(m,'new')+'"><div class="price-lbl">Buy New</div><div class="price-val">'+c.newLabel+'</div><div class="price-note">CA all-in est.</div></div>'+
+        '<div class="price-cell '+priceHighlight(m,'used')+'"><div class="price-lbl">Used / CPO</div><div class="price-val">'+c.usedLabel+'</div><div class="price-note">2022–24 est.</div></div>'+
+        '<div class="price-cell '+(priceHighlight(m,'lease')||'hi')+'"><div class="price-lbl">Lease / mo</div><div class="price-val">'+c.leaseLabel+'</div><div class="price-note">36 mo / 10K mi est. + ~'+c.insLabel+' insur</div></div>'+
+      '</div>'+
+      (c.caveat ? '<div class="caveat-bar">'+c.caveat+'</div>' : '')+
+      '<button class="card-toggle-btn" onclick="toggleCard(this)">Features &amp; Notes <span class="chevron">▼</span></button>'+
+      '<div class="card-details">'+
+        '<div><div class="details-panel-lbl">Key Features</div><ul class="feat-list">'+featHtml+'</ul></div>'+
+        '<div><div class="details-panel-lbl">Things to Know</div><ul class="notes-list">'+notesHtml+'</ul></div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function toggleCard(btn) {
+  var details = btn.nextElementSibling;
+  var open = details.classList.contains('open');
+  details.classList.toggle('open', !open);
+  btn.classList.toggle('open', !open);
+  btn.querySelector('.chevron').textContent = open ? '▼' : '▲';
+}
+
+// ══════════════════════════════════════════════
+// RENDER MASTER TABLE
+// ══════════════════════════════════════════════
+function sortTable(col) {
+  if (sortCol === col) { sortDir = sortDir==='asc'?'desc':'asc'; }
+  else { sortCol=col; sortDir=(col==='rank')?'desc':'asc'; }
+  // update header arrows
+  document.querySelectorAll('.master-table th').forEach(function(th){
+    th.classList.remove('sorted');
+    th.querySelector('.sort-arrow').textContent='↕';
+  });
+  var activeH = document.querySelector('.master-table th[data-col="'+col+'"]');
+  if (activeH) { activeH.classList.add('sorted'); activeH.querySelector('.sort-arrow').textContent = sortDir==='asc'?'↑':'↓'; }
+  renderMaster();
+}
+
+function renderMaster() {
+  var cars = getFiltered().slice();
+  var tbody = document.getElementById('master-tbody');
+  var noR = document.getElementById('master-no-results');
+  if (cars.length===0) { tbody.innerHTML=''; noR.classList.add('show'); return; }
+  noR.classList.remove('show');
+  // sort
+  cars.sort(function(a,b){
+    var av = a[sortCol], bv = b[sortCol];
+    if (typeof av==='string') av=av.toLowerCase(), bv=bv.toLowerCase();
+    if (av<bv) return sortDir==='asc'?-1:1;
+    if (av>bv) return sortDir==='asc'?1:-1;
+    return 0;
+  });
+  var m = filters.mode;
+  tbody.innerHTML = cars.map(function(c){
+    var heatCell = c.heated==='yes'?'<span class="chk-yes">✓</span>':c.heated==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
+    var coolCell = c.cooledStatus==='yes'?'<span class="chk-yes">✓</span>':c.cooledStatus==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
+    var budgetIcon = c.budgetFit==='near'?'🟢':c.budgetFit==='over'?'🟡':'🔴';
+    var totalCell = '$'+(c.leaseLow+c.insLow)+'+';
+    var newStyle  = m==='new'?'font-weight:700;color:var(--accent)':'';
+    var usedStyle = m==='used'?'font-weight:700;color:var(--accent)':'';
+    var leaseStyle= (m==='lease'||m==='all')?'font-weight:700;color:var(--accent)':'';
+    return '<tr class="'+budgetClass(c)+'">'+
+      '<td>'+c.name+'<br><span style="font-size:10px;color:#888;font-weight:400">'+c.trim+'</span></td>'+
+      '<td>'+styleBadge(c.style)+'</td>'+
+      '<td>'+ptBadge(c.power)+'</td>'+
+      '<td style="'+usedStyle+'">'+c.usedLabel+'</td>'+
+      '<td style="'+newStyle+'">'+c.newLabel+'</td>'+
+      '<td style="'+leaseStyle+'">'+c.leaseLabel+'</td>'+
+      '<td>'+c.insLabel+'</td>'+
+      '<td style="font-weight:600">'+totalCell+'</td>'+
+      '<td>'+heatCell+'</td>'+
+      '<td>'+coolCell+'</td>'+
+      '<td>'+budgetIcon+'</td>'+
+      '<td class="rank-cell">★ '+c.rank+'</td>'+
+    '</tr>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// RENDER COMPARE TABLE
+// ══════════════════════════════════════════════
+function renderCompare() {
+  var cars = getFiltered();
+  var tbody = document.getElementById('compare-tbody');
+  var noR = document.getElementById('compare-no-results');
+  if (cars.length===0) { tbody.innerHTML=''; noR.classList.add('show'); return; }
+  noR.classList.remove('show');
+  // sort by rank desc
+  cars = cars.slice().sort(function(a,b){return b.rank-a.rank});
+  tbody.innerHTML = cars.map(function(c){
+    var heatCell = c.heated==='yes'?'<span class="chk-yes">✓</span>':c.heated==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
+    var coolCell = c.cooledStatus==='yes'?'<span class="chk-yes">✓</span>':c.cooledStatus==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
+    return '<tr>'+
+      '<td class="tcar">'+c.name+'<br><span style="font-size:10px;color:#888;font-weight:400">'+c.trim+'</span></td>'+
+      '<td>'+styleBadge(c.style)+'</td>'+
+      '<td>'+ptBadge(c.power)+'</td>'+
+      '<td>'+c.newLabel+'</td>'+
+      '<td class="tbest">'+c.usedLabel+'</td>'+
+      '<td class="tbest">'+c.leaseLabel+'</td>'+
+      '<td>'+c.insLabel+'</td>'+
+      '<td>'+heatCell+'</td>'+
+      '<td>'+coolCell+'</td>'+
+      '<td><span class="tag '+c.tag+'">'+c.tagLabel+'</span></td>'+
+    '</tr>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════════════════
+var filterPages = ['master','cars','compare'];
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.pill-btn').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  window.scrollTo({top:0,behavior:'smooth'});
+  // show/hide filter bar
+  document.getElementById('filter-bar').style.display = filterPages.indexOf(id)>=0 ? '' : 'none';
+}
+
+function renderAll() {
+  renderMaster();
+  renderCards();
+  renderCompare();
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function(){
+  // init sort header
+  var h = document.querySelector('.master-table th[data-col="rank"]');
+  if (h) { h.classList.add('sorted'); h.querySelector('.sort-arrow').textContent='↓'; }
+  renderAll();
+});
+</script>
 </body>
 </html>
