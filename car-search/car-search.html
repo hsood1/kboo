@@ -151,7 +151,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 
 /* ── MASTER TABLE ── */
 .master-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:14px;background:white;box-shadow:0 2px 12px rgba(0,0,0,.05)}
-.master-table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+.master-table{width:100%;border-collapse:collapse;font-size:12px;min-width:880px}
 .master-table thead{background:var(--charcoal);color:white;position:sticky;top:0}
 .master-table th{padding:10px 12px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;cursor:pointer;user-select:none}
 .master-table th:hover{background:#333}
@@ -309,7 +309,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 <div class="pg">
   <div class="section-eyebrow">All Options</div>
   <div class="section-h2">Master View</div>
-  <div class="section-sub">Every car × every data point. Tap any column header to sort. Filters above apply here too.</div>
+  <div class="section-sub">Every car × every data point. Tap any column header to sort. Filters above apply here too. <strong>New /mo</strong> &amp; <strong>Used /mo</strong> = loan payment at 10% down; add <strong>+Insur/mo</strong> for the all-in cost (insurance applies to leases too).</div>
   <div class="master-wrap">
     <table class="master-table" id="master-table">
       <thead>
@@ -317,11 +317,12 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
           <th onclick="sortTable('name')"       data-col="name">Car <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('style')"      data-col="style">Style <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('power')"      data-col="power">Power <span class="sort-arrow">↕</span></th>
-          <th onclick="sortTable('usedLow')"    data-col="usedLow">Used/CPO <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('newLow')"     data-col="newLow">Buy New <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('newMoLo')"    data-col="newMoLo">New /mo <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('usedLow')"    data-col="usedLow">Used/CPO <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('usedMoLo')"   data-col="usedMoLo">Used /mo <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('leaseLow')"   data-col="leaseLow">Lease/mo <span class="sort-arrow">↕</span></th>
-          <th onclick="sortTable('insLow')"     data-col="insLow">Insur/mo <span class="sort-arrow">↕</span></th>
-          <th onclick="sortTable('totalLease')" data-col="totalLease">Total/mo <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('insLow')"     data-col="insLow">+Insur/mo <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('heated')"     data-col="heated">🔥 Heat <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('cooled')"     data-col="cooled">❄️ Cool <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('budget')"     data-col="budget">Budget <span class="sort-arrow">↕</span></th>
@@ -331,7 +332,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
       <tbody id="master-tbody"></tbody>
     </table>
   </div>
-  <p style="font-size:11px;color:var(--soft);margin-top:8px;padding:0 2px">Total/mo = lease + insurance (low estimates). Budget: 🟢 near $30K buy or &lt;$450/mo lease · 🟡 somewhat over · 🔴 significantly over. ★ Rank = Claude editorial score 1–10.</p>
+  <p style="font-size:11px;color:var(--soft);margin-top:8px;padding:0 2px">Monthly payments assume 10% down, 72-mo loan (new ~6.5% · used ~7.5% APR). <strong>+Insur/mo</strong> applies to every row, leases included — add it to any /mo column for the true cost. Budget: 🟢 near $30K buy or &lt;$450/mo lease · 🟡 somewhat over · 🔴 significantly over. ★ Rank = Claude editorial score 1–10.</p>
   <div class="no-results" id="master-no-results">No cars match the current filters. Try adjusting above.</div>
 </div>
 </div>
@@ -343,6 +344,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
   <div class="section-h2">All Options</div>
   <div class="section-sub">Tap a card to expand features &amp; notes. Filters above apply. Left border = budget fit: 🟢 near · 🟡 over · 🔴 significantly over.</div>
   <div id="cards-container"></div>
+  <p style="font-size:11px;color:var(--soft);margin-top:10px;padding:0 2px;line-height:1.6"><strong>“All-in /mo” = loan or lease payment + insurance.</strong> Buy = 10% down, 72-month loan (new ~6.5% APR · used/CPO ~7.5% APR). Lease = 36 mo / 10K mi/yr. Insurance is included in every monthly figure, leases included. Verify rates with the lender — APRs vary with credit.</p>
   <div class="no-results" id="cards-no-results">No cars match the current filters. Try adjusting above.</div>
 </div>
 </div>
@@ -352,7 +354,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 <div class="pg">
   <div class="section-eyebrow">Side by Side</div>
   <div class="section-h2">Full Comparison</div>
-  <div class="section-sub">CA all-in estimates. Lease = 36 mo / 10K mi/yr. Filters above apply.</div>
+  <div class="section-sub">CA all-in estimates. Buy prices show the financed payment below (10% down, 72-mo loan). Lease = 36 mo / 10K mi/yr. Add Insur/mo for the true monthly. Filters above apply.</div>
   <div class="tbl-wrap">
     <table class="sum-table" id="compare-table">
       <thead><tr>
@@ -844,6 +846,80 @@ const CARS = [
       'CPO 2022–23 XLE at $23–30K hits buy budget with room to spare.',
     ]
   },
+  {
+    id:'civic-hybrid',
+    name:'Honda Civic Hybrid',
+    trim:'Sport Touring',
+    style:'sedan',
+    power:'hybrid',
+    mpg:'49 city',
+    mpgNum:49,
+    rank:6,
+    rankNote:'Genuine in-budget NEW option from the trusted Honda Poway dealer. Excellent hybrid, bigger than a Corolla. Trade-off: no cooled seats on any Civic.',
+    tag:'tag-budget',tagLabel:'New in Budget',
+    budgetFit:'near',
+    newLow:30000, newHigh:34000, newLabel:'~$30–34K',
+    usedLow:26000, usedHigh:30000, usedLabel:'~$26–30K',
+    leaseLow:330, leaseHigh:390, leaseLabel:'~$330–390',
+    insLow:180, insHigh:240, insLabel:'~$180–240',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'no', cooledNote:'Not offered on any Civic trim',
+    heatedLabel:'✓ Sport Touring',cooledLabel:'✗ Not available',
+    dealer:'Honda Poway — Harry has multiple positive firsthand experiences.',
+    caveat:null,
+    features:[
+      {icon:'yes',text:'Heated front seats (Sport Touring)'},
+      {icon:'no', text:'No ventilated/cooled seats on any Civic'},
+      {icon:'yes',text:'Wireless CarPlay / Android Auto'},
+      {icon:'yes',text:'Honda Sensing safety suite standard'},
+      {icon:'yes',text:'Bose audio + 9" screen (Sport Touring)'},
+      {icon:'yes',text:'~49 MPG city — among the best in class'},
+      {icon:'yes',text:'Honda CPO: 7yr/100K powertrain warranty'},
+    ],
+    notes:[
+      'One of the few cars here that\'s genuinely in budget bought NEW (~$30–34K all-in).',
+      'Honda Poway is a trusted dealer — same advantage as the Accord.',
+      'Bigger and nicer than a Corolla, a step down in size from the Accord.',
+      'No cooled seats is the price of staying in budget on a new car — honest trade-off.',
+    ]
+  },
+  {
+    id:'corolla-hybrid',
+    name:'Toyota Corolla Hybrid',
+    trim:'SE / XLE · AWD avail',
+    style:'sedan',
+    power:'hybrid',
+    mpg:'50 city',
+    mpgNum:50,
+    rank:5,
+    rankNote:'Cheapest car here to buy NEW and run. Class-leading ~50 MPG and Toyota reliability. Compact and no cooled seats, but the surest way to stay well under the $30K budget.',
+    tag:'tag-budget',tagLabel:'Cheapest New',
+    budgetFit:'near',
+    newLow:26000, newHigh:31000, newLabel:'~$26–31K',
+    usedLow:21000, usedHigh:26000, usedLabel:'~$21–26K',
+    leaseLow:300, leaseHigh:360, leaseLabel:'~$300–360',
+    insLow:170, insHigh:220, insLabel:'~$170–220',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'trim', cooledStatus:'no', cooledNote:'Not available on any trim',
+    heatedLabel:'⚠️ SE/XLE',cooledLabel:'✗ Not available',
+    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — unverified by Harry. Inland negotiates more.',
+    caveat:null,
+    features:[
+      {icon:'par',text:'Heated front seats — XLE (or SE with package)'},
+      {icon:'no', text:'No ventilated/cooled seats on any trim'},
+      {icon:'yes',text:'~50 MPG city — best in this whole list'},
+      {icon:'yes',text:'Toyota Safety Sense 3.0 standard'},
+      {icon:'yes',text:'Wireless CarPlay / Android Auto'},
+      {icon:'yes',text:'AWD available (rare in the class)'},
+      {icon:'yes',text:'Toyota CPO: 7yr/100K powertrain warranty'},
+    ],
+    notes:[
+      'Comfortably in budget bought NEW (~$26–31K all-in) — and the cheapest to insure & fuel.',
+      'Compact sedan — smaller than the Accord/Camry; confirm the size feels right.',
+      'No cooled seats on any trim; a $40–80 seat cooling cushion can partly substitute.',
+      'Best pick if staying under budget is the #1 priority.',
+    ]
+  },
 ];
 
 // ══════════════════════════════════════════════
@@ -852,6 +928,23 @@ const CARS = [
 const filters = { mode:'all', style:'all', power:'all', budget:'all' };
 let sortCol = 'rank';
 let sortDir = 'desc'; // desc = highest rank first
+
+// ══════════════════════════════════════════════
+// FINANCE — monthly loan payment assuming 10% down
+// New: 72 mo @ ~6.5% APR · Used/CPO: 72 mo @ ~7.5% APR
+// ══════════════════════════════════════════════
+const DOWN = 0.10, TERM = 72, NEW_APR = 0.065, USED_APR = 0.075;
+function loanMo(price, apr){
+  var r = apr/12, L = price*(1-DOWN);
+  return Math.round(L*r/(1-Math.pow(1+r,-TERM)));
+}
+function fmtMo(lo, hi){ return lo===hi ? '$'+lo : '$'+lo+'–'+hi; }
+// All-in monthly (payment + insurance) for a given mode
+function allIn(c, mode){
+  if(mode==='new')  return {lo: c.newMoLo + c.insLow, hi: c.newMoHi + c.insHigh};
+  if(mode==='used') return {lo: c.usedMoLo + c.insLow, hi: c.usedMoHi + c.insHigh};
+  return {lo: c.leaseLow + c.insLow, hi: c.leaseHigh + c.insHigh}; // lease
+}
 
 function setFilter(key, val, btn) {
   filters[key] = val;
@@ -920,6 +1013,7 @@ function renderCards() {
     var notesHtml = c.notes.map(function(n){
       return '<li class="note-item">'+n+'</li>';
     }).join('');
+    var nMo = allIn(c,'new'), uMo = allIn(c,'used'), lMo = allIn(c,'lease');
     return '<div class="car-card '+budgetClass(c)+'" data-id="'+c.id+'">'+
       '<div class="card-head">'+
         '<div class="card-head-left">'+
@@ -942,9 +1036,9 @@ function renderCards() {
         '<div class="card-mpg"><div class="mpg-num" style="'+(c.power==='ev'?'color:var(--blue)':'')+'">'+c.mpgNum+'</div><div class="mpg-lbl">'+c.mpg+'</div></div>'+
       '</div>'+
       '<div class="price-row">'+
-        '<div class="price-cell '+priceHighlight(m,'new')+'"><div class="price-lbl">Buy New</div><div class="price-val">'+c.newLabel+'</div><div class="price-note">CA all-in est.</div></div>'+
-        '<div class="price-cell '+priceHighlight(m,'used')+'"><div class="price-lbl">Used / CPO</div><div class="price-val">'+c.usedLabel+'</div><div class="price-note">2022–24 est.</div></div>'+
-        '<div class="price-cell '+(priceHighlight(m,'lease')||'hi')+'"><div class="price-lbl">Lease / mo</div><div class="price-val">'+c.leaseLabel+'</div><div class="price-note">36 mo / 10K mi est. + ~'+c.insLabel+' insur</div></div>'+
+        '<div class="price-cell '+priceHighlight(m,'new')+'"><div class="price-lbl">Buy New</div><div class="price-val">'+c.newLabel+'</div><div class="price-note">10% down · ≈'+fmtMo(nMo.lo,nMo.hi)+'/mo all-in</div></div>'+
+        '<div class="price-cell '+priceHighlight(m,'used')+'"><div class="price-lbl">Used / CPO</div><div class="price-val">'+c.usedLabel+'</div><div class="price-note">10% down · ≈'+fmtMo(uMo.lo,uMo.hi)+'/mo all-in</div></div>'+
+        '<div class="price-cell '+(priceHighlight(m,'lease')||'hi')+'"><div class="price-lbl">Lease / mo</div><div class="price-val">'+c.leaseLabel+'</div><div class="price-note">36mo/10K · ≈'+fmtMo(lMo.lo,lMo.hi)+'/mo all-in</div></div>'+
       '</div>'+
       (c.caveat ? '<div class="caveat-bar">'+c.caveat+'</div>' : '')+
       '<button class="card-toggle-btn" onclick="toggleCard(this)">Features &amp; Notes <span class="chevron">▼</span></button>'+
@@ -999,19 +1093,22 @@ function renderMaster() {
     var heatCell = c.heated==='yes'?'<span class="chk-yes">✓</span>':c.heated==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
     var coolCell = c.cooledStatus==='yes'?'<span class="chk-yes">✓</span>':c.cooledStatus==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
     var budgetIcon = c.budgetFit==='near'?'🟢':c.budgetFit==='over'?'🟡':'🔴';
-    var totalCell = '$'+(c.leaseLow+c.insLow)+'+';
-    var newStyle  = m==='new'?'font-weight:700;color:var(--accent)':'';
-    var usedStyle = m==='used'?'font-weight:700;color:var(--accent)':'';
-    var leaseStyle= (m==='lease'||m==='all')?'font-weight:700;color:var(--accent)':'';
+    var newMoCell  = fmtMo(c.newMoLo,  c.newMoHi);
+    var usedMoCell = fmtMo(c.usedMoLo, c.usedMoHi);
+    var hl = 'font-weight:700;color:var(--accent)';
+    var newStyle    = m==='new' ? hl : '';
+    var usedStyle   = m==='used'? hl : '';
+    var leaseStyle  = (m==='lease'||m==='all') ? hl : '';
     return '<tr class="'+budgetClass(c)+'">'+
       '<td>'+c.name+'<br><span style="font-size:10px;color:#888;font-weight:400">'+c.trim+'</span></td>'+
       '<td>'+styleBadge(c.style)+'</td>'+
       '<td>'+ptBadge(c.power)+'</td>'+
-      '<td style="'+usedStyle+'">'+c.usedLabel+'</td>'+
       '<td style="'+newStyle+'">'+c.newLabel+'</td>'+
+      '<td style="'+newStyle+'">'+newMoCell+'</td>'+
+      '<td style="'+usedStyle+'">'+c.usedLabel+'</td>'+
+      '<td style="'+usedStyle+'">'+usedMoCell+'</td>'+
       '<td style="'+leaseStyle+'">'+c.leaseLabel+'</td>'+
       '<td>'+c.insLabel+'</td>'+
-      '<td style="font-weight:600">'+totalCell+'</td>'+
       '<td>'+heatCell+'</td>'+
       '<td>'+coolCell+'</td>'+
       '<td>'+budgetIcon+'</td>'+
@@ -1034,12 +1131,13 @@ function renderCompare() {
   tbody.innerHTML = cars.map(function(c){
     var heatCell = c.heated==='yes'?'<span class="chk-yes">✓</span>':c.heated==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
     var coolCell = c.cooledStatus==='yes'?'<span class="chk-yes">✓</span>':c.cooledStatus==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
+    var sub = 'font-size:10px;color:#888;font-weight:400';
     return '<tr>'+
-      '<td class="tcar">'+c.name+'<br><span style="font-size:10px;color:#888;font-weight:400">'+c.trim+'</span></td>'+
+      '<td class="tcar">'+c.name+'<br><span style="'+sub+'">'+c.trim+'</span></td>'+
       '<td>'+styleBadge(c.style)+'</td>'+
       '<td>'+ptBadge(c.power)+'</td>'+
-      '<td>'+c.newLabel+'</td>'+
-      '<td class="tbest">'+c.usedLabel+'</td>'+
+      '<td>'+c.newLabel+'<br><span style="'+sub+'">≈'+fmtMo(c.newMoLo,c.newMoHi)+'/mo</span></td>'+
+      '<td class="tbest">'+c.usedLabel+'<br><span style="'+sub+'">≈'+fmtMo(c.usedMoLo,c.usedMoHi)+'/mo</span></td>'+
       '<td class="tbest">'+c.leaseLabel+'</td>'+
       '<td>'+c.insLabel+'</td>'+
       '<td>'+heatCell+'</td>'+
@@ -1075,6 +1173,12 @@ function renderAll() {
 // INIT
 // ══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', function(){
+  // precompute monthly loan payments (10% down) so cards, master & sort all agree
+  CARS.forEach(function(c){
+    c.newMoLo  = loanMo(c.newLow,  NEW_APR);  c.newMoHi  = loanMo(c.newHigh,  NEW_APR);
+    c.usedMoLo = loanMo(c.usedLow, USED_APR); c.usedMoHi = loanMo(c.usedHigh, USED_APR);
+    c.leaseAllInLo = c.leaseLow + c.insLow;   // lease + insurance, low estimate (sortable)
+  });
   // init sort header
   var h = document.querySelector('.master-table th[data-col="rank"]');
   if (h) { h.classList.add('sorted'); h.querySelector('.sort-arrow').textContent='↓'; }

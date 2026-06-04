@@ -18,14 +18,17 @@ All car data lives in one `CARS` array in the `<script>` at the bottom of `<body
 Four independent filter rows (Mode · Style · Power · Budget), AND-combined in `getFiltered()`. `setFilter()` updates state + re-renders. The filter bar is shown only on Master/Cars/Compare (`filterPages`). **Mode** highlights the matching price column (`hi`) and dims the others (`dimmed`) rather than hiding them.
 
 ### Master table
-`renderMaster()` builds a sortable table; `sortTable(col)` toggles asc/desc (default = rank desc). Horizontally scrollable on mobile. `Total/mo` = `leaseLow + insLow` (most useful real-world number).
+`renderMaster()` builds a sortable table; `sortTable(col)` toggles asc/desc (default = rank desc). Horizontally scrollable on mobile. Columns include **New /mo** and **Used /mo** (financed payments) and **+Insur/mo** (applies to every row, leases included).
+
+### Finance model (computed, not stored)
+`loanMo(price, apr)` returns a monthly loan payment assuming **10% down, 72-month term** (new ~6.5% APR, used/CPO ~7.5% APR). On load, an init loop precomputes `newMoLo/Hi` and `usedMoLo/Hi` on each car so cards, the Master table, and sorting all agree. `allIn(c, mode)` returns the **payment + insurance** range for new/used/lease — so **insurance is folded into every monthly figure, leases included**. Cards show "≈$X–Y/mo all-in" under each price; the Master keeps payment and insurance as separate columns. Adjust the constants `DOWN / TERM / NEW_APR / USED_APR` to change assumptions globally.
 
 ### Card expand
 Each card's "Features & Notes" button calls `toggleCard()` (plain JS, toggles `.open`) — this replaces the old broken sibling-selector approach.
 
 ## Car data (estimates, June 2026)
 
-10 cars, ranked editorially:
+12 cars, ranked editorially:
 
 | Car | Style·Power | Rank | Why |
 |-----|-------------|------|-----|
@@ -37,8 +40,12 @@ Each card's "Features & Notes" button calls `toggleCard()` (plain JS, toggles `.
 | Toyota Camry Hybrid XLE | Sedan·Hybrid | 7 | Strong value, 2025 redesign, dealer TBD |
 | RAV4 Hybrid XLE Premium | SUV·Hybrid | 6 | Budget buy, no cooled seats |
 | Tucson Hybrid SEL Convenience | SUV·Hybrid | 6 | Cheapest SUV lease, no cooled |
+| **Honda Civic Hybrid Sport Touring** | Sedan·Hybrid | 6 | **In budget bought NEW**, trusted Honda Poway dealer, no cooled |
 | Hyundai Sonata Hybrid Limited | Sedan·Hybrid | 5 | Good value, dealer concerns — deprioritized |
 | RAV4 Hybrid XLE/LE | SUV·Hybrid | 5 | Most affordable, heated may need package |
+| **Toyota Corolla Hybrid SE/XLE** | Sedan·Hybrid | 5 | **Cheapest to buy NEW & run** (~50 MPG), compact, no cooled |
+
+**In-budget new options:** most hybrids here are $36K+ new, so Civic Hybrid (~$30–34K) and Corolla Hybrid (~$26–31K) were added as cars genuinely affordable bought new at ~$30K — the honest trade is they're smaller and lack cooled seats.
 
 **Budget fit** drives the card left-border stripe: 🟢 near (≤~$5K over $30K buy, or <$450/mo lease) · 🟡 somewhat over · 🔴 significantly over.
 
