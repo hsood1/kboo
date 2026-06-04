@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Car Guide — San Diego 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
@@ -33,8 +33,16 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 .sticky-nav{position:sticky;top:0;z-index:100;background:white;border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)}
 
 /* ── PILL NAV ── */
+.pill-nav-wrap{position:relative}
+.pill-nav-wrap::after{content:'';position:absolute;top:0;right:0;bottom:0;width:30px;pointer-events:none;background:linear-gradient(to right,rgba(255,255,255,0),rgba(255,255,255,.96))}
 .pill-nav{padding:10px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;display:flex;gap:8px}
 .pill-nav::-webkit-scrollbar{display:none}
+
+/* ── FILTER TOGGLE ── */
+.filter-toggle-row{display:none;align-items:center;gap:8px;border-top:1px solid var(--border);padding:8px 16px}
+.filter-toggle{flex:1;text-align:left;padding:8px 14px;border-radius:100px;border:1.5px solid var(--border);background:#faf8f5;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--charcoal);cursor:pointer}
+.filter-toggle strong{color:white;background:var(--accent);border-radius:100px;padding:1px 8px;font-size:11px;margin:0 2px}
+.filter-clear{flex-shrink:0;padding:8px 14px;border-radius:100px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:600;color:var(--blue);cursor:pointer;text-decoration:underline}
 .pill-btn{flex-shrink:0;padding:8px 18px;border-radius:100px;border:1.5px solid var(--border);background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--soft);cursor:pointer;transition:all .2s;white-space:nowrap}
 .pill-btn.active{background:var(--charcoal);border-color:var(--charcoal);color:white}
 
@@ -174,17 +182,6 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 .tag-budget{background:#ede8f5;color:#5a3a9a}
 .tag-warn  {background:#fef3cd;color:#856404}
 
-/* ── COMPARE TABLE ── */
-.tbl-wrap{overflow-x:auto;margin-bottom:14px;border-radius:14px;border:1px solid var(--border);background:white;box-shadow:0 2px 12px rgba(0,0,0,.05)}
-.sum-table{width:100%;border-collapse:collapse;font-size:12px}
-.sum-table thead{background:var(--charcoal);color:white}
-.sum-table th{padding:10px 12px;text-align:left;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
-.sum-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--mid);vertical-align:middle}
-.sum-table tr:last-child td{border-bottom:none}
-.sum-table tr:hover td{background:#faf8f5}
-.tcar{font-weight:600;color:var(--charcoal)}
-.tbest{color:var(--green);font-weight:600}
-
 /* ── INSURANCE ── */
 .ins-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .ins-card{background:white;border:1px solid var(--border);border-radius:12px;padding:13px 15px}
@@ -227,6 +224,58 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 /* ── FOOTER ── */
 .footer{background:var(--charcoal);color:rgba(255,255,255,.35);text-align:center;padding:14px;font-size:11px}
 
+/* ── START PAGE ── */
+.start-hi{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--charcoal);margin-bottom:6px}
+.start-intro{font-size:14px;color:var(--mid);line-height:1.6;margin-bottom:22px}
+.start-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:24px 0 12px;display:flex;align-items:center;gap:8px}
+.start-label::after{content:'';flex:1;height:1px;background:var(--border)}
+/* top-pick mini cards */
+.pick{display:flex;align-items:center;gap:13px;width:100%;text-align:left;background:white;border:1px solid var(--border);border-left:4px solid var(--border);border-radius:14px;padding:13px 15px;margin-bottom:10px;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 2px 10px rgba(0,0,0,.05);transition:transform .15s,box-shadow .15s}
+.pick:hover,.pick:active{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.1)}
+.pick.budget-green{border-left-color:var(--green)}.pick.budget-amber{border-left-color:var(--amber)}.pick.budget-red{border-left-color:var(--red)}
+.pick-rank{flex-shrink:0;width:40px;height:40px;border-radius:12px;background:var(--charcoal);color:var(--accent-light);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.pick-rank b{font-family:'Playfair Display',serif;font-size:17px;font-weight:900}
+.pick-rank span{font-size:7px;letter-spacing:.1em;opacity:.7}
+.pick-body{flex:1;min-width:0}
+.pick-name{font-size:15px;font-weight:700;color:var(--charcoal)}
+.pick-why{font-size:11.5px;color:var(--soft);line-height:1.45;margin-top:2px}
+.pick-num{flex-shrink:0;text-align:right}
+.pick-num b{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--accent);display:block;line-height:1}
+.pick-num span{font-size:9px;color:var(--soft);letter-spacing:.04em}
+.pick-arrow{flex-shrink:0;color:var(--border);font-size:18px}
+/* big button */
+.big-btn{display:block;width:100%;text-align:center;padding:14px;border-radius:14px;border:none;background:var(--charcoal);color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;transition:background .15s}
+.big-btn:hover{background:#333}
+.big-btn.ghost{background:white;color:var(--charcoal);border:1.5px solid var(--border)}
+/* two-up simple cards */
+.split2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scard{background:white;border:1px solid var(--border);border-radius:14px;padding:14px 15px}
+.scard-ico{font-size:20px;margin-bottom:6px}
+.scard-h{font-size:14px;font-weight:700;color:var(--charcoal);margin-bottom:5px}
+.scard-p{font-size:12px;color:var(--soft);line-height:1.55}
+.scard-foot{font-size:11px;color:var(--blue);margin-top:8px;font-weight:600;cursor:pointer;text-decoration:underline}
+/* highlight callout */
+.callout{background:var(--accent-pale);border:1px solid #e8c99a;border-radius:14px;padding:14px 16px;display:flex;gap:11px;align-items:flex-start}
+.callout-ico{font-size:19px;flex-shrink:0}
+.callout-h{font-size:13.5px;font-weight:700;color:#7a4a00;margin-bottom:3px}
+.callout-p{font-size:12px;color:var(--mid);line-height:1.55}
+/* numbered steps */
+.step{display:flex;gap:13px;align-items:flex-start;background:white;border:1px solid var(--border);border-radius:14px;padding:13px 15px;margin-bottom:10px}
+.step-n{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--green-light);color:var(--green);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.step-h{font-size:13.5px;font-weight:600;color:var(--charcoal);margin-bottom:2px}
+.step-p{font-size:12px;color:var(--soft);line-height:1.55}
+
+/* ── SWIPE HINT for wide tables ── */
+.swipe-hint{font-size:11px;color:var(--soft);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.swipe-hint span{font-size:13px;animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.hscroll{position:relative}
+.hscroll::after{content:'';position:absolute;top:0;right:0;bottom:0;width:32px;border-radius:0 14px 14px 0;pointer-events:none;background:linear-gradient(to right,rgba(255,255,255,0),rgba(255,255,255,.9))}
+
+/* ── CARD FLASH (when jumped to from a top pick) ── */
+.car-card.flash{animation:flash 1.6s ease-out}
+@keyframes flash{0%{box-shadow:0 0 0 3px var(--accent)}60%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 2px 12px rgba(0,0,0,.05)}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:480px){
   .price-row{grid-template-columns:1fr 1fr}
@@ -259,16 +308,23 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 <!-- STICKY NAV + FILTERS -->
 <div class="sticky-nav">
   <!-- Tab pills -->
+  <div class="pill-nav-wrap">
   <div class="pill-nav" id="pill-nav">
-    <button class="pill-btn active" data-page="master" onclick="showPage('master',this)">⚡ Master</button>
-    <button class="pill-btn" data-page="cars"    onclick="showPage('cars',this)">🚗 Cars</button>
-    <button class="pill-btn" data-page="compare" onclick="showPage('compare',this)">📊 Compare</button>
+    <button class="pill-btn active" data-page="start" onclick="showPage('start',this)">🏁 Start here</button>
+    <button class="pill-btn" data-page="cars"    onclick="showPage('cars',this)">🚗 The cars</button>
+    <button class="pill-btn" data-page="master"  onclick="showPage('master',this)">📊 Compare all</button>
     <button class="pill-btn" data-page="ins"     onclick="showPage('ins',this)">🛡️ Insurance</button>
     <button class="pill-btn" data-page="lease"   onclick="showPage('lease',this)">📋 Leasing 101</button>
     <button class="pill-btn" data-page="tips"    onclick="showPage('tips',this)">💡 Tips</button>
   </div>
-  <!-- Filter rows — only shown on Master + Cars pages -->
-  <div class="filter-bar" id="filter-bar">
+  </div>
+  <!-- Filter toggle — only shown on browsing pages -->
+  <div class="filter-toggle-row" id="filter-toggle-row">
+    <button class="filter-toggle" id="filter-toggle" onclick="toggleFilters()">🔍 Filter cars ▸</button>
+    <button class="filter-clear" id="filter-clear" onclick="resetFilters()" style="display:none">Clear</button>
+  </div>
+  <!-- Filter rows — hidden until the toggle is opened -->
+  <div class="filter-bar" id="filter-bar" style="display:none">
     <div class="filter-row">
       <span class="filter-row-label">Mode</span>
       <button class="filter-btn active" data-filter="mode" data-val="all"   onclick="setFilter('mode','all',this)">All</button>
@@ -304,16 +360,62 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
      both the Cards page and Master table
      ══════════════════════════════════════ -->
 
-<!-- ════════════ PAGE: MASTER ════════════ -->
-<div class="page active" id="page-master">
+<!-- ════════════ PAGE: START HERE ════════════ -->
+<div class="page active" id="page-start">
+<div class="pg">
+  <div class="section-eyebrow">Start Here</div>
+  <div class="start-hi">Hi Khusbu 👋</div>
+  <div class="start-intro">A friendly guide to finding your first car in San Diego — no jargon, no rush. Here's the short version; tap into any part to go deeper. Everything's an estimate to get you oriented, not a quote.</div>
+
+  <div class="start-label">★ Your top picks</div>
+  <div id="top-picks"></div>
+  <button class="big-btn ghost" onclick="showPageById('cars')">See all 12 cars →</button>
+
+  <div class="start-label">Lease or buy?</div>
+  <div class="split2">
+    <div class="scard">
+      <div class="scard-ico">💳</div>
+      <div class="scard-h">Lease</div>
+      <div class="scard-p">Lower monthly payment, a new car every ~3 years, then hand back the keys. Best if you drive under ~12K mi/year and like staying under warranty.</div>
+      <div class="scard-foot" onclick="showPageById('lease')">How leasing works →</div>
+    </div>
+    <div class="scard">
+      <div class="scard-ico">🔑</div>
+      <div class="scard-h">Buy</div>
+      <div class="scard-p">It's yours — no mileage limits, build equity, keep it as long as you like. A 2–3 yr used/CPO car stretches your budget the furthest.</div>
+      <div class="scard-foot" onclick="showPageById('master')">Compare the numbers →</div>
+    </div>
+  </div>
+
+  <div class="start-label">Staying near $30K</div>
+  <div class="callout">
+    <div class="callout-ico">💰</div>
+    <div>
+      <div class="callout-h">Yes, there are in-budget options</div>
+      <div class="callout-p">Most hybrids here run $36K+ new, but a <strong>new Honda Civic Hybrid (~$30–34K)</strong> or <strong>Toyota Corolla Hybrid (~$26–31K)</strong> fit a ~$30K budget brand-new. Prefer something bigger? A <strong>certified used (CPO) RAV4 or Accord</strong> lands around $28–33K. The honest trade on the cheapest options: smaller, and usually no cooled seats.</div>
+    </div>
+  </div>
+
+  <div class="start-label">What to do next</div>
+  <div class="step"><div class="step-n">1</div><div><div class="step-h">Test drive your top 2–3</div><div class="step-p">Sit in them, feel the size. Curious about the Tesla? Drive it first — it has no physical buttons, so it's worth knowing if that suits you.</div></div></div>
+  <div class="step"><div class="step-n">2</div><div><div class="step-h">Get insurance quotes before you buy</div><div class="step-p">Run Geico, Mercury &amp; Progressive — it must be active the day you drive off. See the Insurance tab for rough numbers.</div></div></div>
+  <div class="step"><div class="step-n">3</div><div><div class="step-h">Shop the last week of September</div><div class="step-p">End of quarter = best deals. Honda Poway is a dealer we already trust — a good first stop.</div></div></div>
+</div>
+</div>
+
+<!-- ════════════ PAGE: COMPARE ALL (table) ════════════ -->
+<div class="page" id="page-master">
 <div class="pg">
   <div class="section-eyebrow">All Options</div>
-  <div class="section-h2">Master View</div>
-  <div class="section-sub">Every car × every data point. Tap any column header to sort. Filters above apply here too. <strong>New /mo</strong> &amp; <strong>Used /mo</strong> = loan payment at 10% down; add <strong>+Insur/mo</strong> for the all-in cost (insurance applies to leases too).</div>
+  <div class="section-h2">Compare Every Car</div>
+  <div class="section-sub">Every car, side by side. Tap any column heading to sort (it starts on our ranking). <strong>New /mo</strong> &amp; <strong>Used /mo</strong> are loan payments at 10% down; add <strong>+Insur/mo</strong> for the true monthly cost — insurance applies to leases too.</div>
+  <div class="swipe-hint"><span>↔</span> Swipe the table sideways to see every column</div>
+  <div class="hscroll">
   <div class="master-wrap">
     <table class="master-table" id="master-table">
       <thead>
         <tr>
+          <th onclick="sortTable('rank')"       data-col="rank" class="sorted">★ Score <span class="sort-arrow">↓</span></th>
           <th onclick="sortTable('name')"       data-col="name">Car <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('style')"      data-col="style">Style <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('power')"      data-col="power">Power <span class="sort-arrow">↕</span></th>
@@ -325,47 +427,15 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
           <th onclick="sortTable('insLow')"     data-col="insLow">+Insur/mo <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('heated')"     data-col="heated">🔥 Heat <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('cooled')"     data-col="cooled">❄️ Cool <span class="sort-arrow">↕</span></th>
-          <th onclick="sortTable('budget')"     data-col="budget">Budget <span class="sort-arrow">↕</span></th>
-          <th onclick="sortTable('rank')"       data-col="rank" class="sorted">★ Rank <span class="sort-arrow">↓</span></th>
+          <th>Our Pick</th>
         </tr>
       </thead>
       <tbody id="master-tbody"></tbody>
     </table>
   </div>
-  <p style="font-size:11px;color:var(--soft);margin-top:8px;padding:0 2px">Monthly payments assume 10% down, 72-mo loan (new ~6.5% · used ~7.5% APR). <strong>+Insur/mo</strong> applies to every row, leases included — add it to any /mo column for the true cost. Budget: 🟢 near $30K buy or &lt;$450/mo lease · 🟡 somewhat over · 🔴 significantly over. ★ Rank = Claude editorial score 1–10.</p>
-  <div class="no-results" id="master-no-results">No cars match the current filters. Try adjusting above.</div>
-</div>
-</div>
-
-<!-- ════════════ PAGE: CARS ════════════ -->
-<div class="page" id="page-cars">
-<div class="pg">
-  <div class="section-eyebrow">Car Cards</div>
-  <div class="section-h2">All Options</div>
-  <div class="section-sub">Tap a card to expand features &amp; notes. Filters above apply. Left border = budget fit: 🟢 near · 🟡 over · 🔴 significantly over.</div>
-  <div id="cards-container"></div>
-  <p style="font-size:11px;color:var(--soft);margin-top:10px;padding:0 2px;line-height:1.6"><strong>“All-in /mo” = loan or lease payment + insurance.</strong> Buy = 10% down, 72-month loan (new ~6.5% APR · used/CPO ~7.5% APR). Lease = 36 mo / 10K mi/yr. Insurance is included in every monthly figure, leases included. Verify rates with the lender — APRs vary with credit.</p>
-  <div class="no-results" id="cards-no-results">No cars match the current filters. Try adjusting above.</div>
-</div>
-</div>
-
-<!-- ════════════ PAGE: COMPARE ════════════ -->
-<div class="page" id="page-compare">
-<div class="pg">
-  <div class="section-eyebrow">Side by Side</div>
-  <div class="section-h2">Full Comparison</div>
-  <div class="section-sub">CA all-in estimates. Buy prices show the financed payment below (10% down, 72-mo loan). Lease = 36 mo / 10K mi/yr. Add Insur/mo for the true monthly. Filters above apply.</div>
-  <div class="tbl-wrap">
-    <table class="sum-table" id="compare-table">
-      <thead><tr>
-        <th>Car</th><th>Style</th><th>Power</th>
-        <th>Buy New</th><th>Used/CPO</th><th>Lease/mo</th>
-        <th>Insur/mo</th><th>🔥</th><th>❄️</th><th>Pick</th>
-      </tr></thead>
-      <tbody id="compare-tbody"></tbody>
-    </table>
   </div>
-  <div class="no-results" id="compare-no-results">No cars match the current filters.</div>
+  <p style="font-size:11px;color:var(--soft);margin-top:8px;padding:0 2px">Monthly payments assume 10% down, 72-mo loan (new ~6.5% · used ~7.5% APR). <strong>+Insur/mo</strong> applies to every row, leases included — add it to any /mo column for the true cost. The colored left edge = budget fit: 🟢 near $30K buy or &lt;$450/mo lease · 🟡 somewhat over · 🔴 significantly over. ★ Score = Claude editorial rating, 1–10 (table sorts by it).</p>
+  <div class="no-results" id="master-no-results">No cars match these filters.<br><button class="big-btn" style="max-width:240px;margin:12px auto 0" onclick="resetFilters()">Show all cars</button></div>
 
   <div class="divider"></div>
   <div class="section-eyebrow">5-Year Snapshot</div>
@@ -383,6 +453,18 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
       <div style="font-size:11px;color:var(--mid);margin-top:4px;line-height:1.5">~$440 × 36 = $16K + $3K signing × 1.5 cycles. Always under warranty.</div>
     </div>
   </div>
+</div>
+</div>
+
+<!-- ════════════ PAGE: CARS ════════════ -->
+<div class="page" id="page-cars">
+<div class="pg">
+  <div class="section-eyebrow">The Cars</div>
+  <div class="section-h2">All 12 Options</div>
+  <div class="section-sub">Tap any card to open its features &amp; notes. The colored left edge shows budget fit: 🟢 near · 🟡 over · 🔴 well over. Want to narrow it down? Use <strong>🔍 Filter cars</strong> up top.</div>
+  <div id="cards-container"></div>
+  <p style="font-size:11px;color:var(--soft);margin-top:10px;padding:0 2px;line-height:1.6"><strong>“All-in /mo” = loan or lease payment + insurance.</strong> Buy = 10% down, 72-month loan (new ~6.5% APR · used/CPO ~7.5% APR). Lease = 36 mo / 10K mi/yr. Insurance is included in every monthly figure, leases included. Verify rates with the lender — APRs vary with credit.</p>
+  <div class="no-results" id="cards-no-results">No cars match these filters.<br><button class="big-btn" style="max-width:240px;margin:12px auto 0" onclick="resetFilters()">Show all cars</button></div>
 </div>
 </div>
 
@@ -925,7 +1007,7 @@ const CARS = [
 // ══════════════════════════════════════════════
 // FILTER STATE
 // ══════════════════════════════════════════════
-const filters = { mode:'all', style:'all', power:'all', budget:'all' };
+let filters = { mode:'all', style:'all', power:'all', budget:'all' };
 let sortCol = 'rank';
 let sortDir = 'desc'; // desc = highest rank first
 
@@ -952,6 +1034,7 @@ function setFilter(key, val, btn) {
   document.querySelectorAll('[data-filter="'+key+'"]').forEach(function(b){ b.classList.remove('active') });
   btn.classList.add('active');
   renderAll();
+  updateFilterChrome();
 }
 
 function getFiltered() {
@@ -1092,7 +1175,6 @@ function renderMaster() {
   tbody.innerHTML = cars.map(function(c){
     var heatCell = c.heated==='yes'?'<span class="chk-yes">✓</span>':c.heated==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
     var coolCell = c.cooledStatus==='yes'?'<span class="chk-yes">✓</span>':c.cooledStatus==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
-    var budgetIcon = c.budgetFit==='near'?'🟢':c.budgetFit==='over'?'🟡':'🔴';
     var newMoCell  = fmtMo(c.newMoLo,  c.newMoHi);
     var usedMoCell = fmtMo(c.usedMoLo, c.usedMoHi);
     var hl = 'font-weight:700;color:var(--accent)';
@@ -1100,7 +1182,8 @@ function renderMaster() {
     var usedStyle   = m==='used'? hl : '';
     var leaseStyle  = (m==='lease'||m==='all') ? hl : '';
     return '<tr class="'+budgetClass(c)+'">'+
-      '<td>'+c.name+'<br><span style="font-size:10px;color:#888;font-weight:400">'+c.trim+'</span></td>'+
+      '<td class="rank-cell" style="font-size:14px;color:var(--accent)">★ '+c.rank+'</td>'+
+      '<td><strong>'+c.name+'</strong><br><span style="font-size:10px;color:#888;font-weight:400">'+c.trim+'</span></td>'+
       '<td>'+styleBadge(c.style)+'</td>'+
       '<td>'+ptBadge(c.power)+'</td>'+
       '<td style="'+newStyle+'">'+c.newLabel+'</td>'+
@@ -1108,37 +1191,6 @@ function renderMaster() {
       '<td style="'+usedStyle+'">'+c.usedLabel+'</td>'+
       '<td style="'+usedStyle+'">'+usedMoCell+'</td>'+
       '<td style="'+leaseStyle+'">'+c.leaseLabel+'</td>'+
-      '<td>'+c.insLabel+'</td>'+
-      '<td>'+heatCell+'</td>'+
-      '<td>'+coolCell+'</td>'+
-      '<td>'+budgetIcon+'</td>'+
-      '<td class="rank-cell">★ '+c.rank+'</td>'+
-    '</tr>';
-  }).join('');
-}
-
-// ══════════════════════════════════════════════
-// RENDER COMPARE TABLE
-// ══════════════════════════════════════════════
-function renderCompare() {
-  var cars = getFiltered();
-  var tbody = document.getElementById('compare-tbody');
-  var noR = document.getElementById('compare-no-results');
-  if (cars.length===0) { tbody.innerHTML=''; noR.classList.add('show'); return; }
-  noR.classList.remove('show');
-  // sort by rank desc
-  cars = cars.slice().sort(function(a,b){return b.rank-a.rank});
-  tbody.innerHTML = cars.map(function(c){
-    var heatCell = c.heated==='yes'?'<span class="chk-yes">✓</span>':c.heated==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
-    var coolCell = c.cooledStatus==='yes'?'<span class="chk-yes">✓</span>':c.cooledStatus==='trim'?'<span class="chk-trim">trim</span>':'<span class="chk-no">✗</span>';
-    var sub = 'font-size:10px;color:#888;font-weight:400';
-    return '<tr>'+
-      '<td class="tcar">'+c.name+'<br><span style="'+sub+'">'+c.trim+'</span></td>'+
-      '<td>'+styleBadge(c.style)+'</td>'+
-      '<td>'+ptBadge(c.power)+'</td>'+
-      '<td>'+c.newLabel+'<br><span style="'+sub+'">≈'+fmtMo(c.newMoLo,c.newMoHi)+'/mo</span></td>'+
-      '<td class="tbest">'+c.usedLabel+'<br><span style="'+sub+'">≈'+fmtMo(c.usedMoLo,c.usedMoHi)+'/mo</span></td>'+
-      '<td class="tbest">'+c.leaseLabel+'</td>'+
       '<td>'+c.insLabel+'</td>'+
       '<td>'+heatCell+'</td>'+
       '<td>'+coolCell+'</td>'+
@@ -1150,23 +1202,80 @@ function renderCompare() {
 // ══════════════════════════════════════════════
 // PAGE NAVIGATION
 // ══════════════════════════════════════════════
-var filterPages = ['master','cars','compare'];
+var filterPages = ['cars','master'];   // pages where the filter toggle appears
+var currentPage = 'start';
+var filtersOpen = false;
 
 function showPage(id, btn) {
+  currentPage = id;
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
   document.querySelectorAll('.pill-btn').forEach(function(b){b.classList.remove('active')});
   document.getElementById('page-'+id).classList.add('active');
-  btn.classList.add('active');
-  btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  if (btn) { btn.classList.add('active'); btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}); }
   window.scrollTo({top:0,behavior:'smooth'});
-  // show/hide filter bar
-  document.getElementById('filter-bar').style.display = filterPages.indexOf(id)>=0 ? '' : 'none';
+  // the filter toggle only lives on browsing pages
+  document.getElementById('filter-toggle-row').style.display = filterPages.indexOf(id)>=0 ? 'flex' : 'none';
+  applyFilterBarVisibility();
+}
+
+// jump straight to a tab by its name (used by Start-page buttons)
+function showPageById(id) {
+  var btn = document.querySelector('.pill-btn[data-page="'+id+'"]');
+  if (btn) showPage(id, btn);
+}
+
+// open the Cars tab and spotlight one specific car
+function goToCar(id) {
+  showPageById('cars');
+  setTimeout(function(){
+    var el = document.querySelector('.car-card[data-id="'+id+'"]');
+    if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  }, 90);
+}
+
+// ── FILTER CHROME ──
+function toggleFilters(){ filtersOpen = !filtersOpen; applyFilterBarVisibility(); }
+function applyFilterBarVisibility(){
+  var onFilter = filterPages.indexOf(currentPage) >= 0;
+  document.getElementById('filter-bar').style.display = (onFilter && filtersOpen) ? 'flex' : 'none';
+  updateFilterChrome();
+}
+function updateFilterChrome(){
+  var active = ['mode','style','power','budget'].filter(function(k){ return filters[k] !== 'all'; }).length;
+  var t = document.getElementById('filter-toggle');
+  if (t) t.innerHTML = '🔍 Filter cars' + (active ? ' <strong>'+active+'</strong>' : '') + (filtersOpen ? ' ▾' : ' ▸');
+  var c = document.getElementById('filter-clear');
+  if (c) c.style.display = active ? '' : 'none';
+}
+function resetFilters(){
+  filters = { mode:'all', style:'all', power:'all', budget:'all' };
+  document.querySelectorAll('.filter-btn').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-val') === 'all');
+  });
+  renderAll();
+  updateFilterChrome();
+}
+
+// ── TOP PICKS (Start page) ──
+function cheapestMo(c){ return Math.min(c.leaseLow + c.insLow, c.usedMoLo + c.insLow, c.newMoLo + c.insLow); }
+function renderTopPicks(){
+  var top = CARS.slice().sort(function(a,b){ return b.rank - a.rank; }).slice(0,3);
+  document.getElementById('top-picks').innerHTML = top.map(function(c){
+    return '<button class="pick '+budgetClass(c)+'" onclick="goToCar(\''+c.id+'\')">'+
+      '<div class="pick-rank"><b>'+c.rank+'</b><span>SCORE</span></div>'+
+      '<div class="pick-body">'+
+        '<div class="pick-name">'+c.name+'</div>'+
+        '<div class="pick-why">'+c.trim+' · '+c.tagLabel+'</div>'+
+      '</div>'+
+      '<div class="pick-num"><b>$'+cheapestMo(c)+'</b><span>/mo from</span></div>'+
+      '<div class="pick-arrow">›</div>'+
+    '</button>';
+  }).join('');
 }
 
 function renderAll() {
   renderMaster();
   renderCards();
-  renderCompare();
 }
 
 // ══════════════════════════════════════════════
@@ -1182,7 +1291,9 @@ document.addEventListener('DOMContentLoaded', function(){
   // init sort header
   var h = document.querySelector('.master-table th[data-col="rank"]');
   if (h) { h.classList.add('sorted'); h.querySelector('.sort-arrow').textContent='↓'; }
+  renderTopPicks();
   renderAll();
+  updateFilterChrome();
 });
 </script>
 </body>

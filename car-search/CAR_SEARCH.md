@@ -11,14 +11,21 @@ A single-file car shopping guide (`car-search.html`) for Harry's girlfriend (Khu
 ### Single source of truth
 All car data lives in one `CARS` array in the `<script>` at the bottom of `<body>`. Each entry holds pricing (`newLow/High`, `usedLow/High`, `leaseLow/High`, `insLow/High`), `style`, `power`, `budgetFit`, seat status (`heated`, `cooledStatus`), an editorial `rank` (1–10) + `rankNote`, a `tag`/`tagLabel`, optional `caveat`, and `features[]` / `notes[]`. Both the Cards page and the Master table render from this array — **edit a car once, both views update.**
 
-### Pages (6 tabs)
-`⚡ Master` (default) · `🚗 Cars` · `📊 Compare` · `🛡️ Insurance` · `📋 Leasing 101` · `💡 Tips`. `showPage()` toggles `.page.active`. Insurance/Leasing/Tips are static HTML; Master/Cars/Compare render from `CARS`.
+### Pages (6 tabs) — built for a non-technical phone user
+`🏁 Start here` **(default)** · `🚗 The cars` · `📊 Compare all` · `🛡️ Insurance` · `📋 Leasing 101` · `💡 Tips`. `showPage(id, btn)` toggles `.page.active`; `showPageById(id)` navigates by name (used by Start-page buttons). The hero header sits above the sticky nav on every tab.
 
-### Filters
-Four independent filter rows (Mode · Style · Power · Budget), AND-combined in `getFiltered()`. `setFilter()` updates state + re-renders. The filter bar is shown only on Master/Cars/Compare (`filterPages`). **Mode** highlights the matching price column (`hi`) and dims the others (`dimmed`) rather than hiding them.
+- **Start here** — the friendly landing. `renderTopPicks()` renders the top 3 cars by score as tappable mini-cards (`goToCar(id)` jumps to the Cars tab and flashes that card); plus plain-English lease-vs-buy cards, an in-budget callout, and 3 next-step cards. Set as default so she never lands on a spreadsheet.
+- **The cars** — the primary browse view; `renderCards()`.
+- **Compare all** — one sortable table (the old "Master" and "Compare" tables were merged — two spreadsheets confused the audience). `renderMaster()` + `sortTable()`. **Score (★) is the first column** and the default sort (desc). The 5-Year Snapshot lives at its bottom.
+- Insurance / Leasing 101 / Tips are static HTML.
 
-### Master table
-`renderMaster()` builds a sortable table; `sortTable(col)` toggles asc/desc (default = rank desc). Horizontally scrollable on mobile. Columns include **New /mo** and **Used /mo** (financed payments) and **+Insur/mo** (applies to every row, leases included).
+### Filters — collapsed by default
+Four AND-combined rows (Mode · Style · Power · Budget) in `getFiltered()`. They're **hidden behind a `🔍 Filter cars` toggle** (`toggleFilters()` / `applyFilterBarVisibility()`) so browsing — not querying — is the default. The toggle shows an active-count badge and a **Clear** button; `resetFilters()` restores all-to-`all` and is also wired to the "Show all cars" button in every empty state. The toggle row only appears on `filterPages` (`['cars','master']`).
+
+### Mobile UX details
+- Pinch-zoom is **enabled** (viewport has no `maximum-scale`) — never trap zoom for this user.
+- Horizontal-scroll affordances: a right-edge fade on the tab bar (`.pill-nav-wrap::after`) and on the table (`.hscroll::after`), plus a "↔ Swipe" caption above the table.
+- `+Insur/mo` applies to every row including lease; budget fit is the colored left edge of each card/row (no separate column).
 
 ### Finance model (computed, not stored)
 `loanMo(price, apr)` returns a monthly loan payment assuming **10% down, 72-month term** (new ~6.5% APR, used/CPO ~7.5% APR). On load, an init loop precomputes `newMoLo/Hi` and `usedMoLo/Hi` on each car so cards, the Master table, and sorting all agree. `allIn(c, mode)` returns the **payment + insurance** range for new/used/lease — so **insurance is folded into every monthly figure, leases included**. Cards show "≈$X–Y/mo all-in" under each price; the Master keeps payment and insurance as separate columns. Adjust the constants `DOWN / TERM / NEW_APR / USED_APR` to change assumptions globally.
