@@ -57,6 +57,11 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 .filter-btn.active.f-power{background:var(--green);border-color:var(--green)}
 .filter-btn.active.f-budget{background:#7a5a2a;border-color:#7a5a2a}
 
+/* ── QUICK IN-BUDGET CHIP ── */
+.quick-budget{margin:0 0 14px}
+.qb-btn{width:100%;padding:11px;border-radius:12px;border:1.5px solid var(--green);background:var(--green-light);color:var(--green);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .15s}
+.qb-btn.on{background:var(--green);color:white}
+
 /* ── PAGES ── */
 .page{display:none}
 .page.active{display:block}
@@ -347,9 +352,10 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
     </div>
     <div class="filter-row">
       <span class="filter-row-label">Budget</span>
-      <button class="filter-btn f-budget active" data-filter="budget" data-val="all"  onclick="setFilter('budget','all',this)">All</button>
-      <button class="filter-btn f-budget"        data-filter="budget" data-val="near" onclick="setFilter('budget','near',this)">🟢 Near Budget</button>
-      <button class="filter-btn f-budget"        data-filter="budget" data-val="over" onclick="setFilter('budget','over',this)">🔴 Over Budget</button>
+      <button class="filter-btn f-budget active" data-filter="budget" data-val="all"     onclick="setFilter('budget','all',this)">All</button>
+      <button class="filter-btn f-budget"        data-filter="budget" data-val="in"      onclick="setFilter('budget','in',this)">🟢 In Budget</button>
+      <button class="filter-btn f-budget"        data-filter="budget" data-val="stretch" onclick="setFilter('budget','stretch',this)">🟡 Stretch</button>
+      <button class="filter-btn f-budget"        data-filter="budget" data-val="over"    onclick="setFilter('budget','over',this)">🔴 Over</button>
     </div>
   </div>
 </div>
@@ -391,10 +397,11 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
   <div class="callout">
     <div class="callout-ico">💰</div>
     <div>
-      <div class="callout-h">Yes, there are in-budget options</div>
-      <div class="callout-p">Most hybrids here run $36K+ new, but a <strong>new Honda Civic Hybrid (~$30–34K)</strong> or <strong>Toyota Corolla Hybrid (~$26–31K)</strong> fit a ~$30K budget brand-new. Prefer something bigger? A <strong>certified used (CPO) RAV4 or Accord</strong> lands around $28–33K. The honest trade on the cheapest options: smaller, and usually no cooled seats.</div>
+      <div class="callout-h">Yes — plenty of in-budget options</div>
+      <div class="callout-p">A <strong>new Civic Hybrid (~$30–34K)</strong>, <strong>Corolla Hybrid (~$26–31K)</strong>, <strong>Prius</strong>, or <strong>Hyundai Elantra Hybrid (~$28–31K — even cooled seats)</strong> all fit a ~$30K budget brand-new. Want something bigger? A <strong>certified-used RAV4, Accord, or Camry</strong> lands around $27–33K. Every car is now scored with the budget weighted heavily.</div>
     </div>
   </div>
+  <button class="big-btn" style="margin-top:10px" onclick="showInBudget()">🟢 Show me the in-budget cars →</button>
 
   <div class="start-label">What to do next</div>
   <div class="step"><div class="step-n">1</div><div><div class="step-h">Test drive your top 2–3</div><div class="step-p">Sit in them, feel the size. Curious about the Tesla? Drive it first — it has no physical buttons, so it's worth knowing if that suits you.</div></div></div>
@@ -434,7 +441,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
     </table>
   </div>
   </div>
-  <p style="font-size:11px;color:var(--soft);margin-top:8px;padding:0 2px">Monthly payments assume 10% down, 72-mo loan (new ~6.5% · used ~7.5% APR). <strong>+Insur/mo</strong> applies to every row, leases included — add it to any /mo column for the true cost. The colored left edge = budget fit: 🟢 near $30K buy or &lt;$450/mo lease · 🟡 somewhat over · 🔴 significantly over. ★ Score = Claude editorial rating, 1–10 (table sorts by it).</p>
+  <p style="font-size:11px;color:var(--soft);margin-top:8px;padding:0 2px">Monthly payments assume 10% down, 72-mo loan (new ~6.5% · used ~7.5% APR). <strong>+Insur/mo</strong> applies to every row, leases included — add it to any /mo column for the true cost. The colored left edge = budget fit: 🟢 in budget (~$30K) · 🟡 a stretch · 🔴 well over. ★ Score = Claude editorial rating 1–10, now weighted heavily toward staying near the $30K budget (table sorts by it).</p>
   <div class="no-results" id="master-no-results">No cars match these filters.<br><button class="big-btn" style="max-width:240px;margin:12px auto 0" onclick="resetFilters()">Show all cars</button></div>
 
   <div class="divider"></div>
@@ -460,8 +467,9 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 <div class="page" id="page-cars">
 <div class="pg">
   <div class="section-eyebrow">The Cars</div>
-  <div class="section-h2">All 12 Options</div>
-  <div class="section-sub">Tap any card to open its features &amp; notes. The colored left edge shows budget fit: 🟢 near · 🟡 over · 🔴 well over. Want to narrow it down? Use <strong>🔍 Filter cars</strong> up top.</div>
+  <div class="section-h2">All 15 Options</div>
+  <div class="section-sub">Tap any card to open its features &amp; notes. The colored left edge shows budget fit: 🟢 in budget · 🟡 a stretch · 🔴 well over. Want more control? Use <strong>🔍 Filter cars</strong> up top.</div>
+  <div class="quick-budget"><button id="qb" class="qb-btn" onclick="toggleInBudget()">🟢 Show in-budget only</button></div>
   <div id="cards-container"></div>
   <p style="font-size:11px;color:var(--soft);margin-top:10px;padding:0 2px;line-height:1.6"><strong>“All-in /mo” = loan or lease payment + insurance.</strong> Buy = 10% down, 72-month loan (new ~6.5% APR · used/CPO ~7.5% APR). Lease = 36 mo / 10K mi/yr. Insurance is included in every monthly figure, leases included. Verify rates with the lender — APRs vary with credit.</p>
   <div class="no-results" id="cards-no-results">No cars match these filters.<br><button class="big-btn" style="max-width:240px;margin:12px auto 0" onclick="resetFilters()">Show all cars</button></div>
@@ -569,10 +577,10 @@ const CARS = [
     power:'ev',
     mpg:'363mi range',
     mpgNum:363,
-    rank:8,
-    rankNote:'Best lease value; charging solved at work + likely home; cooled seats standard; HOV eligible. Must test drive interface first — no physical controls.',
+    rank:7,
+    rankNote:'Best lease value and charging is solved (work + likely home), but it\'s pricey to actually buy and insurance runs high — so on a budget-weighted list it slips a bit. Must test drive the no-button interface first.',
     tag:'tag-lease',tagLabel:'Best Lease',
-    budgetFit:'near', // lease is under $470/mo
+    budgetFit:'stretch',
     newLow:44000, newHigh:47000, newLabel:'~$44–47K',
     usedLow:28000, usedHigh:36000, usedLabel:'~$28–36K',
     leaseLow:400, leaseHigh:470, leaseLabel:'~$400–470',
@@ -607,9 +615,9 @@ const CARS = [
     mpg:'46 city',
     mpgNum:46,
     rank:9,
-    rankNote:'Trusted dealer (Honda Poway — Harry has firsthand positive experience), familiar size (Harry drives Accord), great hybrid, ventilated seats on Sport-L.',
+    rankNote:'The budget-smart sweet spot: in reach via CPO (~$28–33K), trusted Honda Poway dealer, familiar size (Harry drives one), strong hybrid, and cooled seats on Sport-L.',
     tag:'tag-best',tagLabel:'Top Pick',
-    budgetFit:'near',
+    budgetFit:'in',
     newLow:40000, newHigh:42000, newLabel:'~$40–42K',
     usedLow:28000, usedHigh:33000, usedLabel:'~$28–33K',
     leaseLow:380, leaseHigh:420, leaseLabel:'~$380–420',
@@ -643,10 +651,10 @@ const CARS = [
     power:'hybrid',
     mpg:'43 city',
     mpgNum:43,
-    rank:8,
-    rankNote:'Best CPO buy option, class-leading reliability and resale, ventilated seats on Limited. All-new 2026 hybrid-only generation.',
+    rank:6,
+    rankNote:'Excellent and has cooled seats, but at ~$48–51K new it only fits the budget as a CPO — so on a budget-weighted list it lands mid-pack. Class-leading reliability and resale.',
     tag:'tag-best',tagLabel:'Best Buy (CPO)',
-    budgetFit:'over',
+    budgetFit:'stretch',
     newLow:48000, newHigh:51000, newLabel:'~$48–51K',
     usedLow:30000, usedHigh:38000, usedLabel:'~$30–38K',
     leaseLow:500, leaseHigh:540, leaseLabel:'~$500–540',
@@ -680,8 +688,8 @@ const CARS = [
     power:'phev',
     mpg:'94 MPGe',
     mpgNum:94,
-    rank:7,
-    rankNote:'Only PHEV on the list. 42 miles EV-only range. CA HOV sticker eligible. Pricier than regular hybrid but charging solved at work makes this compelling.',
+    rank:5,
+    rankNote:'The most expensive car here (~$47–52K), so it scores low once budget is weighted — but it\'s the only PHEV, with 42 mi of EV range and an HOV sticker. Compelling if the budget can stretch and charging is set.',
     tag:'tag-lease',tagLabel:'PHEV Pick',
     budgetFit:'over',
     newLow:47000, newHigh:52000, newLabel:'~$47–52K',
@@ -717,10 +725,10 @@ const CARS = [
     power:'hybrid',
     mpg:'38 city',
     mpgNum:38,
-    rank:7,
-    rankNote:'Best SUV lease value. Physical climate dials make it the most approachable interface. Dealer quality in SD area uncertain — verify before committing.',
+    rank:5,
+    rankNote:'Lovely physical-dial interface and a strong lease, but ~$47–50K new pushes it to a CPO-only budget fit, and SD dealer quality is uncertain — so it slips on a budget-weighted list.',
     tag:'tag-lease',tagLabel:'Best SUV Lease',
-    budgetFit:'over',
+    budgetFit:'stretch',
     newLow:47000, newHigh:50000, newLabel:'~$47–50K',
     usedLow:33000, usedHigh:39000, usedLabel:'~$33–39K',
     leaseLow:442, leaseHigh:500, leaseLabel:'~$442–500',
@@ -754,10 +762,10 @@ const CARS = [
     power:'hybrid',
     mpg:'44 city',
     mpgNum:44,
-    rank:7,
-    rankNote:'Strong value sedan, excellent resale, full 2025 redesign. Dealer TBD — unverified by Harry. Good if she prefers Toyota reliability in sedan form.',
-    tag:'tag-budget',tagLabel:'Solid Pick',
-    budgetFit:'near',
+    rank:8,
+    rankNote:'A standout once budget matters: cooled seats on XLE, Toyota reliability and resale, and CPO around $27–32K lands it in budget. Only the unverified SD dealer holds it back.',
+    tag:'tag-best',tagLabel:'Budget + Cooled',
+    budgetFit:'in',
     newLow:38000, newHigh:42000, newLabel:'~$38–42K',
     usedLow:27000, usedHigh:32000, usedLabel:'~$27–32K',
     leaseLow:370, leaseHigh:420, leaseLabel:'~$370–420',
@@ -792,9 +800,9 @@ const CARS = [
     mpg:'43 city',
     mpgNum:43,
     rank:6,
-    rankNote:'Best budget buy if cooled seats are dropped. Saves ~$8K vs Limited. Same powertrain/warranty, just without luxury trim extras.',
+    rankNote:'In-budget RAV4 if you drop cooled seats — saves ~$8K vs the Limited for the same bulletproof powertrain and warranty. The sensible-SUV value pick.',
     tag:'tag-budget',tagLabel:'Budget Buy',
-    budgetFit:'near',
+    budgetFit:'in',
     newLow:39000, newHigh:43000, newLabel:'~$39–43K',
     usedLow:26000, usedHigh:33000, usedLabel:'~$26–33K',
     leaseLow:400, leaseHigh:440, leaseLabel:'~$400–440',
@@ -829,9 +837,9 @@ const CARS = [
     mpg:'38 city',
     mpgNum:38,
     rank:6,
-    rankNote:'Cheapest SUV lease on the list when cooled seats not required. Physical climate controls still present. Dealer quality in SD uncertain.',
+    rankNote:'In budget and the cheapest SUV lease here when cooled seats aren\'t required. Keeps real physical climate dials. Held back by uncertain SD dealer quality.',
     tag:'tag-lease',tagLabel:'Cheapest SUV Lease',
-    budgetFit:'near',
+    budgetFit:'in',
     newLow:38000, newHigh:42000, newLabel:'~$38–42K',
     usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
     leaseLow:390, leaseHigh:430, leaseLabel:'~$390–430',
@@ -866,9 +874,9 @@ const CARS = [
     mpg:'44 city',
     mpgNum:44,
     rank:5,
-    rankNote:'Good value sedan with ventilated seats, but Hyundai dealer quality in SD uncertain. Deprioritized until dealer situation clarified.',
+    rankNote:'In budget and has ventilated seats, but Hyundai dealer quality in SD is uncertain — deprioritized behind the Elantra Hybrid and the Honda sedans until that\'s cleared up.',
     tag:'tag-warn',tagLabel:'Verify Dealer First',
-    budgetFit:'near',
+    budgetFit:'in',
     newLow:36000, newHigh:39000, newLabel:'~$36–39K',
     usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
     leaseLow:360, leaseHigh:410, leaseLabel:'~$360–410',
@@ -901,10 +909,10 @@ const CARS = [
     power:'hybrid',
     mpg:'43 city',
     mpgNum:43,
-    rank:5,
-    rankNote:'Most affordable entry point. LE lease at $399/mo $0 down is exceptional value. Heated seats may require package — confirm on specific car.',
+    rank:7,
+    rankNote:'The most affordable way into a RAV4 — comfortably in budget, with an exceptional LE lease ($399/mo $0 down). Confirm heated seats on the specific car; no cooled option.',
     tag:'tag-budget',tagLabel:'Most Affordable',
-    budgetFit:'near',
+    budgetFit:'in',
     newLow:36000, newHigh:39000, newLabel:'~$36–39K',
     usedLow:23000, usedHigh:30000, usedLabel:'~$23–30K',
     leaseLow:350, leaseHigh:400, leaseLabel:'~$350–400',
@@ -936,10 +944,10 @@ const CARS = [
     power:'hybrid',
     mpg:'49 city',
     mpgNum:49,
-    rank:6,
-    rankNote:'Genuine in-budget NEW option from the trusted Honda Poway dealer. Excellent hybrid, bigger than a Corolla. Trade-off: no cooled seats on any Civic.',
-    tag:'tag-budget',tagLabel:'New in Budget',
-    budgetFit:'near',
+    rank:8,
+    rankNote:'One of the few cars you can buy NEW in budget (~$30–34K) — and from the trusted Honda Poway dealer. Bigger and nicer than a Corolla. Only real miss: no cooled seats on any Civic.',
+    tag:'tag-best',tagLabel:'New in Budget',
+    budgetFit:'in',
     newLow:30000, newHigh:34000, newLabel:'~$30–34K',
     usedLow:26000, usedHigh:30000, usedLabel:'~$26–30K',
     leaseLow:330, leaseHigh:390, leaseLabel:'~$330–390',
@@ -973,10 +981,10 @@ const CARS = [
     power:'hybrid',
     mpg:'50 city',
     mpgNum:50,
-    rank:5,
-    rankNote:'Cheapest car here to buy NEW and run. Class-leading ~50 MPG and Toyota reliability. Compact and no cooled seats, but the surest way to stay well under the $30K budget.',
+    rank:7,
+    rankNote:'The surest way to stay well under $30K bought new, with class-leading ~50 MPG and Toyota reliability. Compact and no cooled seats — but unbeatable on budget.',
     tag:'tag-budget',tagLabel:'Cheapest New',
-    budgetFit:'near',
+    budgetFit:'in',
     newLow:26000, newHigh:31000, newLabel:'~$26–31K',
     usedLow:21000, usedHigh:26000, usedLabel:'~$21–26K',
     leaseLow:300, leaseHigh:360, leaseLabel:'~$300–360',
@@ -1000,6 +1008,115 @@ const CARS = [
       'Compact sedan — smaller than the Accord/Camry; confirm the size feels right.',
       'No cooled seats on any trim; a $40–80 seat cooling cushion can partly substitute.',
       'Best pick if staying under budget is the #1 priority.',
+    ]
+  },
+  {
+    id:'prius',
+    name:'Toyota Prius',
+    trim:'LE / XLE',
+    style:'sedan',
+    power:'hybrid',
+    mpg:'57 city',
+    mpgNum:57,
+    rank:7,
+    rankNote:'In budget bought new and the efficiency champ of the list (~57 city). The redesigned Prius finally looks great. No cooled seats and a lower roofline are the trade-offs.',
+    tag:'tag-budget',tagLabel:'Most Efficient',
+    budgetFit:'in',
+    newLow:31000, newHigh:36000, newLabel:'~$31–36K',
+    usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
+    leaseLow:330, leaseHigh:400, leaseLabel:'~$330–400',
+    insLow:180, insHigh:240, insLabel:'~$180–240',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'trim', cooledStatus:'no', cooledNote:'Not available on Prius',
+    heatedLabel:'⚠️ XLE+',cooledLabel:'✗ Not available',
+    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — unverified by Harry. Prius holds value, so used isn\'t much cheaper than new.',
+    caveat:null,
+    features:[
+      {icon:'par',text:'Heated front seats — XLE and Limited (not base LE)'},
+      {icon:'no', text:'No ventilated/cooled seats on any trim'},
+      {icon:'yes',text:'~57 MPG city — best efficiency on this list'},
+      {icon:'yes',text:'Bold 2023+ redesign — looks nothing like the old Prius'},
+      {icon:'yes',text:'Toyota Safety Sense 3.0 standard'},
+      {icon:'yes',text:'Toyota CPO: 7yr/100K powertrain warranty'},
+      {icon:'par',text:'Lower roofline — sleeker but less headroom/visibility'},
+    ],
+    notes:[
+      'In budget bought new (~$31–36K) and by far the cheapest to fuel.',
+      'Prius resale is strong, so a used one isn\'t dramatically cheaper.',
+      'No cooled seats — a real consideration in San Diego summers.',
+      'Hatchback practicality with a sedan-like footprint.',
+    ]
+  },
+  {
+    id:'escape-hybrid',
+    name:'Ford Escape Hybrid',
+    trim:'ST-Line Select',
+    style:'suv',
+    power:'hybrid',
+    mpg:'42 city',
+    mpgNum:42,
+    rank:6,
+    rankNote:'A genuine in-budget hybrid SUV from outside the Toyota/Honda bubble — strong via CPO especially. No cooled seats, and Ford reliability is middling, but it\'s roomy and well-priced.',
+    tag:'tag-budget',tagLabel:'In-Budget SUV',
+    budgetFit:'in',
+    newLow:34000, newHigh:38000, newLabel:'~$34–38K',
+    usedLow:24000, usedHigh:29000, usedLabel:'~$24–29K',
+    leaseLow:340, leaseHigh:410, leaseLabel:'~$340–410',
+    insLow:185, insHigh:240, insLabel:'~$185–240',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'no', cooledNote:'Not available on Escape',
+    heatedLabel:'✓ ST-Line+',cooledLabel:'✗ Not available',
+    dealer:'Ford of Escondido, Drew Ford (La Mesa) — unverified by Harry. Ford discounts more readily than Toyota/Honda.',
+    caveat:null,
+    features:[
+      {icon:'yes',text:'Heated front seats (ST-Line and up)'},
+      {icon:'no', text:'No ventilated/cooled seats'},
+      {icon:'yes',text:'~42 MPG city'},
+      {icon:'yes',text:'SYNC 4 with wireless CarPlay / Android Auto'},
+      {icon:'yes',text:'Roomy rear seat & cargo for a compact SUV'},
+      {icon:'par',text:'Ford reliability is average — buy CPO for the warranty'},
+    ],
+    notes:[
+      'A real in-budget SUV, especially used/CPO (~$24–29K).',
+      'A different brand if she wants options beyond Toyota and Honda.',
+      'No cooled seats; Ford long-term reliability trails the Japanese rivals.',
+      'Ford tends to discount more, so new deals can be found.',
+    ]
+  },
+  {
+    id:'elantra-hybrid',
+    name:'Hyundai Elantra Hybrid',
+    trim:'Limited',
+    style:'sedan',
+    power:'hybrid',
+    mpg:'53 city',
+    mpgNum:53,
+    rank:6,
+    rankNote:'The cheapest way into budget — and the Limited, unusually for the price, includes COOLED seats. Big MPG. Held back only by Hyundai dealer uncertainty in SD and its compact size.',
+    tag:'tag-budget',tagLabel:'Cheapest In-Budget',
+    budgetFit:'in',
+    newLow:28000, newHigh:31000, newLabel:'~$28–31K',
+    usedLow:22000, usedHigh:27000, usedLabel:'~$22–27K',
+    leaseLow:300, leaseHigh:360, leaseLabel:'~$300–360',
+    insLow:175, insHigh:225, insLabel:'~$175–225',
+    get totalLease(){ return this.leaseLow + this.insLow },
+    heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim',
+    heatedLabel:'✓ Limited',cooledLabel:'⚠️ Limited only',
+    dealer:'Hyundai SD area — dealer quality uncertain per Harry. Unverified.',
+    caveat:'⚠️ Dealer quality in San Diego area is uncertain per Harry. Verify before committing.',
+    features:[
+      {icon:'yes',text:'Heated front seats (Limited)'},
+      {icon:'par',text:'Ventilated/cooled front seats — Limited (rare at this price)'},
+      {icon:'yes',text:'~53 MPG city — among the best here'},
+      {icon:'yes',text:'Wireless CarPlay / Android Auto'},
+      {icon:'yes',text:'10yr/100K powertrain warranty (CPO)'},
+      {icon:'par',text:'Compact sedan — smaller than Accord/Camry'},
+    ],
+    notes:[
+      'The lowest-cost route to a hybrid with cooled seats — unusual in budget.',
+      'New ~$28–31K fits the budget comfortably; CPO is cheaper still.',
+      'Main caveat is Hyundai dealer quality in SD — verify independently.',
+      'Compact — confirm the size feels right vs the midsize options.',
     ]
   },
 ];
@@ -1068,7 +1185,7 @@ function styleBadge(style) {
 }
 
 function budgetClass(c) {
-  return c.budgetFit==='near' ? 'budget-green' : c.budgetFit==='over' ? 'budget-amber' : 'budget-red';
+  return c.budgetFit==='in' ? 'budget-green' : c.budgetFit==='stretch' ? 'budget-amber' : 'budget-red';
 }
 
 function priceHighlight(mode, cell) {
@@ -1246,6 +1363,8 @@ function updateFilterChrome(){
   if (t) t.innerHTML = '🔍 Filter cars' + (active ? ' <strong>'+active+'</strong>' : '') + (filtersOpen ? ' ▾' : ' ▸');
   var c = document.getElementById('filter-clear');
   if (c) c.style.display = active ? '' : 'none';
+  var qb = document.getElementById('qb');
+  if (qb) { var on = filters.budget === 'in'; qb.classList.toggle('on', on); qb.innerHTML = on ? '🟢 In-budget only · tap to show all' : '🟢 Show in-budget only'; }
 }
 function resetFilters(){
   filters = { mode:'all', style:'all', power:'all', budget:'all' };
@@ -1255,6 +1374,18 @@ function resetFilters(){
   renderAll();
   updateFilterChrome();
 }
+
+// ── IN-BUDGET QUICK FILTER (chip + Start-page button) ──
+function setBudgetFilter(val){
+  filters.budget = val;
+  document.querySelectorAll('[data-filter="budget"]').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-val') === val);
+  });
+  renderAll();
+  updateFilterChrome();
+}
+function toggleInBudget(){ setBudgetFilter(filters.budget === 'in' ? 'all' : 'in'); }
+function showInBudget(){ setBudgetFilter('in'); showPageById('cars'); }
 
 // ── TOP PICKS (Start page) ──
 function cheapestMo(c){ return Math.min(c.leaseLow + c.insLow, c.usedMoLo + c.insLow, c.newMoLo + c.insLow); }

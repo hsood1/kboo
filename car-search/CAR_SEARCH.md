@@ -35,26 +35,31 @@ Each card's "Features & Notes" button calls `toggleCard()` (plain JS, toggles `.
 
 ## Car data (estimates, June 2026)
 
-12 cars, ranked editorially:
+15 cars, **scored with the $30K budget weighted heavily** (cheap in-budget cars rise; $48K+ cars fall even if great):
 
-| Car | Style·Power | Rank | Why |
-|-----|-------------|------|-----|
-| Honda Accord Hybrid Sport-L | Sedan·Hybrid | 9 | Trusted dealer (Honda Poway), familiar size, cooled seats Sport-L |
-| Tesla Model 3 LR | Sedan·EV | 8 | Best lease value, charging solved, cooled standard — **must test drive interface** |
-| Toyota RAV4 Hybrid Limited | SUV·Hybrid | 8 | Best CPO buy, reliability/resale, cooled on Limited |
-| Toyota RAV4 Prime | SUV·PHEV | 7 | Only PHEV, 42mi EV range, HOV sticker |
-| Hyundai Tucson Hybrid Limited | SUV·Hybrid | 7 | Best SUV lease, physical climate dials, dealer uncertain |
-| Toyota Camry Hybrid XLE | Sedan·Hybrid | 7 | Strong value, 2025 redesign, dealer TBD |
-| RAV4 Hybrid XLE Premium | SUV·Hybrid | 6 | Budget buy, no cooled seats |
-| Tucson Hybrid SEL Convenience | SUV·Hybrid | 6 | Cheapest SUV lease, no cooled |
-| **Honda Civic Hybrid Sport Touring** | Sedan·Hybrid | 6 | **In budget bought NEW**, trusted Honda Poway dealer, no cooled |
-| Hyundai Sonata Hybrid Limited | Sedan·Hybrid | 5 | Good value, dealer concerns — deprioritized |
-| RAV4 Hybrid XLE/LE | SUV·Hybrid | 5 | Most affordable, heated may need package |
-| **Toyota Corolla Hybrid SE/XLE** | Sedan·Hybrid | 5 | **Cheapest to buy NEW & run** (~50 MPG), compact, no cooled |
+| Car | Style·Power | Score | Budget | Why |
+|-----|-------------|:---:|:---:|-----|
+| Honda Accord Hybrid Sport-L | Sedan·Hybrid | 9 | 🟢 | Budget-smart sweet spot: CPO ~$28–33K, Honda Poway, cooled seats |
+| Toyota Camry Hybrid XLE | Sedan·Hybrid | 8 | 🟢 | Cooled seats + CPO in budget + Toyota resale (dealer unverified) |
+| Honda Civic Hybrid Sport Touring | Sedan·Hybrid | 8 | 🟢 | In budget bought NEW, trusted Honda Poway dealer |
+| Tesla Model 3 LR | Sedan·EV | 7 | 🟡 | Best lease + charging solved, but pricey to buy / high insurance |
+| Toyota RAV4 Hybrid XLE/LE | SUV·Hybrid | 7 | 🟢 | Most affordable RAV4, great LE lease |
+| Toyota Corolla Hybrid | Sedan·Hybrid | 7 | 🟢 | Cheapest to buy NEW & run (~50 MPG), compact, no cooled |
+| **Toyota Prius LE/XLE** | Sedan·Hybrid | 7 | 🟢 | **NEW:** efficiency champ (~57 MPG), in budget, no cooled |
+| Toyota RAV4 Hybrid Limited | SUV·Hybrid | 6 | 🟡 | Cooled seats but ~$48–51K new → only fits via CPO |
+| RAV4 Hybrid XLE Premium | SUV·Hybrid | 6 | 🟢 | In-budget RAV4 without cooled seats |
+| Tucson Hybrid SEL Convenience | SUV·Hybrid | 6 | 🟢 | Cheapest SUV lease, physical dials, dealer uncertain |
+| **Ford Escape Hybrid ST-Line** | SUV·Hybrid | 6 | 🟢 | **NEW brand:** in-budget SUV (esp. CPO), no cooled, avg reliability |
+| **Hyundai Elantra Hybrid Limited** | Sedan·Hybrid | 6 | 🟢 | **NEW:** cheapest in-budget + **cooled seats**; Hyundai dealer caveat |
+| Toyota RAV4 Prime | SUV·PHEV | 5 | 🔴 | Only PHEV (42mi EV, HOV) but most expensive (~$47–52K) |
+| Hyundai Tucson Hybrid Limited | SUV·Hybrid | 5 | 🟡 | Great interface but CPO-only budget + dealer uncertain |
+| Hyundai Sonata Hybrid Limited | Sedan·Hybrid | 5 | 🟢 | In budget w/ cooled, but Hyundai dealer concerns — deprioritized |
 
-**In-budget new options:** most hybrids here are $36K+ new, so Civic Hybrid (~$30–34K) and Corolla Hybrid (~$26–31K) were added as cars genuinely affordable bought new at ~$30K — the honest trade is they're smaller and lack cooled seats.
+**Three brands/options added** to broaden the in-budget set beyond Toyota/Honda: **Ford Escape Hybrid** (SUV), **Toyota Prius**, **Hyundai Elantra Hybrid** (cheapest route to cooled seats). No Kia (excluded).
 
-**Budget fit** drives the card left-border stripe: 🟢 near (≤~$5K over $30K buy, or <$450/mo lease) · 🟡 somewhat over · 🔴 significantly over.
+**Budget fit** = three tiers driving the card/row left-edge stripe and the Budget filter: `'in'` 🟢 (attainable ~$30K new or via mild CPO) · `'stretch'` 🟡 ($48K-ish cars that only reach budget as CPO) · `'over'` 🔴 (expensive even used). Hand-set per car (editorial, budget-weighted), not auto-computed.
+
+**In-budget filter:** the Budget filter row (All / 🟢 In Budget / 🟡 Stretch / 🔴 Over), plus a always-visible **"🟢 Show in-budget only" chip** on the Cars page and a **"Show me the in-budget cars →"** button on Start. All route through `setBudgetFilter('in')` / `toggleInBudget()` / `showInBudget()`; `updateFilterChrome()` keeps the chip in sync.
 
 ## Buyer context (do not invent beyond this)
 
