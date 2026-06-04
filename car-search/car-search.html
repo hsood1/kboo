@@ -542,7 +542,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
   <div class="section-h2">Tips for September</div>
   <div class="section-sub">How to get the best deal when you're ready to shop in ~3 months.</div>
   <div class="tip-card"><div class="tip-num">01</div><div class="tip-title">Time it right — end of quarter is king</div><div class="tip-body">September 30 = end of Q3. Salespeople have monthly and quarterly quotas. The last few days of September dealers are more willing to deal than almost any other time of year. Go then.</div></div>
-  <div class="tip-card"><div class="tip-num">02</div><div class="tip-title">Honda Poway — trusted dealer</div><div class="tip-body">Harry has had multiple positive personal experiences at Honda Poway. For the Accord Hybrid this is the recommended starting point — familiarity with a dealer removes a lot of stress from the process.</div></div>
+  <div class="tip-card"><div class="tip-num">02</div><div class="tip-title">Honda Poway — trusted dealer</div><div class="tip-body">Multiple positive firsthand experiences at Honda Poway. For the Accord Hybrid this is the recommended starting point — familiarity with a dealer removes a lot of stress from the process.</div></div>
   <div class="tip-card"><div class="tip-num">03</div><div class="tip-title">Go inland for Toyota / Hyundai</div><div class="tip-body">Toyota of El Cajon, Mossy Toyota (Kearny Mesa), and Temecula Toyota discount more aggressively than coastal stores. A 30-min drive can save $1,500–3,000 on the same car.</div></div>
   <div class="tip-card"><div class="tip-num">04</div><div class="tip-title">Verify cooled seats on the specific car</div><div class="tip-body">Always confirm ventilated seats are on the actual unit — not just the trim level generally. Check the window sticker and feel for perforation holes in the seat fabric before signing anything.</div></div>
   <div class="tip-card"><div class="tip-num">05</div><div class="tip-title">Get insurance quotes before signing</div><div class="tip-body">Run Geico, Mercury, and Progressive quotes before the dealer appointment. Insurance must be active on delivery day for leased/financed cars. Know the cost before committing.</div></div>
@@ -609,7 +609,7 @@ const CARS = [
     mpg:'46 city',
     mpgNum:46,
     rank:9,
-    rankNote:'The budget-smart sweet spot: trusted Honda Poway dealer, familiar size (Harry drives one), strong hybrid, and cooled seats on the Touring trim — in reach via CPO (~$30–35K).',
+    rankNote:'The budget-smart sweet spot: trusted Honda Poway dealer, familiar sedan size, strong hybrid, and cooled seats on the Touring trim — in reach via CPO (~$30–35K).',
     tag:'tag-best',tagLabel:'Top Pick',
     budgetFit:'in',
     newLow:42000, newHigh:44000, newLabel:'~$42–44K',
@@ -619,7 +619,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'yes', cooledNote:'Touring trim',
     heatedLabel:'✓ Touring',cooledLabel:'✓ Touring',
-    dealer:'Honda Poway — Harry has multiple positive firsthand experiences. Recommended starting point.',
+    dealer:'Honda Poway — multiple positive firsthand experiences. Recommended starting point.',
     caveat:null,
     features:[
       {icon:'yes',text:'Heated front seats (Touring)'},
@@ -631,7 +631,7 @@ const CARS = [
       {icon:'yes',text:'Honda CPO: 7yr/100K powertrain warranty'},
     ],
     notes:[
-      'Harry drives an Accord, so the size and feel are already familiar.',
+      'A familiar sedan size and feel — easy to step into.',
       'Honda Poway is a trusted dealer — removes stress from the buying process.',
       'Cooled seats require the Touring trim — confirm on the specific car (other trims are heated-only).',
       '2023–24 CPO Accord Hybrid Touring around $30–35K hits the buy budget well.',
@@ -656,7 +656,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
     heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
-    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — unverified by Harry personally. Inland dealers negotiate more.',
+    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — not personally verified. Inland dealers negotiate more.',
     caveat:null,
     features:[
       {icon:'yes',text:'Heated front seats (standard)'},
@@ -693,7 +693,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
     heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
-    dealer:'Same Toyota dealers as RAV4 Hybrid. Mossy Toyota, Toyota of El Cajon — unverified by Harry.',
+    dealer:'Same Toyota dealers as RAV4 Hybrid. Mossy Toyota, Toyota of El Cajon — not personally verified.',
     caveat:'🔌 Plug-in hybrid — needs charging to get full EV benefit. Work charger and likely home charger make this viable.',
     features:[
       {icon:'yes',text:'Heated front seats'},
@@ -730,7 +730,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
     heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
-    dealer:'Hyundai SD area — dealer quality uncertain per Harry. Unverified. Temecula Hyundai or National City Hyundai may be options.',
+    dealer:'Hyundai SD area — dealer quality uncertain — unverified. Temecula Hyundai or National City Hyundai may be options.',
     caveat:'⚠️ Dealer quality in San Diego area is uncertain. Verify before committing.',
     features:[
       {icon:'yes',text:'Heated front seats'},
@@ -767,7 +767,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'XLE / XSE only',
     heatedLabel:'✓ XLE',cooledLabel:'⚠️ XLE / XSE only',
-    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — unverified by Harry personally.',
+    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — not personally verified.',
     caveat:null,
     features:[
       {icon:'yes',text:'Heated front seats (XLE)'},
@@ -782,7 +782,7 @@ const CARS = [
       'Full 2025 redesign — significantly improved interior and tech vs previous gen.',
       'XLE trim required for cooled seats — confirm on specific car.',
       '2022–23 CPO XLE at ~$27–32K hits near or at the buy budget.',
-      'Dealer TBD — Harry has not personally verified Toyota SD dealers.',
+      'Dealer TBD — Toyota SD dealers not personally verified.',
     ]
   },
   {
@@ -841,7 +841,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'no', cooledNote:'Not available on this trim',
     heatedLabel:'✓ Standard',cooledLabel:'✗ Not available',
-    dealer:'Hyundai SD area — dealer quality uncertain per Harry.',
+    dealer:'Hyundai SD area — dealer quality uncertain.',
     caveat:'⚠️ Dealer quality in San Diego area is uncertain. Verify before committing.',
     features:[
       {icon:'yes',text:'Heated front seats'},
@@ -878,8 +878,8 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'SEL Plus / Limited only',
     heatedLabel:'✓ Limited',cooledLabel:'⚠️ Limited only',
-    dealer:'Hyundai SD area — dealer quality uncertain per Harry. Deprioritized.',
-    caveat:'⚠️ Dealer quality in San Diego area is uncertain per Harry. Verify independently before visiting.',
+    dealer:'Hyundai SD area — dealer quality uncertain. Deprioritized.',
+    caveat:'⚠️ Dealer quality in San Diego area is uncertain. Verify independently before visiting.',
     features:[
       {icon:'yes',text:'Heated front seats (Limited)'},
       {icon:'par',text:'Ventilated/cooled seats (SEL Plus / Limited)'},
@@ -949,7 +949,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'no', cooledNote:'Not offered on any Civic trim',
     heatedLabel:'✓ Sport Touring',cooledLabel:'✗ Not available',
-    dealer:'Honda Poway — Harry has multiple positive firsthand experiences.',
+    dealer:'Honda Poway — multiple positive firsthand experiences.',
     caveat:null,
     features:[
       {icon:'yes',text:'Heated front seats (Sport Touring)'},
@@ -986,7 +986,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'trim', cooledStatus:'no', cooledNote:'Not available on any trim',
     heatedLabel:'⚠️ SE/XLE',cooledLabel:'✗ Not available',
-    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — unverified by Harry. Inland negotiates more.',
+    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — not personally verified. Inland negotiates more.',
     caveat:null,
     features:[
       {icon:'par',text:'Heated front seats — XLE (or SE with package)'},
@@ -1023,7 +1023,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'trim', cooledStatus:'no', cooledNote:'Not available on Prius',
     heatedLabel:'⚠️ XLE+',cooledLabel:'✗ Not available',
-    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — unverified by Harry. Prius holds value, so used isn\'t much cheaper than new.',
+    dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — not personally verified. Prius holds value, so used isn\'t much cheaper than new.',
     caveat:null,
     features:[
       {icon:'par',text:'Heated front seats — XLE and Limited (not base LE)'},
@@ -1060,7 +1060,7 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'no', cooledNote:'Not available on Escape',
     heatedLabel:'✓ ST-Line+',cooledLabel:'✗ Not available',
-    dealer:'Ford of Escondido, Drew Ford (La Mesa) — unverified by Harry. Ford discounts more readily than Toyota/Honda.',
+    dealer:'Ford of Escondido, Drew Ford (La Mesa) — not personally verified. Ford discounts more readily than Toyota/Honda.',
     caveat:null,
     features:[
       {icon:'yes',text:'Heated front seats (ST-Line and up)'},
@@ -1096,8 +1096,8 @@ const CARS = [
     get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim',
     heatedLabel:'✓ Limited',cooledLabel:'⚠️ Limited only',
-    dealer:'Hyundai SD area — dealer quality uncertain per Harry. Unverified.',
-    caveat:'⚠️ Dealer quality in San Diego area is uncertain per Harry. Verify before committing.',
+    dealer:'Hyundai SD area — dealer quality uncertain. Unverified.',
+    caveat:'⚠️ Dealer quality in San Diego area is uncertain. Verify before committing.',
     features:[
       {icon:'yes',text:'Heated front seats (Limited)'},
       {icon:'par',text:'Ventilated/cooled front seats — Limited (rare at this price)'},

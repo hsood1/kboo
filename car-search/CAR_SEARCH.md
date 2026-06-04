@@ -63,16 +63,16 @@ Each card's "Features & Notes" button calls `toggleCard()` (plain JS, toggles `.
 
 ## Buyer context (do not invent beyond this)
 
-- **Wants:** hybrid/EV, heated AND cooled seats ideally, simple non-overwhelming interface, SUV or sedan (sedan now fine — Harry drives an Accord, so a sedan-sized car feels familiar).
+- **Wants:** hybrid/EV, heated AND cooled seats ideally, simple non-overwhelming interface, SUV or sedan (sedan now fine — a sedan-sized car feels familiar).
 - **Excludes:** Kia (personal preference).
 - **Budget:** ~$30K to buy, or lease. First solo insurance policy (~$200–280/mo to start).
 - **Location/timing:** buy & register in California (any SoCal — El Cajon, Temecula, etc.). ~September 2026; end-of-quarter is best for negotiating.
 - **Charging:** work has a free charger; home likely will too → Tesla running cost ~$20–30/mo.
 
 ### Dealer intelligence (facts only)
-- **Honda Poway** — Harry has multiple positive firsthand experiences. Verified.
-- **Hyundai (SD area)** — Harry has concerns; no specific incident. Treat as unverified; don't recommend without caveat.
-- **Toyota (SD area)** — Mossy Toyota (Kearny Mesa), Toyota of El Cajon commonly cited; unverified by Harry personally.
+- **Honda Poway** — multiple positive firsthand experiences. Verified.
+- **Hyundai (SD area)** — some concern; no specific incident. Treat as unverified; don't recommend without caveat.
+- **Toyota (SD area)** — Mossy Toyota (Kearny Mesa), Toyota of El Cajon commonly cited; not personally verified.
 - **Tesla** — no dealership; single SD service center, sales direct.
 
 ## Design system
