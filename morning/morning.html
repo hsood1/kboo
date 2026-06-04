@@ -1196,8 +1196,8 @@
           1:  ['Mainly clear',       '🌤'],
           2:  ['Partly cloudy',      '⛅'],
           3:  ['Overcast',           '☁️'],
-          45: ['Foggy',              '🌫'],
-          48: ['Icy fog',            '🌫'],
+          45: ['Fog',                '🌫'],
+          48: ['Freezing fog',       '🌫'],
           51: ['Light drizzle',      '🌦'],
           53: ['Moderate drizzle',   '🌦'],
           55: ['Dense drizzle',      '🌧'],
@@ -1496,7 +1496,9 @@
         const refWind = isAfternoon ? afternoonWind : morningWind;
 
         const { sky, precip } = getWeatherLayers(refCode, refWind);
-        document.body.dataset.sky = sky;
+        // Show the night scene (moon + stars) when it's actually night at the location
+        const isNight = locationHour < 6 || locationHour >= 20;
+        document.body.dataset.sky = isNight ? 'night' : sky;
         if (precip) { document.body.dataset.precip = precip; }
         else        { delete document.body.dataset.precip; }
 
@@ -1734,8 +1736,8 @@
         { quote: "I dream my painting, and then I paint my dream.", author: "Vincent van Gogh" },
         // Mar 31
         { quote: "Well-behaved women seldom make history.", author: "Laurel Thatcher Ulrich" },
-        // Apr 1
-        { quote: "Do not take life too seriously. You will never get out of it alive.", author: "Elbert Hubbard" },
+        // Apr 1 — Carl Sagan (the Sagan Easter egg lives here too)
+        { quote: "Somewhere, something incredible is waiting to be known.", author: "Carl Sagan" },
         // Apr 2
         { quote: "Reality is merely an illusion, albeit a very persistent one.", author: "Albert Einstein" },
         // Apr 3
@@ -1905,7 +1907,7 @@
         // Jun 24
         { quote: "Do what you feel in your heart to be right — for you'll be criticised anyway.", author: "Eleanor Roosevelt" },
         // Jun 25
-        { quote: "Do not tell me the sky's the limit when there are footprints on the moon.", author: "Paul Brandt" },
+        { quote: "Look up at the stars and not down at your feet.", author: "Stephen Hawking" },
         // Jun 26
         { quote: "The only real mistake is the one from which we learn nothing.", author: "Henry Ford" },
         // Jun 27 — Helen Keller birthday
@@ -2641,7 +2643,7 @@
         </div>
 
         <!-- Speech bubble to the right of cat -->
-        <div id="sagan-bubble" id="sagan-speech">
+        <div id="sagan-bubble">
           Hi! It's me, Sagan. Today is my birthday, and I am turning <strong id="sagan-age">?</strong> years old. Don't forget to give me lots of birthday treats!
         </div>
       </div>

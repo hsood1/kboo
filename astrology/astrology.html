@@ -426,7 +426,10 @@
       const h     = function(n) { return ((seed ^ (n * 2654435761)) >>> 0); };
       const moods  = ['Reflective','Energised','Ambitious','Serene','Curious','Passionate','Grounded','Optimistic','Focused','Creative','Romantic','Adventurous'];
       const colors = ['Midnight Blue','Forest Green','Deep Violet','Warm Amber','Dusty Rose','Silver','Teal','Burnt Orange','Sage Green','Crimson','Lavender','Gold'];
-      const signs  = ['Taurus','Cancer','Scorpio','Pisces','Libra','Leo','Aquarius','Aries','Gemini','Sagittarius'];
+      // Compatibility pool includes the partner sign (weighted, never self) so the
+      // Capricorn×Virgo "mutual pull" lines can actually fire and vary day to day.
+      const partner = signKey === 'capricorn' ? 'Virgo' : 'Capricorn';
+      const signs  = [partner, partner, partner, 'Taurus','Cancer','Scorpio','Pisces','Libra','Leo','Aquarius'];
       const times  = ['7:00 AM','8:30 AM','10:15 AM','12:00 PM','2:45 PM','4:00 PM','6:30 PM','9:00 PM'];
       return {
         mood:          moods [h(sv + 11) % moods.length],
@@ -695,8 +698,6 @@
       ]);
       renderSignCard('astro-card-capricorn', 'capricorn', capData);
       renderSignCard('astro-card-virgo',     'virgo',     virData);
-      renderCompatCard('astro-compat-capricorn', 'capricorn', capData);
-      renderCompatCard('astro-compat-virgo',     'virgo',     virData);
       renderTogetherInsight(capData, virData);
       updateSourceBadge(capData, virData);
     }

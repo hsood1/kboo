@@ -477,7 +477,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
   <div class="section-h2">Insurance Estimates</div>
   <div class="section-sub">San Diego CA · Full coverage required for leased/financed cars. CA does not allow gender-based pricing.</div>
   <div class="ins-grid">
-    <div class="ins-card"><div class="ins-card-lbl">RAV4 / Tucson / Accord Hybrid</div><div class="ins-card-price hi">$200–267<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">$2,400–3,200/yr · SUVs and sedans cheapest in SD</div></div>
+    <div class="ins-card"><div class="ins-card-lbl">Hybrid SUVs &amp; sedans</div><div class="ins-card-price hi">$175–260<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">$2,100–3,100/yr · compacts (Corolla, Civic, Elantra) at the low end</div></div>
     <div class="ins-card"><div class="ins-card-lbl">Tesla Model 3</div><div class="ins-card-price red">$267–367<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">$3,200–4,400/yr · High repair costs = high premiums</div></div>
     <div class="ins-card"><div class="ins-card-lbl">SD City Average</div><div class="ins-card-price">$233<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">$2,800/yr · Below CA avg — less congestion than LA</div></div>
     <div class="ins-card"><div class="ins-card-lbl">After 1 Year w/ Record</div><div class="ins-card-price grn">$183–233<span style="font-size:12px;color:#888">/mo</span></div><div class="ins-card-note">Drops once you build your own policy history</div></div>
@@ -503,7 +503,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
     <div class="dark-head" style="background:#c04040"><div class="dark-head-lbl">Your Responsibility</div><div class="dark-head-title">💸 You pay for this</div></div>
     <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">💳</div><div><div class="lease-item-title">Monthly Payments</div><div class="lease-item-body">Every month, on time. Missing payments damages credit and can trigger repossession — same stakes as an apartment.</div></div></div>
     <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🛡️</div><div><div class="lease-item-title">Full Coverage Insurance (Required)</div><div class="lease-item-body">Leasing company mandates comprehensive + collision — minimum liability not allowed. Must be active before you drive off the lot.</div></div></div>
-    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🔧</div><div><div class="lease-item-title">Routine Maintenance</div><div class="lease-item-body">Oil changes, tire rotations, wiper blades — yours. Toyota and Hyundai cover first 2 yrs / 25K miles free on new cars.</div></div></div>
+    <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🔧</div><div><div class="lease-item-title">Routine Maintenance</div><div class="lease-item-body">Oil changes, tire rotations, wiper blades — yours. Toyota covers the first 2 yrs / 25K miles free on new cars; Hyundai 3 yrs / 36K.</div></div></div>
     <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">⛽</div><div><div class="lease-item-title">Gas or Charging</div><div class="lease-item-body">Always yours. Hybrids save ~$40–60/mo vs gas-only. Tesla EVs ~$20–30/mo with home/work charging.</div></div></div>
     <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🛣️</div><div><div class="lease-item-title">Mileage Overages — Watch This</div><div class="lease-item-body">Standard = 10,000–12,000 mi/yr. Every mile over = $0.15–0.25 at lease end. Estimate real commuting before signing.</div></div></div>
     <div class="lease-item"><div class="lease-ico" style="background:rgba(192,64,64,.2);color:#f08080">🗑️</div><div><div class="lease-item-title">Disposition Fee ($350–400) at Return</div><div class="lease-item-body">Charged when you hand the car back. Avoidable if you lease or buy again from the same brand immediately.</div></div></div>
@@ -580,7 +580,7 @@ const CARS = [
     leaseLow:400, leaseHigh:470, leaseLabel:'~$400–470',
     insLow:267, insHigh:367, insLabel:'~$267–367',
     get totalLease(){ return this.leaseLow + this.insLow },
-    heated:'yes', cooledStatus:'yes', cooledNote:'Standard on all trims',
+    heated:'yes', cooledStatus:'yes', cooledNote:'Standard on Long Range',
     heatedLabel:'✓ Standard',cooledLabel:'✓ Standard',
     dealer:'Tesla direct — single SD service center. No traditional dealership.',
     caveat:'⚠️ Must test drive first. Zero physical buttons — climate, mirrors, wipers all in touchscreen. Cannot purchase at lease end (Tesla policy).',
@@ -603,27 +603,27 @@ const CARS = [
   {
     id:'accord-hybrid',
     name:'Honda Accord Hybrid',
-    trim:'Sport-L',
+    trim:'Touring',
     style:'sedan',
     power:'hybrid',
     mpg:'46 city',
     mpgNum:46,
     rank:9,
-    rankNote:'The budget-smart sweet spot: in reach via CPO (~$28–33K), trusted Honda Poway dealer, familiar size (Harry drives one), strong hybrid, and cooled seats on Sport-L.',
+    rankNote:'The budget-smart sweet spot: trusted Honda Poway dealer, familiar size (Harry drives one), strong hybrid, and cooled seats on the Touring trim — in reach via CPO (~$30–35K).',
     tag:'tag-best',tagLabel:'Top Pick',
     budgetFit:'in',
-    newLow:40000, newHigh:42000, newLabel:'~$40–42K',
-    usedLow:28000, usedHigh:33000, usedLabel:'~$28–33K',
-    leaseLow:380, leaseHigh:420, leaseLabel:'~$380–420',
+    newLow:42000, newHigh:44000, newLabel:'~$42–44K',
+    usedLow:30000, usedHigh:35000, usedLabel:'~$30–35K',
+    leaseLow:410, leaseHigh:460, leaseLabel:'~$410–460',
     insLow:190, insHigh:250, insLabel:'~$190–250',
     get totalLease(){ return this.leaseLow + this.insLow },
-    heated:'yes', cooledStatus:'yes', cooledNote:'Sport-L trim only',
-    heatedLabel:'✓ Sport-L',cooledLabel:'✓ Sport-L only',
+    heated:'yes', cooledStatus:'yes', cooledNote:'Touring trim',
+    heatedLabel:'✓ Touring',cooledLabel:'✓ Touring',
     dealer:'Honda Poway — Harry has multiple positive firsthand experiences. Recommended starting point.',
     caveat:null,
     features:[
-      {icon:'yes',text:'Heated front seats (Sport-L)'},
-      {icon:'yes',text:'Ventilated/cooled seats (Sport-L only)'},
+      {icon:'yes',text:'Heated front seats (Touring)'},
+      {icon:'yes',text:'Ventilated/cooled front seats — Touring trim'},
       {icon:'yes',text:'Wireless CarPlay / Android Auto'},
       {icon:'yes',text:'Honda Sensing safety suite standard'},
       {icon:'yes',text:'Intuitive interface — physical climate controls'},
@@ -633,8 +633,8 @@ const CARS = [
     notes:[
       'Harry drives an Accord, so the size and feel are already familiar.',
       'Honda Poway is a trusted dealer — removes stress from the buying process.',
-      'Sport-L trim required for cooled seats — confirm on the specific car.',
-      '2022–23 CPO Accord Hybrid Sport-L around $28–33K hits the buy budget well.',
+      'Cooled seats require the Touring trim — confirm on the specific car (other trims are heated-only).',
+      '2023–24 CPO Accord Hybrid Touring around $30–35K hits the buy budget well.',
     ]
   },
   {
@@ -1014,7 +1014,7 @@ const CARS = [
     mpgNum:57,
     rank:7,
     rankNote:'In budget bought new and the efficiency champ of the list (~57 city). The redesigned Prius finally looks great. No cooled seats and a lower roofline are the trade-offs.',
-    tag:'tag-budget',tagLabel:'Most Efficient',
+    tag:'tag-budget',tagLabel:'Top MPG',
     budgetFit:'in',
     newLow:31000, newHigh:36000, newLabel:'~$31–36K',
     usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
