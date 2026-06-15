@@ -35,27 +35,26 @@ Each card's "Features & Notes" button calls `toggleCard()` (plain JS, toggles `.
 
 ## Car data (estimates, June 2026)
 
-15 cars, **scored with the $30K budget weighted heavily** (cheap in-budget cars rise; $48K+ cars fall even if great):
+14 cars, **scored with the $30K budget weighted heavily** (cheap in-budget cars rise; $48K+ cars fall even if great):
 
 | Car | Style·Power | Score | Budget | Why |
 |-----|-------------|:---:|:---:|-----|
-| Honda Accord Hybrid Sport-L | Sedan·Hybrid | 9 | 🟢 | Budget-smart sweet spot: CPO ~$28–33K, Honda Poway, cooled seats |
+| Honda Accord Hybrid Touring | Sedan·Hybrid | 9 | 🟢 | Budget-smart sweet spot: CPO ~$30–35K, Honda Poway, cooled seats |
 | Toyota Camry Hybrid XLE | Sedan·Hybrid | 8 | 🟢 | Cooled seats + CPO in budget + Toyota resale (dealer unverified) |
 | Honda Civic Hybrid Sport Touring | Sedan·Hybrid | 8 | 🟢 | In budget bought NEW, trusted Honda Poway dealer |
 | Tesla Model 3 LR | Sedan·EV | 7 | 🟡 | Best lease + charging solved, but pricey to buy / high insurance |
 | Toyota RAV4 Hybrid XLE/LE | SUV·Hybrid | 7 | 🟢 | Most affordable RAV4, great LE lease |
 | Toyota Corolla Hybrid | Sedan·Hybrid | 7 | 🟢 | Cheapest to buy NEW & run (~50 MPG), compact, no cooled |
-| **Toyota Prius LE/XLE** | Sedan·Hybrid | 7 | 🟢 | **NEW:** efficiency champ (~57 MPG), in budget, no cooled |
+| Toyota Prius LE/XLE | Sedan·Hybrid | 7 | 🟢 | Efficiency champ (~57 MPG), in budget, no cooled |
 | Toyota RAV4 Hybrid Limited | SUV·Hybrid | 6 | 🟡 | Cooled seats but ~$48–51K new → only fits via CPO |
 | RAV4 Hybrid XLE Premium | SUV·Hybrid | 6 | 🟢 | In-budget RAV4 without cooled seats |
 | Tucson Hybrid SEL Convenience | SUV·Hybrid | 6 | 🟢 | Cheapest SUV lease, physical dials, dealer uncertain |
-| **Ford Escape Hybrid ST-Line** | SUV·Hybrid | 6 | 🟢 | **NEW brand:** in-budget SUV (esp. CPO), no cooled, avg reliability |
-| **Hyundai Elantra Hybrid Limited** | Sedan·Hybrid | 6 | 🟢 | **NEW:** cheapest in-budget + **cooled seats**; Hyundai dealer caveat |
-| Toyota RAV4 Prime | SUV·PHEV | 5 | 🔴 | Only PHEV (42mi EV, HOV) but most expensive (~$47–52K) |
+| Hyundai Elantra Hybrid Limited | Sedan·Hybrid | 6 | 🟢 | Cheapest in-budget + **cooled seats**; Hyundai dealer caveat |
+| **Toyota RAV4 PHEV** XSE | SUV·PHEV | 6 | 🟡 | Only PHEV; 2026 redesign: 52mi EV, 324hp, now from ~$43K |
 | Hyundai Tucson Hybrid Limited | SUV·Hybrid | 5 | 🟡 | Great interface but CPO-only budget + dealer uncertain |
 | Hyundai Sonata Hybrid Limited | Sedan·Hybrid | 5 | 🟢 | In budget w/ cooled, but Hyundai dealer concerns — deprioritized |
 
-**Three brands/options added** to broaden the in-budget set beyond Toyota/Honda: **Ford Escape Hybrid** (SUV), **Toyota Prius**, **Hyundai Elantra Hybrid** (cheapest route to cooled seats). No Kia (excluded).
+**Brands beyond Toyota/Honda** broaden the in-budget set: **Toyota Prius** and **Hyundai Elantra Hybrid** (cheapest route to cooled seats). No Kia (excluded). (The Ford Escape was dropped — discontinued after 2026 and not sold new in California.)
 
 **Budget fit** = three tiers driving the card/row left-edge stripe and the Budget filter: `'in'` 🟢 (attainable ~$30K new or via mild CPO) · `'stretch'` 🟡 ($48K-ish cars that only reach budget as CPO) · `'over'` 🔴 (expensive even used). Hand-set per car (editorial, budget-weighted), not auto-computed.
 

@@ -369,7 +369,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 <div class="pg">
   <div class="start-label">★ Your top picks</div>
   <div id="top-picks"></div>
-  <button class="big-btn ghost" onclick="showPageById('cars')">See all 15 cars →</button>
+  <button class="big-btn ghost" onclick="showPageById('cars')">See all 14 cars →</button>
 
   <div class="start-label">Lease or buy?</div>
   <div class="split2">
@@ -392,7 +392,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
     <div class="callout-ico">💰</div>
     <div>
       <div class="callout-h">Yes — plenty of in-budget options</div>
-      <div class="callout-p">A <strong>new Civic Hybrid (~$30–34K)</strong>, <strong>Corolla Hybrid (~$26–31K)</strong>, <strong>Prius</strong>, or <strong>Hyundai Elantra Hybrid (~$28–31K — even cooled seats)</strong> all fit a ~$30K budget brand-new. Want something bigger? A <strong>certified-used RAV4, Accord, or Camry</strong> lands around $27–33K. Every car is now scored with the budget weighted heavily.</div>
+      <div class="callout-p">A <strong>new Civic Hybrid (~$30–34K)</strong>, <strong>Corolla Hybrid (~$26–31K)</strong>, <strong>Prius</strong>, or <strong>Hyundai Elantra Hybrid (~$28–31K — even cooled seats)</strong> all fit a ~$30K budget brand-new. Want something bigger? A <strong>certified-used RAV4, Accord, or Camry</strong> lands around $27–35K. Every car is now scored with the budget weighted heavily.</div>
     </div>
   </div>
   <button class="big-btn" style="margin-top:10px" onclick="showInBudget()">🟢 Show me the in-budget cars →</button>
@@ -427,7 +427,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
           <th onclick="sortTable('leaseLow')"   data-col="leaseLow">Lease/mo <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('insLow')"     data-col="insLow">+Insur/mo <span class="sort-arrow">↕</span></th>
           <th onclick="sortTable('heated')"     data-col="heated">🔥 Heat <span class="sort-arrow">↕</span></th>
-          <th onclick="sortTable('cooled')"     data-col="cooled">❄️ Cool <span class="sort-arrow">↕</span></th>
+          <th onclick="sortTable('cooledStatus')" data-col="cooledStatus">❄️ Cool <span class="sort-arrow">↕</span></th>
           <th>Our Pick</th>
         </tr>
       </thead>
@@ -441,7 +441,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
   <div class="divider"></div>
   <div class="section-eyebrow">5-Year Snapshot</div>
   <div class="section-h2" style="font-size:18px">Ownership vs. Lease Math</div>
-  <div class="section-sub">Rough totals including insurance, fuel, maintenance. Lease = payments only.</div>
+  <div class="section-sub">Rough totals over 5 years, both including insurance &amp; fuel so they're comparable.</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
     <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:14px">
       <div style="font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin-bottom:6px">Buy CPO RAV4 Hybrid Lim · Own 5 yrs</div>
@@ -450,8 +450,8 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
     </div>
     <div style="background:var(--accent-pale);border:1px solid #e8c99a;border-radius:12px;padding:14px">
       <div style="font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">Lease Tesla M3 36 mo → Lease again</div>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--accent)">~$28–32K</div>
-      <div style="font-size:11px;color:var(--mid);margin-top:4px;line-height:1.5">~$440 × 36 = $16K + $3K signing × 1.5 cycles. Always under warranty.</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--accent)">~$46–52K</div>
+      <div style="font-size:11px;color:var(--mid);margin-top:4px;line-height:1.5">~$28–32K payments + signing, +~$18K insurance +~$1.5K charging over 5 yrs. Always under warranty, nothing to resell.</div>
     </div>
   </div>
 </div>
@@ -461,7 +461,7 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
 <div class="page" id="page-cars">
 <div class="pg">
   <div class="section-eyebrow">The Cars</div>
-  <div class="section-h2">All 15 Options</div>
+  <div class="section-h2">All 14 Options</div>
   <div class="section-sub">Tap any card to open its features &amp; notes. The colored left edge shows budget fit: 🟢 in budget · 🟡 a stretch · 🔴 well over. Want more control? Use <strong>🔍 Filter cars</strong> up top.</div>
   <div class="quick-budget"><button id="qb" class="qb-btn" onclick="toggleInBudget()">🟢 Show in-budget only</button></div>
   <div id="cards-container"></div>
@@ -527,8 +527,8 @@ body{background:#faf7f2;color:#1a1a1a;font-family:'DM Sans',sans-serif;font-size
   <div class="dark-section">
     <div class="dark-head"><div class="dark-head-lbl">Quick Take</div><div class="dark-head-title">🤔 Lease vs. Buy in Plain English</div></div>
     <div class="lv-grid">
-      <div><div class="lv-col-lbl" style="color:#e8c99a">Lease if you...</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Drives under 12,000 mi/yr</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Likes a new car every 3 years</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Doesn't want resale hassle</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Wants lower monthly payments</div><div class="lv-item" style="color:rgba(255,255,255,.65)">New to SD, unsure long-term</div></div>
-      <div><div class="lv-col-lbl" style="color:#7ecba7">Buy if you...</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Drives 12,000–15,000+ mi/yr</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Wants to build equity</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Wants to customize the car</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Plans to keep it 5+ years</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Wants no mileage limits</div></div>
+      <div><div class="lv-col-lbl" style="color:#e8c99a">Lease if you...</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Drive under 12,000 mi/yr</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Like a new car every 3 years</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Don't want resale hassle</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Want lower monthly payments</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Are new to SD, unsure long-term</div></div>
+      <div><div class="lv-col-lbl" style="color:#7ecba7">Buy if you...</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Drive 12,000–15,000+ mi/yr</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Want to build equity</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Want to customize the car</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Plan to keep it 5+ years</div><div class="lv-item" style="color:rgba(255,255,255,.65)">Want no mileage limits</div></div>
     </div>
     <div style="height:14px"></div>
   </div>
@@ -579,25 +579,23 @@ const CARS = [
     usedLow:28000, usedHigh:36000, usedLabel:'~$28–36K',
     leaseLow:400, leaseHigh:470, leaseLabel:'~$400–470',
     insLow:267, insHigh:367, insLabel:'~$267–367',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'yes', cooledNote:'Standard on Long Range',
     heatedLabel:'✓ Standard',cooledLabel:'✓ Standard',
     dealer:'Tesla direct — single SD service center. No traditional dealership.',
-    caveat:'⚠️ Must test drive first. Zero physical buttons — climate, mirrors, wipers all in touchscreen. Cannot purchase at lease end (Tesla policy).',
+    caveat:'⚠️ Must test drive first. Zero physical buttons — climate, mirrors, wipers all in touchscreen.',
     features:[
       {icon:'yes',text:'Heated front seats (standard)'},
       {icon:'yes',text:'Ventilated/cooled front seats (standard)'},
       {icon:'yes',text:'Panoramic glass roof'},
       {icon:'yes',text:'Autopilot standard (adaptive cruise + lane keeping)'},
-      {icon:'yes',text:'CA HOV sticker eligible'},
+      {icon:'yes',text:'Lease buyout now allowed at lease end ($350 fee)'},
       {icon:'no', text:'No physical climate controls at all'},
-      {icon:'no', text:'Cannot purchase at lease end (Tesla policy)'},
     ],
     notes:[
       'Sedan — lower clearance, less cargo than RAV4/Tucson but comparable to Honda Accord.',
       'Charging solved: work has free charger; home likely has one. Running cost ~$20–30/mo.',
       'Insurance runs $50–100/mo more than hybrids due to high repair costs.',
-      'Lease is pure 3-yr rental — but this makes sense given current car prices and rates.',
+      'Tesla now allows a lease buyout at lease end ($350 fee) — you can keep it or hand it back.',
     ]
   },
   {
@@ -616,7 +614,6 @@ const CARS = [
     usedLow:30000, usedHigh:35000, usedLabel:'~$30–35K',
     leaseLow:410, leaseHigh:460, leaseLabel:'~$410–460',
     insLow:190, insHigh:250, insLabel:'~$190–250',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'yes', cooledNote:'Touring trim',
     heatedLabel:'✓ Touring',cooledLabel:'✓ Touring',
     dealer:'Honda Poway — multiple positive firsthand experiences. Recommended starting point.',
@@ -653,7 +650,6 @@ const CARS = [
     usedLow:30000, usedHigh:38000, usedLabel:'~$30–38K',
     leaseLow:500, leaseHigh:540, leaseLabel:'~$500–540',
     insLow:200, insHigh:260, insLabel:'~$200–260',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
     heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
     dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — not personally verified. Inland dealers negotiate more.',
@@ -676,38 +672,37 @@ const CARS = [
   },
   {
     id:'rav4-prime',
-    name:'Toyota RAV4 Prime',
-    trim:'XSE Premium · AWD',
+    name:'Toyota RAV4 PHEV',
+    trim:'XSE · AWD',
     style:'suv',
     power:'phev',
     mpg:'94 MPGe',
     mpgNum:94,
-    rank:5,
-    rankNote:'The most expensive car here (~$47–52K), so it scores low once budget is weighted — but it\'s the only PHEV, with 42 mi of EV range and an HOV sticker. Compelling if the budget can stretch and charging is set.',
+    rank:6,
+    rankNote:'The only plug-in here — and for 2026 it got better and cheaper: 52 mi of EV range, 324 hp, now from ~$43K (SE). A genuine stretch rather than a splurge if charging is set; compelling for the EV-commute-plus-road-trip combo.',
     tag:'tag-lease',tagLabel:'PHEV Pick',
-    budgetFit:'over',
-    newLow:47000, newHigh:52000, newLabel:'~$47–52K',
+    budgetFit:'stretch',
+    newLow:43000, newHigh:48000, newLabel:'~$43–48K',
     usedLow:36000, usedHigh:44000, usedLabel:'~$36–44K',
     leaseLow:480, leaseHigh:540, leaseLabel:'~$480–540',
     insLow:200, insHigh:260, insLabel:'~$200–260',
-    get totalLease(){ return this.leaseLow + this.insLow },
-    heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
-    heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
+    heated:'yes', cooledStatus:'trim', cooledNote:'XSE trim',
+    heatedLabel:'✓ Standard',cooledLabel:'⚠️ XSE+ only',
     dealer:'Same Toyota dealers as RAV4 Hybrid. Mossy Toyota, Toyota of El Cajon — not personally verified.',
     caveat:'🔌 Plug-in hybrid — needs charging to get full EV benefit. Work charger and likely home charger make this viable.',
     features:[
       {icon:'yes',text:'Heated front seats'},
-      {icon:'par',text:'Ventilated/cooled seats — Limited trim only'},
+      {icon:'par',text:'Ventilated/cooled seats — XSE trim and up'},
       {icon:'yes',text:'AWD standard'},
-      {icon:'yes',text:'42-mile EV-only range'},
-      {icon:'yes',text:'CA HOV sticker eligible (PHEV qualifies)'},
-      {icon:'yes',text:'94 MPGe combined'},
+      {icon:'yes',text:'52-mile EV-only range (up from 42 for 2026)'},
+      {icon:'yes',text:'324 hp — quickest RAV4 made'},
+      {icon:'yes',text:'94 MPGe combined + DC fast charging'},
       {icon:'yes',text:'10yr/150K hybrid/EV battery warranty'},
     ],
     notes:[
       'Best of both worlds — EV range for daily commutes, gas engine for road trips.',
       'With work charging, most daily driving would be free electricity.',
-      'Pricier than RAV4 Hybrid — CPO may be the only way to hit near budget.',
+      '2026 redesign added range and cut the price (~$3K cheaper than before).',
       'Same dealer network and reliability reputation as RAV4 Hybrid.',
     ]
   },
@@ -727,7 +722,6 @@ const CARS = [
     usedLow:33000, usedHigh:39000, usedLabel:'~$33–39K',
     leaseLow:442, leaseHigh:500, leaseLabel:'~$442–500',
     insLow:200, insHigh:260, insLabel:'~$200–260',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim only',
     heatedLabel:'✓ Standard',cooledLabel:'⚠️ Limited only',
     dealer:'Hyundai SD area — dealer quality uncertain — unverified. Temecula Hyundai or National City Hyundai may be options.',
@@ -764,7 +758,6 @@ const CARS = [
     usedLow:27000, usedHigh:32000, usedLabel:'~$27–32K',
     leaseLow:370, leaseHigh:420, leaseLabel:'~$370–420',
     insLow:190, insHigh:250, insLabel:'~$190–250',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'XLE / XSE only',
     heatedLabel:'✓ XLE',cooledLabel:'⚠️ XLE / XSE only',
     dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — not personally verified.',
@@ -801,7 +794,6 @@ const CARS = [
     usedLow:26000, usedHigh:33000, usedLabel:'~$26–33K',
     leaseLow:400, leaseHigh:440, leaseLabel:'~$400–440',
     insLow:200, insHigh:250, insLabel:'~$200–250',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'no', cooledNote:'Not available on this trim',
     heatedLabel:'✓ Standard',cooledLabel:'✗ Not available',
     dealer:'Same as RAV4 Hybrid Limited. Mossy Toyota, Toyota of El Cajon.',
@@ -838,7 +830,6 @@ const CARS = [
     usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
     leaseLow:390, leaseHigh:430, leaseLabel:'~$390–430',
     insLow:200, insHigh:250, insLabel:'~$200–250',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'no', cooledNote:'Not available on this trim',
     heatedLabel:'✓ Standard',cooledLabel:'✗ Not available',
     dealer:'Hyundai SD area — dealer quality uncertain.',
@@ -875,7 +866,6 @@ const CARS = [
     usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
     leaseLow:360, leaseHigh:410, leaseLabel:'~$360–410',
     insLow:190, insHigh:250, insLabel:'~$190–250',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'SEL Plus / Limited only',
     heatedLabel:'✓ Limited',cooledLabel:'⚠️ Limited only',
     dealer:'Hyundai SD area — dealer quality uncertain. Deprioritized.',
@@ -911,7 +901,6 @@ const CARS = [
     usedLow:23000, usedHigh:30000, usedLabel:'~$23–30K',
     leaseLow:350, leaseHigh:400, leaseLabel:'~$350–400',
     insLow:190, insHigh:240, insLabel:'~$190–240',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'trim', cooledStatus:'no', cooledNote:'Not available',
     heatedLabel:'⚠️ Package req.',cooledLabel:'✗ Not available',
     dealer:'Same as other RAV4 trims.',
@@ -946,7 +935,6 @@ const CARS = [
     usedLow:26000, usedHigh:30000, usedLabel:'~$26–30K',
     leaseLow:330, leaseHigh:390, leaseLabel:'~$330–390',
     insLow:180, insHigh:240, insLabel:'~$180–240',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'no', cooledNote:'Not offered on any Civic trim',
     heatedLabel:'✓ Sport Touring',cooledLabel:'✗ Not available',
     dealer:'Honda Poway — multiple positive firsthand experiences.',
@@ -983,7 +971,6 @@ const CARS = [
     usedLow:21000, usedHigh:26000, usedLabel:'~$21–26K',
     leaseLow:300, leaseHigh:360, leaseLabel:'~$300–360',
     insLow:170, insHigh:220, insLabel:'~$170–220',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'trim', cooledStatus:'no', cooledNote:'Not available on any trim',
     heatedLabel:'⚠️ SE/XLE',cooledLabel:'✗ Not available',
     dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — not personally verified. Inland negotiates more.',
@@ -1020,7 +1007,6 @@ const CARS = [
     usedLow:27000, usedHigh:33000, usedLabel:'~$27–33K',
     leaseLow:330, leaseHigh:400, leaseLabel:'~$330–400',
     insLow:180, insHigh:240, insLabel:'~$180–240',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'trim', cooledStatus:'no', cooledNote:'Not available on Prius',
     heatedLabel:'⚠️ XLE+',cooledLabel:'✗ Not available',
     dealer:'Mossy Toyota (Kearny Mesa), Toyota of El Cajon — not personally verified. Prius holds value, so used isn\'t much cheaper than new.',
@@ -1042,42 +1028,6 @@ const CARS = [
     ]
   },
   {
-    id:'escape-hybrid',
-    name:'Ford Escape Hybrid',
-    trim:'ST-Line Select',
-    style:'suv',
-    power:'hybrid',
-    mpg:'42 city',
-    mpgNum:42,
-    rank:6,
-    rankNote:'A genuine in-budget hybrid SUV from outside the Toyota/Honda bubble — strong via CPO especially. No cooled seats, and Ford reliability is middling, but it\'s roomy and well-priced.',
-    tag:'tag-budget',tagLabel:'In-Budget SUV',
-    budgetFit:'in',
-    newLow:34000, newHigh:38000, newLabel:'~$34–38K',
-    usedLow:24000, usedHigh:29000, usedLabel:'~$24–29K',
-    leaseLow:340, leaseHigh:410, leaseLabel:'~$340–410',
-    insLow:185, insHigh:240, insLabel:'~$185–240',
-    get totalLease(){ return this.leaseLow + this.insLow },
-    heated:'yes', cooledStatus:'no', cooledNote:'Not available on Escape',
-    heatedLabel:'✓ ST-Line+',cooledLabel:'✗ Not available',
-    dealer:'Ford of Escondido, Drew Ford (La Mesa) — not personally verified. Ford discounts more readily than Toyota/Honda.',
-    caveat:null,
-    features:[
-      {icon:'yes',text:'Heated front seats (ST-Line and up)'},
-      {icon:'no', text:'No ventilated/cooled seats'},
-      {icon:'yes',text:'~42 MPG city'},
-      {icon:'yes',text:'SYNC 4 with wireless CarPlay / Android Auto'},
-      {icon:'yes',text:'Roomy rear seat & cargo for a compact SUV'},
-      {icon:'par',text:'Ford reliability is average — buy CPO for the warranty'},
-    ],
-    notes:[
-      'A real in-budget SUV, especially used/CPO (~$24–29K).',
-      'A different brand for options beyond Toyota and Honda.',
-      'No cooled seats; Ford long-term reliability trails the Japanese rivals.',
-      'Ford tends to discount more, so new deals can be found.',
-    ]
-  },
-  {
     id:'elantra-hybrid',
     name:'Hyundai Elantra Hybrid',
     trim:'Limited',
@@ -1093,7 +1043,6 @@ const CARS = [
     usedLow:22000, usedHigh:27000, usedLabel:'~$22–27K',
     leaseLow:300, leaseHigh:360, leaseLabel:'~$300–360',
     insLow:175, insHigh:225, insLabel:'~$175–225',
-    get totalLease(){ return this.leaseLow + this.insLow },
     heated:'yes', cooledStatus:'trim', cooledNote:'Limited trim',
     heatedLabel:'✓ Limited',cooledLabel:'⚠️ Limited only',
     dealer:'Hyundai SD area — dealer quality uncertain. Unverified.',
@@ -1411,7 +1360,6 @@ document.addEventListener('DOMContentLoaded', function(){
   CARS.forEach(function(c){
     c.newMoLo  = loanMo(c.newLow,  NEW_APR);  c.newMoHi  = loanMo(c.newHigh,  NEW_APR);
     c.usedMoLo = loanMo(c.usedLow, USED_APR); c.usedMoHi = loanMo(c.usedHigh, USED_APR);
-    c.leaseAllInLo = c.leaseLow + c.insLow;   // lease + insurance, low estimate (sortable)
   });
   // init sort header
   var h = document.querySelector('.master-table th[data-col="rank"]');
