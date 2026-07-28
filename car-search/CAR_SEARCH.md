@@ -1,3 +1,7 @@
+> **Deprecated July 2026.** The page this brief describes is now a redirect to
+> [Car Picks 2026](https://hsood1.github.io/car-research/). The last full version of
+> `car-search.html` is in git history at commit `2e3cb51^`.
+
 # Car Guide — Design Brief
 
 ## What this is
